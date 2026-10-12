@@ -103,3 +103,21 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 
 - **Living Charts**: Animate the change, not the data. ([full](data.md#living-charts))
 - **Curve Smoothing**: A smooth line should never go higher or lower than the points it connects. ([full](data.md#curve-smoothing))
+
+## Mobile
+
+- **Native Feel**: Draw the parts people learned from the system the way their platform draws them, and put your brand in color, content and voice. ([full](mobile/native-feel.md))
+- **Thumb Reach**: Put persistent, frequent controls at the bottom, keep content in the middle, and leave the top for actions people rarely take. ([full](mobile/thumb-reach.md))
+- **Touch Feedback**: Show the pressed state the moment the finger lands, and drop it the moment the touch turns into a scroll, a drag or a slide off. ([full](mobile/touch-feedback.md))
+- **Gestures**: Treat every gesture as a shortcut for something people can see and tap. ([full](mobile/gestures.md))
+- **Swipe Actions**: Let a short swipe reveal the actions and a long swipe commit the first one, and make the moment it switches impossible to miss. ([full](mobile/swipe-actions.md))
+- **Long Press**: Show the hold progressing, mark the moment it completes, and open the menu attached to the thing you pressed. ([full](mobile/long-press.md))
+- **Bottom Sheets**: Give a sheet a few resting heights and a grabber, let the flick pick the height, and let a swipe down close it. ([full](mobile/bottom-sheets.md))
+- **Back Navigation**: Let back follow the finger the whole way, show the screen underneath, and decide on release, so people can change their mind. ([full](mobile/back-navigation.md))
+- **Haptics**: Play a haptic only at a moment the screen also shows, and use the system pattern whose meaning matches it. ([full](mobile/haptics.md))
+- **Safe Areas**: Let backgrounds and scrolling content run to the edges of the screen, and keep text and controls inside the safe area. ([full](mobile/safe-areas.md))
+- **Soft Keyboard**: Keep the focused field and its action above the keyboard, and move them with the keyboard's own animation, frame by frame. ([full](mobile/soft-keyboard.md))
+- **Text Size**: Use the platform's text styles, give text containers minimum heights instead of fixed ones, and stack side-by-side content at the largest sizes. ([full](mobile/text-size.md))
+- **UI Thread**: Compute anything that follows the finger on the thread that draws the frames, and keep every frame inside the budget of a 120 Hz screen. ([full](mobile/ui-thread.md))
+- **App Launch**: Make the launch screen look like your first screen, draw that screen from cached data, and never hold the launch for the network. ([full](mobile/app-launch.md))
+- **Native Lists**: Use the platform's recycling list, give every row a stable key and a type, and keep each row cheap enough to fill inside one frame. ([full](mobile/native-lists.md))

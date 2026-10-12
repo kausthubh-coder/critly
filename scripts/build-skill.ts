@@ -96,7 +96,11 @@ function ruleOf(concept: Concept) {
   return rule.charAt(0).toUpperCase() + rule.slice(1);
 }
 
-function referenceFile(section: string) {
+// A section whose reference would pass this size is written as one file per
+// concept instead, so reading one concept doesn't load the whole section.
+const SPLIT_BYTES = 60_000;
+
+function sectionFile(section: string) {
   return `${section.toLowerCase()}.md`;
 }
 
@@ -110,12 +114,28 @@ async function main() {
   await rm(REFERENCES_DIR, { recursive: true, force: true });
   await mkdir(REFERENCES_DIR, { recursive: true });
 
+  // Where each concept's full reference lives, relative to references/.
+  const link = new Map<string, string>();
+
   for (const { section, concepts } of bySection) {
-    const body = concepts.map((c) => demoteHeadings(conceptMarkdown(c))).join("\n\n");
-    await writeFile(
-      path.join(REFERENCES_DIR, referenceFile(section)),
-      `# ${section}\n\n${body}`,
-    );
+    const parts = concepts.map((c) => demoteHeadings(conceptMarkdown(c)));
+    const body = `# ${section}\n\n${parts.join("\n\n")}`;
+    if (Buffer.byteLength(body) <= SPLIT_BYTES) {
+      await writeFile(path.join(REFERENCES_DIR, sectionFile(section)), body);
+      for (const c of concepts) {
+        link.set(c.slug, `${sectionFile(section)}#${anchor(c.title)}`);
+      }
+      continue;
+    }
+    const dir = section.toLowerCase();
+    await mkdir(path.join(REFERENCES_DIR, dir), { recursive: true });
+    for (const [i, c] of concepts.entries()) {
+      await writeFile(
+        path.join(REFERENCES_DIR, dir, `${c.slug}.md`),
+        `# ${section}\n\n${parts[i]}`,
+      );
+      link.set(c.slug, `${dir}/${c.slug}.md`);
+    }
   }
 
   // A short checklist, cheap enough to re-read mid-task and before finishing.
@@ -124,7 +144,7 @@ async function main() {
     "",
     ...concepts.map(
       (c) =>
-        `- **${c.title}**: ${ruleOf(c)} ([full](${referenceFile(section)}#${anchor(c.title)}))`,
+        `- **${c.title}**: ${ruleOf(c)} ([full](${link.get(c.slug)}))`,
     ),
     "",
   ]);
@@ -146,7 +166,7 @@ async function main() {
     "",
     ...concepts.map(
       (c) =>
-        `- **${c.title}**: ${c.description} ([reference](references/${referenceFile(section)}#${anchor(c.title)}), [demo](${conceptUrl(c.slug)}))`,
+        `- **${c.title}**: ${c.description} ([reference](references/${link.get(c.slug)}), [demo](${conceptUrl(c.slug)}))`,
     ),
     "",
   ]);

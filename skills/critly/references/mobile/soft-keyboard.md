@@ -1,0 +1,209 @@
+# Mobile
+
+## Soft Keyboard
+
+> Keep the field and its button above the keys.
+
+- Section: Mobile
+- URL: https://critly.vercel.app/soft-keyboard
+- Published: 2026-10-12
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/mobile/soft-keyboard.mdx
+
+The keyboard covers close to half the screen, the half where the field and
+its Send button live. If the layout doesn't move, people type blind. If it moves late, the composer jumps after the keys have landed and
+the screen feels broken.
+
+Tap the field in each mode.
+
+> **Interactive demo: Keyboard Avoid.** Open https://critly.vercel.app/soft-keyboard to try it.
+
+Covered leaves the composer under the keys. Jumps waits for the keyboard to
+finish, then snaps the composer up, and on the way down leaves it floating
+over an empty gap. Follows reads the keyboard's position every frame, so the
+composer rides on top of the keys and the newest message stays just above
+it.
+
+**Keep the focused field and its action above the keyboard, and move them with the keyboard's own animation, frame by frame.**
+
+### Let the platform move it
+
+iOS, Android and react-native-keyboard-controller report where the keyboard
+is on every frame. Read that instead of guessing a height and a curve.
+
+- **iPhone**: SwiftUI lays views out around the keyboard by default. Don't add
+  your own `keyboardWillShow` offset on top; it shifts twice. And don't put
+  `.ignoresSafeArea()` on a form, which turns the avoidance off. In UIKit, pin
+  the bottom bar to `view.keyboardLayoutGuide` (iOS 15) and it follows the
+  keyboard, docked or floating.
+- **Android**: Every app targeting API 36 is edge-to-edge with no way out, so
+  the keyboard arrives as an inset you handle yourself. `Modifier.imePadding()`
+  reads `WindowInsets.ime`, which Compose updates on every frame of the
+  keyboard's animation. Inside a `Scaffold`, add it once: the default insets
+  leave out the keyboard, and padding both the Scaffold and its child counts
+  the keyboard twice.
+- **React Native**: `KeyboardAvoidingView` makes you compute the header offset
+  by hand and isn't synced to the keyboard's frames. Use
+  react-native-keyboard-controller: `KeyboardStickyView` for a composer,
+  `KeyboardAwareScrollView` for forms, and `KeyboardChatScrollView` for a
+  message list. Its `useReanimatedKeyboardAnimation().height` is negative, 0
+  down to minus the keyboard height, so `translateY: height` lifts content.
+- **Flutter**: `Scaffold` shrinks its body above the keyboard by default
+  (`resizeToAvoidBottomInset: true`). Inside a sheet or a custom layout, pad
+  by `MediaQuery.viewInsetsOf(context).bottom` yourself.
+
+### Let people put it away
+
+People expect to push the keyboard down the way they pulled the content up.
+Drag the messages down in each mode.
+
+> **Interactive demo: Keyboard Dismiss.** Open https://critly.vercel.app/soft-keyboard to try it.
+
+With Done only, you hunt for a small button above the keys. With interactive
+dismissal, the keyboard follows the finger once it reaches the composer, and
+the release speed decides: a flick down closes it, a move back up keeps it.
+
+- **iPhone**: `scrollDismissesKeyboard(.interactively)` (iOS 16) gives you the
+  Messages behavior. By default a `TextEditor` is interactive and every other
+  scroll view dismisses the keyboard as soon as it scrolls.
+- **Android**: there's no built-in drag-to-dismiss for scroll views. Compose's
+  `Modifier.imeNestedScroll()` opens and closes the keyboard as a list
+  scrolls past its end; otherwise close it when the list is dragged or on a
+  tap outside the field.
+- **React Native**: `keyboardDismissMode="interactive"` is iOS only; Android
+  treats it as `"none"`, so pass `"on-drag"` there.
+- **Flutter**: `keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag`
+  on a scroll view closes the keyboard as soon as the list is dragged.
+
+Tapping outside to dismiss is fine as long as it doesn't eat the tap. In
+React Native, `keyboardShouldPersistTaps` defaults to `"never"`: the first tap
+on Save only closes the keyboard, and a second tap saves. Set it to
+`"handled"`.
+
+### Move with the return key
+
+The return key should take people to the next field and submit from the last
+one, so they never have to reach above the keyboard. Label it for what it
+does: `submitLabel(.next)` with `@FocusState` in SwiftUI, `imeAction =
+ImeAction.Next` with `FocusManager` in Compose, `returnKeyType="next"` in
+React Native. Picking the right keyboard for each field is covered in
+[Input Details](https://critly.vercel.app/input-details).
+
+### Usage
+
+**SwiftUI**
+
+```swift
+struct ChatView: View {
+    @State private var draft = ""
+
+    var body: some View {
+        ScrollView {
+            LazyVStack { ForEach(messages) { MessageRow(message: $0) } }
+        }
+        .defaultScrollAnchor(.bottom)              // iOS 17+: open on the newest
+        .scrollDismissesKeyboard(.interactively)   // drag down to put it away
+        .safeAreaInset(edge: .bottom) {            // sits on top of the keyboard
+            HStack {
+                TextField("Message", text: $draft)
+                    .submitLabel(.send)
+                    .onSubmit(send)
+                Button("Send", systemImage: "arrow.up", action: send)
+                    .disabled(draft.isEmpty)
+            }
+            .padding()
+            .background(.bar)
+        }
+    }
+}
+
+// UIKit: the bar moves with the keyboard, docked or floating.
+// composer.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+```
+
+**Compose**
+
+```kotlin
+// Edge-to-edge: the keyboard is an inset you handle yourself.
+Column(Modifier.fillMaxSize().imePadding()) {   // follows the keyboard each frame
+    LazyColumn(Modifier.weight(1f), reverseLayout = true) {
+        items(newestFirst, key = { it.id }) { MessageRow(it) }
+    }
+    Composer()
+}
+
+// Forms: Return moves to the next field.
+val focusManager = LocalFocusManager.current
+OutlinedTextField(
+    state = email,
+    label = { Text("Email") },
+    keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Email,
+        imeAction = ImeAction.Next,
+    ),
+    onKeyboardAction = { focusManager.moveFocus(FocusDirection.Down) },
+)
+```
+
+**React Native**
+
+```tsx
+// Wrap the app in <KeyboardProvider> from react-native-keyboard-controller.
+import { KeyboardAwareScrollView, KeyboardStickyView } from "react-native-keyboard-controller";
+
+// Form: the focused field scrolls above the keys; Return moves on.
+<KeyboardAwareScrollView bottomOffset={24} keyboardShouldPersistTaps="handled">
+  <TextInput returnKeyType="next" submitBehavior="submit"
+    onSubmitEditing={() => email.current?.focus()} />
+  <TextInput ref={email} keyboardType="email-address" returnKeyType="done"
+    onSubmitEditing={save} />
+  <Button title="Save" onPress={save} />
+</KeyboardAwareScrollView>
+
+// Chat: the composer rides the keyboard without resizing the screen.
+<View style={{ flex: 1 }}>
+  <FlatList inverted data={messages} renderItem={renderMessage}
+    keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"} />
+  <KeyboardStickyView>
+    <Composer />
+  </KeyboardStickyView>
+</View>
+```
+
+**Flutter**
+
+```dart
+Scaffold(
+  // resizeToAvoidBottomInset defaults to true: the body ends at the keyboard.
+  body: Column(children: [
+    Expanded(
+      child: ListView.builder(
+        reverse: true, // newest at the bottom, just above the composer
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        itemCount: messages.length,
+        itemBuilder: (context, i) => MessageRow(messages[i]),
+      ),
+    ),
+    const SafeArea(top: false, child: Composer()),
+  ]),
+);
+
+// Forms: Return moves to the next field.
+TextField(
+  textInputAction: TextInputAction.next,
+  onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+);
+```
+
+Don't hand-animate to the keyboard. Apple doesn't document the curve and
+duration it uses, so a copied 250 ms ease-out drifts away from the keys. Under reduced motion the system still slides the
+keyboard; your layout should keep following it exactly, with no extra spring
+or delay of its own. A hardware keyboard or a floating iPad keyboard can mean
+no bottom inset at all, so test with the keyboard both docked and gone.
+
+### Resources
+
+- [Adjusting your layout with keyboard layout guide](https://developer.apple.com/documentation/uikit/adjusting-your-layout-with-keyboard-layout-guide): Apple's sample for pinning views to the keyboard so they move with it, docked or floating.
+- [Control and animate the software keyboard](https://developer.android.com/develop/ui/views/layout/sw-keyboard): Frame-synced keyboard animation on Android, and why Compose does it for you.
+- [Use keyboard IME animations](https://developer.android.com/develop/ui/compose/system/keyboard-animations): imePadding and imeNestedScroll in Compose, with a chat-style example.
+- [react-native-keyboard-controller](https://kirillzyusko.github.io/react-native-keyboard-controller/): Sticky views, aware scroll views and frame-by-frame keyboard values for React Native.
+- [ScrollView (React Native)](https://reactnative.dev/docs/scrollview): keyboardDismissMode and keyboardShouldPersistTaps, with their defaults and platform limits.

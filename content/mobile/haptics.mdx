@@ -1,0 +1,216 @@
+---
+title: Haptics
+description: Feel the moments the eye confirms.
+section: Mobile
+order: 9
+publishedAt: "2026-10-12"
+resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/playing-haptics
+    title: "Human Interface Guidelines: Playing haptics"
+    description: Apple's meanings for selection, impact and notification haptics, and the case for restraint.
+  - url: https://developer.apple.com/documentation/swiftui/sensoryfeedback
+    title: SensoryFeedback
+    description: Every SwiftUI feedback case; each case's page says which platforms actually play it.
+  - url: https://developer.android.com/develop/ui/views/haptics/haptics-principles
+    title: Haptics design principles
+    description: Google on clear versus buzzy haptics, and why no haptic beats a buzzy one.
+  - url: https://developer.android.com/develop/ui/views/haptics/haptic-feedback
+    title: Add haptic feedback to events
+    description: HapticFeedbackConstants, which need no VIBRATE permission and follow the user's settings.
+  - url: https://docs.expo.dev/versions/latest/sdk/haptics/
+    title: expo-haptics
+    description: Selection, impact, notification and the Android haptic constants from React Native.
+---
+
+A haptic is a small tap on the hand that says something happened. A good one
+confirms what the eye already sees: the wheel landed on 12, the payment went
+through. A bad one is a buzz that means nothing, and people switch it off.
+
+Scrub the wheel in each mode.
+
+<HapticPickerDemo />
+
+Every frame fires on each pixel the wheel moves, so a fling becomes one long
+buzz. None leaves a fast scrub with no sense of how far it went. Per value
+plays one selection tick each time a new number crosses the line, and a
+firmer impact when the wheel hits the end.
+
+**Play a haptic only at a moment the screen also shows, and use the system pattern whose meaning matches it.**
+
+## Use the named patterns
+
+Both platforms ship a small vocabulary, and people learn it from the system
+apps. Apple asks you to use the patterns "according to their documented
+meanings", in three families:
+
+- **Selection** while a value changes: pickers, sliders, segmented controls.
+- **Impact** for a physical metaphor: something snaps into place or collides.
+- **Notification** for the outcome of a task: success, warning or error.
+
+<HapticVocabularyDemo />
+
+| Moment | SwiftUI | Android View | Compose | Expo |
+|---|---|---|---|---|
+| Value steps | `.selection` | `SEGMENT_TICK` | `SegmentTick` | `selectionAsync()` |
+| Snap, or a drag crosses its threshold | `.impact(weight:)` | `GESTURE_THRESHOLD_ACTIVATE` | `GestureThresholdActivate` | `impactAsync(Light)` |
+| Toggle | built into `Toggle` | `TOGGLE_ON` / `TOGGLE_OFF` | `ToggleOn` / `ToggleOff` | iOS `Switch` plays it; Android `Toggle_On` |
+| Success | `.success` | `CONFIRM` | `Confirm` | `notificationAsync(Success)` |
+| Failure | `.error` | `REJECT` | `Reject` | `notificationAsync(Error)` |
+
+Android has no warning pattern and no impact weights. Its constants are named
+for what happened, and each device decides how that feels.
+
+## iPhone
+
+- SwiftUI's `.sensoryFeedback(_:trigger:)` (iOS 17) plays when the trigger
+  value changes. On iPhone only `.selection`, `.impact`, `.success`,
+  `.warning`, `.error`, `.alignment` and `.pathComplete` play. `.increase`,
+  `.decrease`, `.start`, `.stop` and `.levelChange` compile and stay silent;
+  they're for the watch, the Mac or Vision Pro.
+- `Toggle`, `Slider` and `Picker` already play their own haptics. Adding yours
+  doubles them.
+- In UIKit, call `prepare()` when the gesture begins, not right before firing.
+  It wakes the Taptic Engine for a few seconds. iOS 27 deprecates
+  `UIImpactFeedbackGenerator(style:)`; use `init(style:view:)` (iOS 17.5).
+
+## Android
+
+- `View.performHapticFeedback` needs no `VIBRATE` permission and respects the
+  system touch-feedback setting. `CONFIRM` and `REJECT` arrived in API 30, the
+  toggle, tick and threshold constants in API 34. Call them through
+  `ViewCompat` so older phones get a fallback instead of nothing.
+- Skip `Vibrator.vibrate()` for interface feedback. Google's rule: "Given the
+  choice of buzzy haptics or no haptics for touch feedback, choose no
+  haptics." A crisp click lasts 10 to 20 ms; a cheap motor rings for another
+  20 to 50 ms after it.
+- Compose's `LocalHapticFeedback` covers 13 of the 20 constants (Compose UI
+  1.8+). Material 3's `Switch`, `Slider` and sheets play nothing, so add them.
+  `combinedClickable(onLongClick = …)` already fires the long-press haptic, so
+  don't add a second ([Long Press](/long-press)).
+
+## React Native and Flutter
+
+- expo-haptics has the iOS vocabulary: `selectionAsync()`,
+  `impactAsync(Light | Medium | Heavy | Rigid | Soft)` and
+  `notificationAsync(Success | Warning | Error)`. On Android,
+  `performAndroidHapticsAsync(AndroidHaptics.Segment_Tick)` reaches the
+  platform constants directly; it was broken before expo-haptics 57.0.2.
+- Fire haptics from the JS thread. When the value lives in a Reanimated
+  shared value, react to the index changing and hop over with `scheduleOnRN`.
+- Flutter's `HapticFeedback.selectionClick()` maps to the iOS selection
+  generator and to `CLOCK_TICK` on Android; the success and error
+  notifications map to `CONFIRM` and `REJECT` on API 30+.
+
+## How often
+
+- On the value change, never per frame of a drag.
+- On commit, not on touch-down for something that can still be cancelled.
+- Not on every tap. A button's pressed state already answers the finger
+  ([Touch Feedback](/touch-feedback)).
+- Light for frequent events, stronger for rare ones. A heavy impact on every
+  row stops meaning anything.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "SwiftUI",
+      language: "swift",
+      code: `// iOS 17+: plays when the value changes, not per frame.
+Wheel(value: $minutes, range: 0...30)   // a custom control; Picker already ticks
+    .sensoryFeedback(trigger: minutes) { _, new in
+        new == 0 || new == 30 ? .impact(weight: .medium) : .selection
+    }
+
+PayButton(state: payment.state)
+    .sensoryFeedback(trigger: payment.state) { _, new in
+        switch new {
+        case .sent: .success
+        case .failed: .error
+        default: nil
+        }
+    }
+
+// UIKit: prepare when the drag starts, fire on the snap.
+let snap = UIImpactFeedbackGenerator(style: .rigid, view: card) // iOS 17.5
+func dragBegan() { snap.prepare() }
+func didSnap(at point: CGPoint) { snap.impactOccurred(intensity: 0.8, at: point) }`,
+    },
+    {
+      label: "Compose",
+      language: "kotlin",
+      code: `val haptics = LocalHapticFeedback.current
+
+// One tick per value crossed (Compose UI 1.8+).
+LaunchedEffect(Unit) {
+    snapshotFlow { minutes }.drop(1).collect {
+        haptics.performHapticFeedback(HapticFeedbackType.SegmentTick)
+    }
+}
+
+// Material 3's Switch plays nothing by itself.
+Switch(checked = on, onCheckedChange = {
+    haptics.performHapticFeedback(
+        if (it) HapticFeedbackType.ToggleOn else HapticFeedbackType.ToggleOff
+    )
+    onChange(it)
+})
+
+// Outcome of a task
+haptics.performHapticFeedback(
+    if (ok) HapticFeedbackType.Confirm else HapticFeedbackType.Reject
+)`,
+    },
+    {
+      label: "React Native",
+      language: "tsx",
+      code: `import * as Haptics from "expo-haptics";
+import { Platform } from "react-native";
+import { useAnimatedReaction } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
+
+function onIndexChange(index: number) {
+  if (index === 0 || index === MAX) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  } else if (Platform.OS === "android") {
+    Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Segment_Tick);
+  } else {
+    Haptics.selectionAsync();
+  }
+}
+
+// The wheel moves on the UI thread; haptics fire per index, not per frame.
+useAnimatedReaction(
+  () => Math.round(-offset.value / ROW),
+  (index, previous) => {
+    if (previous !== null && index !== previous) scheduleOnRN(onIndexChange, index);
+  }
+);
+
+await pay();
+Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);`,
+    },
+    {
+      label: "Flutter",
+      language: "dart",
+      code: `// iOS: the system generators. Android: CLOCK_TICK, VIRTUAL_KEY, CONFIRM...
+void onIndexChanged(int index) {
+  if (index == 0 || index == max) {
+    HapticFeedback.mediumImpact();
+  } else {
+    HapticFeedback.selectionClick();
+  }
+}
+
+await pay();
+HapticFeedback.successNotification(); // Android: CONFIRM on API 30+`,
+    },
+  ]}
+/>
+
+A haptic is always the second signal, never the only one. People turn system
+haptics off, iOS plays none in Low Power Mode or while the camera is in use,
+and on some Android phones light, medium and heavy feel identical. The
+platform APIs follow the user's setting for you. If you play custom patterns through Core Haptics or `Vibrator`, add your own switch
+in Settings, as Apple's guidelines ask: "Make haptics optional."
