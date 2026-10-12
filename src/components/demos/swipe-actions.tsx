@@ -58,6 +58,16 @@ function rubberBand(over: number, size: number, c = 0.55) {
 
 type Sample = { t: number; x: number };
 
+/**
+ * Screen pixels per layout pixel. On a phone the Phone screen is scaled up
+ * (see usePhoneScale), so pointer coordinates are divided by this before they
+ * move anything laid out in the 248px screen.
+ */
+function scaleOf(el: Element) {
+  const width = (el as HTMLElement).offsetWidth;
+  return width ? el.getBoundingClientRect().width / width : 1;
+}
+
 /** Velocity in px/s from the last 100ms of samples; 0 if the finger stopped. */
 function releaseVelocity(samples: Sample[], now: number) {
   if (samples.length < 2) return 0;
@@ -91,6 +101,7 @@ function useHorizontalSwipe({
     sx: number;
     sy: number;
     start: number;
+    k: number;
     mode: "pending" | "swipe" | "scroll";
     samples: Sample[];
   } | null>(null);
@@ -100,20 +111,23 @@ function useHorizontalSwipe({
       if (event.pointerType === "mouse" && event.button !== 0) return;
       if ((event.target as HTMLElement).closest("button")) return;
       onDown?.();
+      const k = scaleOf(event.currentTarget);
       gesture.current = {
         id: event.pointerId,
-        sx: event.clientX,
-        sy: event.clientY,
+        sx: event.clientX / k,
+        sy: event.clientY / k,
         start: 0,
+        k,
         mode: "pending",
-        samples: [{ t: event.timeStamp, x: event.clientX }],
+        samples: [{ t: event.timeStamp, x: event.clientX / k }],
       };
     },
     onPointerMove(event: React.PointerEvent<HTMLElement>) {
       const g = gesture.current;
       if (!g || g.id !== event.pointerId) return;
-      const dx = event.clientX - g.sx;
-      const dy = event.clientY - g.sy;
+      const px = event.clientX / g.k;
+      const dx = px - g.sx;
+      const dy = event.clientY / g.k - g.sy;
       if (g.mode === "pending") {
         if (Math.abs(dx) > SLOP && Math.abs(dx) > Math.abs(dy)) {
           g.mode = "swipe";
@@ -125,11 +139,11 @@ function useHorizontalSwipe({
         }
       }
       if (g.mode !== "swipe") return;
-      g.samples.push({ t: event.timeStamp, x: event.clientX });
+      g.samples.push({ t: event.timeStamp, x: px });
       while (g.samples.length > 2 && event.timeStamp - g.samples[0].t > 100) {
         g.samples.shift();
       }
-      onMove(g.start + event.clientX - g.sx, event);
+      onMove(g.start + px - g.sx, event);
     },
     onPointerUp(event: React.PointerEvent<HTMLElement>) {
       const g = gesture.current;
@@ -174,13 +188,15 @@ type Haptic = { pulse: number; x: number; y: number; kind: HapticKind };
 function useHaptic(screen: React.RefObject<HTMLDivElement | null>) {
   const [haptic, setHaptic] = useState<Haptic>({ pulse: 0, x: 0, y: 0, kind: "medium" });
   function fire(clientX: number, clientY: number, kind: HapticKind) {
-    const rect = screen.current?.getBoundingClientRect();
-    if (!rect) return;
+    const el = screen.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const k = scaleOf(el);
     vibrate(kind);
     setHaptic((h) => ({
       pulse: h.pulse + 1,
-      x: clientX - rect.left,
-      y: clientY - rect.top,
+      x: (clientX - rect.left) / k,
+      y: (clientY - rect.top) / k,
       kind,
     }));
   }
@@ -352,6 +368,8 @@ function MailRow({
     },
   });
 
+  // Hide the action slabs at rest so none of their colour shows at the seams.
+  const actionsShown = useTransform(x, (v) => (v === 0 ? 0 : 1));
   const readX = useTransform(x, (v) => Math.max(0, v) - ROW_W);
   const readIconX = useTransform(x, (v) => {
     const w = Math.max(0, v);
@@ -364,7 +382,7 @@ function MailRow({
   return (
     <div className="relative overflow-hidden" style={{ height: ROW_H }}>
       {/* Hidden until the row is open, so Tab only reaches what's visible. */}
-      <div className="absolute inset-0" inert={!open}>
+      <motion.div className="absolute inset-0" inert={!open} style={{ opacity: actionsShown }}>
         <motion.button
           aria-label={`${mail.unread ? "Mark as read" : "Mark as unread"}: ${mail.subject}`}
           className="absolute inset-y-0 left-0 cursor-pointer bg-blue-500 text-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
@@ -411,7 +429,7 @@ function MailRow({
           subject={mail.subject}
           x={x}
         />
-      </div>
+      </motion.div>
 
       <motion.div
         className="relative z-10 flex h-full cursor-grab touch-pan-y flex-col justify-center gap-px bg-background pr-2 pl-5 active:cursor-grabbing"
@@ -438,7 +456,7 @@ function MailRow({
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label={`Actions for ${mail.subject}`}
-              className="relative -my-1 grid size-6 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-2.5 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-muted"
+              className="relative -my-1 grid size-6 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-1 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-muted"
             >
               <DotsThreeIcon className="size-4" weight="bold" />
             </DropdownMenuTrigger>
@@ -709,7 +727,9 @@ function ThresholdRow({
     const p = Math.min(1, -x.get() / threshold);
     return 0.6 + 0.4 * p + 0.15 * armed.get();
   });
-  const fill = useTransform(() => (announced ? armed.get() : 1));
+  // Nothing behind the row at rest, so no colour shows at the seams when
+  // the phone is scaled up.
+  const fill = useTransform(() => (announced ? armed.get() : x.get() < 0 ? 1 : 0));
 
   return (
     <div className="relative overflow-hidden" style={{ height: ROW_H }}>
@@ -745,7 +765,7 @@ function ThresholdRow({
         </div>
         <button
           aria-label={`Delete ${mail.subject}`}
-          className="relative grid size-7 shrink-0 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+          className="relative grid size-7 shrink-0 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-px hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
           onClick={() => remove(0)}
           type="button"
         >

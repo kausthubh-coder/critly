@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrast</title>
+<link rel="stylesheet" href="/_base.css">
+<style>.screen { height: 96px; overflow: hidden; border-radius: 12px; } .rows { background: #171717; color: #fafafa; height: 480px; padding: 16px; }</style>
+</head>
+<body>
+<main>
+<h1>Contrast</h1>
+<!-- The dark rows run far below the screen, but overflow: hidden clips them, so the
+     paragraph under the screen sits on the page background, not on the rows. -->
+<div class="screen"><div class="rows">Comments · 20</div></div>
+<p>Text right under a clipped screen.</p>
+</main>
+</body>
+</html>

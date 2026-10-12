@@ -15,6 +15,7 @@ import {
   HapticRing,
   Phone,
   PHONE_INSETS,
+  usePhoneScale,
   vibrate,
   type HapticKind,
 } from "@/components/app/phone";
@@ -47,6 +48,16 @@ function createBus() {
 }
 
 type Bus = ReturnType<typeof createBus>;
+
+// Reads the phone's screen scale from inside <Phone> (where its context
+// lives) into a ref the gesture handlers above it can use.
+function PhoneScaleRef({ target }: { target: React.RefObject<number> }) {
+  const k = usePhoneScale();
+  useEffect(() => {
+    target.current = k;
+  }, [k, target]);
+  return null;
+}
 
 /* ------------------------------------------------------------------ */
 /* HapticPickerDemo                                                    */
@@ -225,6 +236,8 @@ export function HapticPickerDemo() {
     samples: { t: number; y: number }[];
   } | null>(null);
   const wheel = useRef<HTMLDivElement>(null);
+  // Screen px per layout px: 1 on desktop, about 1.5 on a phone.
+  const scale = useRef(1);
 
   useEffect(() => {
     modeRef.current = mode;
@@ -268,17 +281,18 @@ export function HapticPickerDemo() {
     event.currentTarget.setPointerCapture(event.pointerId);
     drag.current = {
       id: event.pointerId,
-      startY: event.clientY,
+      startY: event.clientY / scale.current,
       startOffset: y.get(),
       moved: false,
-      samples: [{ t: performance.now(), y: event.clientY }],
+      samples: [{ t: performance.now(), y: event.clientY / scale.current }],
     };
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const d = drag.current;
     if (!d || d.id !== event.pointerId) return;
-    const dy = event.clientY - d.startY;
+    const fingerY = event.clientY / scale.current;
+    const dy = fingerY - d.startY;
     if (Math.abs(dy) > 4) d.moved = true;
     if (!d.moved) return;
     const raw = d.startOffset + dy;
@@ -290,7 +304,7 @@ export function HapticPickerDemo() {
           : raw;
     y.set(next);
     const now = performance.now();
-    d.samples.push({ t: now, y: event.clientY });
+    d.samples.push({ t: now, y: fingerY });
     d.samples = d.samples.filter((s) => now - s.t < 100);
   }
 
@@ -302,13 +316,17 @@ export function HapticPickerDemo() {
     if (!d.moved) {
       // A tap on a row picks it.
       const rect = event.currentTarget.getBoundingClientRect();
-      const offset = Math.round((event.clientY - rect.top - WHEEL_H / 2) / ROW);
+      const offset = Math.round(
+        ((event.clientY - rect.top) / scale.current - WHEEL_H / 2) / ROW
+      );
       settleTo(clampIndex(y.get()) + offset);
       return;
     }
 
-    const first = d.samples[0];
-    const last = d.samples[d.samples.length - 1];
+    // A finger that stopped before lifting has no velocity left.
+    const recent = d.samples.filter((s) => performance.now() - s.t < 100);
+    const first = recent[0] ?? d.samples[d.samples.length - 1];
+    const last = recent[recent.length - 1] ?? first;
     const dt = (last.t - first.t) / 1000;
     const velocity = dt > 0 ? (last.y - first.y) / dt : 0;
     const aim = y.get() + (reduced ? 0 : projectMomentum(velocity));
@@ -339,6 +357,7 @@ export function HapticPickerDemo() {
   return (
     <Demo className="gap-6 px-4 sm:px-8">
       <Phone height={360} label="Rest timer picker on iPhone" platform="ios">
+        <PhoneScaleRef target={scale} />
         <div
           className="flex h-full flex-col px-4"
           style={{ paddingTop: PHONE_INSETS.ios.top + 10 }}

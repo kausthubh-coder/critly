@@ -21,7 +21,13 @@ import { useEffect, useRef, useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
-import { HapticRing, Phone, PHONE_INSETS, vibrate } from "@/components/app/phone";
+import {
+  HapticRing,
+  Phone,
+  PHONE_INSETS,
+  usePhoneScale,
+  vibrate,
+} from "@/components/app/phone";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { springFromFeel } from "@/lib/spring";
 import { cn } from "@/lib/utils";
@@ -190,6 +196,11 @@ const MAILS: Mail[] = [
   { id: 5, from: "Calendar", subject: "Design review moved", time: "Sun", unread: false, flagged: false },
 ];
 
+/** Screen px per layout px inside a Phone: 1 on desktop, about 1.5 on a phone. */
+function scaleOf(el: HTMLElement) {
+  return el.getBoundingClientRect().width / el.offsetWidth || 1;
+}
+
 const HOLD_MS = 500;
 const HOLD_SLOP = 10;
 const SNAP = springFromFeel(0.35, 0);
@@ -220,6 +231,7 @@ function MailRow({
   buttonRef: (el: HTMLButtonElement | null) => void;
 }) {
   const reduce = useReducedMotion();
+  const k = usePhoneScale();
   const x = useMotionValue(0);
   const reveal = useTransform(x, [-90, -20], [1, 0]);
   const rowRef = useRef<HTMLDivElement>(null);
@@ -297,8 +309,9 @@ function MailRow({
         onPointerMove={(event) => {
           const s = g.current;
           if (event.pointerId !== s.id) return;
-          const dx = event.clientX - s.sx;
-          const dy = event.clientY - s.sy;
+          // Pointer deltas are screen px; the row lives in the phone's units.
+          const dx = (event.clientX - s.sx) / k;
+          const dy = (event.clientY - s.sy) / k;
           if (s.mode === "pending") {
             if (Math.hypot(dx, dy) > HOLD_SLOP) window.clearTimeout(s.timer);
             if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
@@ -351,7 +364,7 @@ function MailRow({
             ref={buttonRef}
             aria-haspopup="menu"
             aria-label={`Actions for ${mail.from}`}
-            className="relative grid size-9 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-1 hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="grid size-9 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50"
             onClick={() => rowRef.current && onMenu(rowRef.current, true)}
             type="button"
           >
@@ -376,6 +389,7 @@ export function GestureTwinDemo() {
   const triggers = useRef(new Map<number, HTMLButtonElement>());
   const hintTimer = useRef(0);
   const viaButton = useRef(false);
+  const openedAt = useRef(0);
 
   useEffect(() => () => window.clearTimeout(hintTimer.current), []);
 
@@ -393,11 +407,15 @@ export function GestureTwinDemo() {
   function openMenu(id: number, row: HTMLElement, fromButton: boolean) {
     const screen = screenRef.current;
     if (!screen) return;
+    const k = scaleOf(screen);
     const s = screen.getBoundingClientRect();
     const r = row.getBoundingClientRect();
-    const below = r.bottom - s.top + 168 < s.height - PHONE_INSETS.ios.bottom;
+    const top = (r.top - s.top) / k;
+    const bottom = (r.bottom - s.top) / k;
+    const below = bottom + 168 < screen.offsetHeight - PHONE_INSETS.ios.bottom;
     viaButton.current = fromButton;
-    setMenu({ id, top: below ? r.bottom - s.top + 4 : r.top - s.top - 4, below });
+    openedAt.current = performance.now();
+    setMenu({ id, top: below ? bottom + 4 : top - 4, below });
   }
 
   function closeMenu() {
@@ -414,7 +432,8 @@ export function GestureTwinDemo() {
   }
 
   function act(action: "archive" | "unread" | "flag" | "delete") {
-    if (!menu) return;
+    // The click that ends a touch hold can land on an item under the finger.
+    if (!menu || performance.now() - openedAt.current < 300) return;
     const id = menu.id;
     setMenu(null);
     if (action === "archive") remove(id, "Archived");
@@ -472,9 +491,11 @@ export function GestureTwinDemo() {
                     mail={mail}
                     onArchive={() => remove(mail.id, "Archived")}
                     onHaptic={(cx, cy) => {
-                      const s = screenRef.current?.getBoundingClientRect();
-                      if (!s) return;
-                      setHaptic((h) => ({ pulse: h.pulse + 1, x: cx - s.left, y: cy - s.top }));
+                      const screen = screenRef.current;
+                      if (!screen) return;
+                      const s = screen.getBoundingClientRect();
+                      const k = scaleOf(screen);
+                      setHaptic((h) => ({ pulse: h.pulse + 1, x: (cx - s.left) / k, y: (cy - s.top) / k }));
                       vibrate("medium");
                     }}
                     onHint={flashHint}
@@ -541,7 +562,9 @@ export function GestureTwinDemo() {
                 <button
                   aria-label="Close menu"
                   className="absolute inset-0 cursor-default bg-black/15 outline-none dark:bg-black/40"
-                  onClick={closeMenu}
+                  // Close on a new press, not on click: the click that ends the hold
+                  // that opened the menu lands here on touch and would close it.
+                  onPointerDown={closeMenu}
                   tabIndex={-1}
                   type="button"
                 />

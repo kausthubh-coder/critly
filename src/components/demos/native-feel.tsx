@@ -14,7 +14,7 @@ import { useRef, useState } from "react";
 
 import { RIGHT_ICON, WRONG_ICON } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
-import { Phone, PHONE_INSETS, type Platform } from "@/components/app/phone";
+import { Phone, PHONE_INSETS, type Platform, usePhoneScale } from "@/components/app/phone";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -37,8 +37,10 @@ const BRAND_TEXT = "text-indigo-600 dark:text-indigo-400";
 const FOCUS =
   "outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-inset";
 
-/* Extends a 26-30px icon button to a 44px target without changing its look. */
-const HIT_44 = "after:absolute after:top-1/2 after:left-1/2 after:size-[44px] after:-translate-x-1/2 after:-translate-y-1/2";
+/* On a phone the screen scales up about 1.52x, so a 29px layout target is
+   44px under the finger. This lifts a smaller control to 30px without
+   changing its look. */
+const HIT_30 = "after:absolute after:top-1/2 after:left-1/2 after:size-[30px] after:-translate-x-1/2 after:-translate-y-1/2";
 
 type Ripple = { id: number; x: number; y: number; size: number };
 
@@ -57,6 +59,7 @@ function Pressable({
   "onPointerDown" | "onPointerUp" | "onPointerLeave" | "onPointerCancel" | "type"
 >) {
   const reduced = useReducedMotion();
+  const k = usePhoneScale();
   const [pressed, setPressed] = useState(false);
   const [ripple, setRipple] = useState<Ripple | null>(null);
   const nextId = useRef(0);
@@ -66,10 +69,12 @@ function Pressable({
     setPressed(true);
     if (platform === "android" && !reduced) {
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const size =
-        2 * Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
+      // Screen pixels to the phone's layout pixels.
+      const w = rect.width / k;
+      const h = rect.height / k;
+      const x = (event.clientX - rect.left) / k;
+      const y = (event.clientY - rect.top) / k;
+      const size = 2 * Math.hypot(Math.max(x, w - x), Math.max(y, h - y));
       nextId.current += 1;
       setRipple({ id: nextId.current, x, y, size });
     }
@@ -223,7 +228,7 @@ function IosSettings({
       <div className="flex h-[30px] items-center px-2.5">
         <Pressable
           aria-label="Back to Settings"
-          className={cn("grid size-[26px] place-items-center rounded-full bg-card shadow-(--custom-shadow) dark:bg-muted", HIT_44)}
+          className={cn("grid size-[26px] place-items-center rounded-full bg-card shadow-(--custom-shadow) dark:bg-muted", HIT_30)}
           platform="ios"
         >
           <CaretLeftIcon aria-hidden="true" className="size-[13px]" weight="bold" />
@@ -244,8 +249,8 @@ function IosSettings({
               <button
                 aria-checked={values[row.id]}
                 aria-label={row.ios}
-                // 44px wide; as tall as the 29px row, so it can't overlap the next switch.
-                className={cn("relative cursor-pointer rounded-full after:absolute after:-inset-x-[6px] after:-inset-y-[4.5px]", FOCUS)}
+                // As tall as the 29px row (44px on a phone), never into the next one.
+                className={cn("relative cursor-pointer rounded-full after:absolute after:inset-x-0 after:-inset-y-[4.5px]", FOCUS)}
                 onClick={() => toggle(row.id)}
                 role="switch"
                 type="button"
@@ -296,7 +301,7 @@ function AndroidSettings({
       <div className="flex h-[40px] items-center gap-1 px-1">
         <Pressable
           aria-label="Back"
-          className={cn("grid size-[30px] place-items-center rounded-full", HIT_44)}
+          className="grid size-[30px] place-items-center rounded-full"
           platform="android"
         >
           <ArrowLeftIcon aria-hidden="true" className="size-[15px]" />
@@ -433,19 +438,19 @@ function DialogButton({
 function IosAlert({ close }: { close: () => void }) {
   // Cancel on the leading side, the action on the trailing side.
   return (
-    <div className="w-[176px] rounded-[22px] bg-card/95 p-3.5 shadow-lg ring-1 ring-black/5 backdrop-blur-md dark:bg-muted/95 dark:ring-white/10">
+    <div className="w-[176px] rounded-[22px] bg-card p-3.5 shadow-lg ring-1 ring-black/5 dark:bg-muted dark:ring-white/10">
       <p className="text-[11px] font-semibold">{TITLE}</p>
       <p className="mt-0.5 text-[9.5px] leading-snug text-muted-foreground">{MESSAGE}</p>
       <div className="mt-3 flex gap-1.5">
         <DialogButton
-          className="h-[28px] flex-1 rounded-full bg-foreground/8 text-[10.5px] font-medium after:absolute after:-inset-y-[8px] after:inset-x-0"
+          className="h-[28px] flex-1 rounded-full bg-foreground/8 text-[10.5px] font-medium after:absolute after:-inset-y-px after:inset-x-0"
           onClick={close}
           platform="ios"
         >
           Cancel
         </DialogButton>
         <DialogButton
-          className="h-[28px] flex-1 rounded-full bg-foreground/8 text-[10.5px] font-semibold text-red-700 after:absolute after:-inset-y-[8px] after:inset-x-0 dark:text-red-400"
+          className="h-[28px] flex-1 rounded-full bg-foreground/8 text-[10.5px] font-semibold text-red-700 after:absolute after:-inset-y-px after:inset-x-0 dark:text-red-400"
           onClick={close}
           platform="ios"
         >
@@ -464,14 +469,14 @@ function M3Dialog({ close }: { close: () => void }) {
       <p className="mt-2 text-[9.5px] leading-snug text-muted-foreground">{MESSAGE}</p>
       <div className="mt-3 flex justify-end gap-1">
         <DialogButton
-          className={cn("h-[25px] rounded-full px-2.5 text-[10px] font-medium after:absolute after:-inset-y-[10px] after:inset-x-0", BRAND_TEXT)}
+          className={cn("h-[25px] rounded-full px-2.5 text-[10px] font-medium after:absolute after:-inset-y-[2.5px] after:inset-x-0", BRAND_TEXT)}
           onClick={close}
           platform="android"
         >
           Cancel
         </DialogButton>
         <DialogButton
-          className={cn("h-[25px] rounded-full px-2.5 text-[10px] font-medium after:absolute after:-inset-y-[10px] after:inset-x-0", BRAND_TEXT)}
+          className={cn("h-[25px] rounded-full px-2.5 text-[10px] font-medium after:absolute after:-inset-y-[2.5px] after:inset-x-0", BRAND_TEXT)}
           onClick={close}
           platform="android"
         >
@@ -490,14 +495,14 @@ function CustomDialog({ platform, close }: { platform: Platform; close: () => vo
       <p className="mt-1 text-[9.5px] leading-snug text-muted-foreground">{MESSAGE}</p>
       <div className="mt-3 flex gap-1.5">
         <DialogButton
-          className="h-[26px] flex-1 rounded-md bg-rose-500 after:absolute after:-inset-y-[9px] after:inset-x-0 text-[10px] font-semibold text-white"
+          className="h-[26px] flex-1 rounded-md bg-rose-500 after:absolute after:-inset-y-[2px] after:inset-x-0 text-[10px] font-semibold text-white"
           onClick={close}
           platform={platform}
         >
           Delete
         </DialogButton>
         <DialogButton
-          className="h-[26px] flex-1 rounded-md text-[10px] font-medium ring-1 after:absolute after:-inset-y-[9px] after:inset-x-0 ring-border ring-inset"
+          className="h-[26px] flex-1 rounded-md text-[10px] font-medium ring-1 after:absolute after:-inset-y-[2px] after:inset-x-0 ring-border ring-inset"
           onClick={close}
           platform={platform}
         >
@@ -519,7 +524,6 @@ function DialogPhone({ platform, mode }: { platform: Platform; mode: DialogMode 
       aria-label="Delete 3 photos"
       className={cn(
         "grid size-[30px] place-items-center rounded-full",
-        HIT_44,
         ios && "bg-card shadow-(--custom-shadow) dark:bg-muted"
       )}
       onClick={() => setOpen(true)}
@@ -548,7 +552,7 @@ function DialogPhone({ platform, mode }: { platform: Platform; mode: DialogMode 
           <div className="flex h-[40px] items-center gap-1 px-1">
             <Pressable
               aria-label="Clear selection"
-              className={cn("grid size-[30px] place-items-center rounded-full", HIT_44)}
+              className="grid size-[30px] place-items-center rounded-full"
               platform="android"
             >
               <XIcon aria-hidden="true" className="size-[15px]" />
@@ -605,13 +609,21 @@ function DialogPhone({ platform, mode }: { platform: Platform; mode: DialogMode 
 
 export function PlatformDialogDemo() {
   const [mode, setMode] = useState<DialogMode>("native");
+  // On a phone each screen is full width, so show one at a time.
+  const [shown, setShown] = useState<Platform>("ios");
   const native = mode === "native";
 
   return (
     <Demo className="gap-6 px-4 sm:px-6">
-      <div className="flex flex-wrap items-start justify-center gap-6">
+      <div className="flex w-full flex-wrap items-start justify-center gap-6">
         {(["ios", "android"] as const).map((platform) => (
-          <div key={platform} className="flex flex-col items-center gap-3">
+          <div
+            key={platform}
+            className={cn(
+              "flex flex-col items-center gap-3 max-sm:w-full",
+              platform !== shown && "max-sm:hidden"
+            )}
+          >
             <DialogPhone key={mode} mode={mode} platform={platform} />
             <p className="max-w-[230px] text-center text-xs text-muted-foreground">
               {native
@@ -623,12 +635,22 @@ export function PlatformDialogDemo() {
           </div>
         ))}
       </div>
-      <SegmentedControl
-        ariaLabel="Dialog style"
-        onChange={setMode}
-        options={DIALOG_OPTIONS}
-        value={mode}
-      />
+      <div className="flex flex-col items-center gap-2">
+        <SegmentedControl
+          ariaLabel="Dialog style"
+          onChange={setMode}
+          options={DIALOG_OPTIONS}
+          value={mode}
+        />
+        <div className="sm:hidden">
+          <SegmentedControl
+            ariaLabel="Platform"
+            onChange={setShown}
+            options={PLATFORM_OPTIONS}
+            value={shown}
+          />
+        </div>
+      </div>
       <p className="text-center text-xs text-muted-foreground">
         Press a button to close the dialog, and the trash button to open it again.
       </p>

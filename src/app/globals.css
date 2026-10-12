@@ -409,3 +409,27 @@ pre:focus-visible {
   outline: 2px solid var(--foreground);
   outline-offset: 2px;
 }
+
+/* Demo phones (src/components/app/phone.tsx). On desktop the screen keeps its
+   layout size inside a small frame. On a phone the track breaks out of the
+   page padding and the screen takes the full width, inset 6px, capped so the
+   whole screen fits the view; JS then scales the 248px layout up to fill it. */
+.phone-box {
+  width: calc(var(--phone-w) * 1px);
+  height: calc(var(--phone-h) * 1px);
+}
+
+@media (width < 40rem) {
+  .phone-track {
+    width: 100vw;
+    max-width: none;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: 6px;
+  }
+
+  .phone-box {
+    width: min(calc(100vw - 12px), calc(86svh * var(--phone-w) / var(--phone-h)));
+    height: auto;
+    aspect-ratio: var(--phone-w) / var(--phone-h);
+  }
+}

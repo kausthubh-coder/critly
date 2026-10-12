@@ -113,7 +113,7 @@ export function SafeAreaDemo() {
             </ul>
             <button
               className={cn(
-                "relative mt-2 flex h-[32px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-foreground text-[11px] font-semibold text-background active:opacity-80 after:absolute after:inset-x-0 after:-inset-y-[6px]",
+                "mt-2 flex h-[32px] shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-foreground text-[11px] font-semibold text-background active:opacity-80",
                 FOCUS
               )}
               type="button"
@@ -235,7 +235,7 @@ export function EdgeToEdgeDemo() {
             {SONGS.map((song, i) => {
               const last = i === SONGS.length - 1;
               return (
-                <li key={song} className="flex items-center gap-2.5 border-b border-border py-[7px] text-[11px] last:border-b-0">
+                <li key={song} className="flex items-center gap-2.5 border-b border-border py-[6px] text-[11px] last:border-b-0">
                   <Art i={i + 3} size={30} />
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span className="truncate font-medium">{song}</span>
@@ -246,8 +246,8 @@ export function EdgeToEdgeDemo() {
                   <button
                     aria-label={`Play ${song}`}
                     className={cn(
-                      // Rows are 45px apart, so a 44px target never overlaps the next one.
-                      "relative grid size-[26px] shrink-0 cursor-pointer place-items-center rounded-full active:bg-foreground/10 after:absolute after:-inset-[9px]",
+                      // 26px drawn, 30px target: 44px under the finger on a phone.
+                      "relative grid size-[26px] shrink-0 cursor-pointer place-items-center rounded-full active:bg-foreground/10 after:absolute after:-inset-[2px]",
                       FOCUS,
                       last && "bg-indigo-500 text-white active:bg-indigo-600"
                     )}
@@ -288,7 +288,7 @@ export function EdgeToEdgeDemo() {
               key={label}
               aria-pressed={i === 0}
               className={cn(
-                "relative flex h-full flex-1 cursor-pointer flex-col items-center justify-center gap-px rounded-full text-[8px] font-medium after:absolute after:inset-x-0 after:-inset-y-[7px]",
+                "flex h-full flex-1 cursor-pointer flex-col items-center justify-center gap-px rounded-full text-[8px] font-medium",
                 FOCUS,
                 i === 0 ? "bg-foreground/8 text-indigo-600 dark:text-indigo-400" : "text-foreground"
               )}

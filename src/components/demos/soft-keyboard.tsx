@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { RIGHT_ICON, WRONG_ICON } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
-import { Phone, PHONE_INSETS } from "@/components/app/phone";
+import { Phone, PHONE_INSETS, usePhoneScale } from "@/components/app/phone";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { springFromFeel } from "@/lib/spring";
 import { cn } from "@/lib/utils";
@@ -121,6 +121,16 @@ function Keyboard({
   );
 }
 
+// Reads the phone's screen scale from inside <Phone> (where its context
+// lives) into a ref the gesture handlers above it can use.
+function PhoneScaleRef({ target }: { target: React.RefObject<number> }) {
+  const k = usePhoneScale();
+  useEffect(() => {
+    target.current = k;
+  }, [k, target]);
+  return null;
+}
+
 /* ------------------------------------------------------------------ */
 /* Chat screen shared by both demos                                    */
 /* ------------------------------------------------------------------ */
@@ -146,6 +156,7 @@ function ChatScreen({
   listHandlers,
   onDone,
   label,
+  scaleRef,
 }: {
   kb: MotionValue<number>;
   lift: MotionValue<number>;
@@ -156,6 +167,7 @@ function ChatScreen({
   onDone?: () => void;
   label: string;
   initialMessages?: Message[];
+  scaleRef?: React.RefObject<number>;
 }) {
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
@@ -177,6 +189,7 @@ function ChatScreen({
 
   return (
     <Phone height={SCREEN_H} label={label} platform="ios">
+      {scaleRef ? <PhoneScaleRef target={scaleRef} /> : null}
       <div
         className="absolute inset-x-0 top-0 z-20 flex flex-col items-center justify-end gap-0.5 border-b border-border bg-background/95 pb-1.5"
         style={{ height: HEADER_H }}
@@ -356,6 +369,8 @@ export function KeyboardDismissDemo() {
   const { kb, open, moveTo, stop } = useKeyboard(true);
   const lift = useMotionValue(KB_H - INSET);
   const wrap = useRef<HTMLDivElement>(null);
+  // Screen px per layout px: 1 on desktop, about 1.5 on a phone.
+  const scale = useRef(1);
   const drag = useRef<{
     id: number;
     startY: number;
@@ -370,8 +385,7 @@ export function KeyboardDismissDemo() {
   );
 
   function screenTop() {
-    // The screen sits 6px inside the phone frame.
-    return (wrap.current?.querySelector("[role=group]")?.getBoundingClientRect().top ?? 0);
+    return wrap.current?.querySelector("[data-phone]")?.getBoundingClientRect().top ?? 0;
   }
 
   const interactive = mode === "interactive";
@@ -382,22 +396,23 @@ export function KeyboardDismissDemo() {
           event.currentTarget.setPointerCapture(event.pointerId);
           drag.current = {
             id: event.pointerId,
-            startY: event.clientY,
+            startY: event.clientY / scale.current,
             moved: false,
             engaged: false,
-            samples: [{ t: performance.now(), y: event.clientY }],
+            samples: [{ t: performance.now(), y: event.clientY / scale.current }],
           };
         },
         onPointerMove(event) {
           const d = drag.current;
           if (!d || d.id !== event.pointerId) return;
-          if (Math.abs(event.clientY - d.startY) > 4) d.moved = true;
+          const localY = event.clientY / scale.current;
+          if (Math.abs(localY - d.startY) > 4) d.moved = true;
           const now = performance.now();
-          d.samples.push({ t: now, y: event.clientY });
+          d.samples.push({ t: now, y: localY });
           d.samples = d.samples.filter((s) => now - s.t < 100);
           if (!open && !d.engaged) return;
           // The keyboard follows once the finger reaches the composer above it.
-          const fingerY = event.clientY - screenTop();
+          const fingerY = (event.clientY - screenTop()) / scale.current;
           const next = Math.min(KB_H, Math.max(0, SCREEN_H - fingerY - COMPOSER_H));
           if (next < KB_H || d.engaged) {
             if (!d.engaged) stop();
@@ -413,8 +428,10 @@ export function KeyboardDismissDemo() {
             if (!d.moved && open) moveTo(0);
             return;
           }
-          const first = d.samples[0];
-          const last = d.samples[d.samples.length - 1];
+          // A finger that stopped before lifting has no velocity left.
+          const recent = d.samples.filter((s) => performance.now() - s.t < 100);
+          const first = recent[0] ?? d.samples[d.samples.length - 1];
+          const last = recent[recent.length - 1] ?? first;
           const dt = (last.t - first.t) / 1000;
           const vy = dt > 0 ? (last.y - first.y) / dt : 0; // px/s, + is down
           const target =
@@ -440,6 +457,7 @@ export function KeyboardDismissDemo() {
           // Starts with the keyboard up: only the messages that fit above it.
           initialMessages={START.slice(-4)}
           kb={kb}
+          scaleRef={scale}
           label="Chat with the keyboard open on iPhone"
           lift={lift}
           listHandlers={listHandlers}

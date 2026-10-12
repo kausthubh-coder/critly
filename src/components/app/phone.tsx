@@ -1,16 +1,58 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
 // A phone frame for the Mobile demos: a screen with a status bar and a home
-// indicator, drawn as iOS or Android. It is roughly 0.63 of a real 393pt
-// iPhone, so a 44pt row is about 28px here. Content goes in the screen; use
-// PHONE_INSETS to keep it out of the status bar and the gesture area the way
-// a real app keeps out of the safe area.
+// indicator, drawn as iOS or Android. Demos lay the screen out at 248px wide,
+// about 0.63 of a real 393pt iPhone, so a 44pt row is about 28px. Content goes
+// in the screen; use PHONE_INSETS to keep it out of the status bar and the
+// gesture area the way a real app keeps out of the safe area.
+//
+// On desktop the screen sits in a small frame. On a phone (640px and down) the
+// frame goes away and the screen scales up to the width of the phone you're
+// holding, inset 6px so it nests in its corners. That's close to real size:
+// a 44pt row becomes about 44px under your thumb, and a swipe covers the
+// distance it would in a real app. Demos keep working in 248px coordinates;
+// anything they measure in screen pixels (clientX, getBoundingClientRect)
+// must go through usePhoneScale().
 
 export type Platform = "ios" | "android";
+
+const PhoneScaleContext = createContext(1);
+
+/**
+ * How many screen pixels one layout pixel of the phone covers: 1 on desktop,
+ * about 1.5 on a phone. Divide distances measured in screen pixels (pointer
+ * deltas, getBoundingClientRect) by it before using them inside the phone.
+ * Motion's drag and pan already get converted points.
+ */
+export function usePhoneScale() {
+  return useContext(PhoneScaleContext);
+}
+
+/**
+ * The same scale, read from the DOM: works from any element inside a phone
+ * screen, including in the component that renders <Phone> itself, where the
+ * hook above can't see the provider. 1 outside a phone.
+ */
+export function phoneScaleOf(el: Element | null | undefined) {
+  const screen = el?.closest<HTMLElement>("[data-phone]");
+  if (!screen || !screen.offsetWidth) return 1;
+  return screen.getBoundingClientRect().width / screen.offsetWidth;
+}
+
+// Tailwind's max-sm, and the CSS in globals.css (.phone-track, .phone-box).
+const MOBILE = "(width < 40rem)";
 
 export const PHONE_WIDTH = 248;
 
@@ -48,30 +90,89 @@ export function Phone({
   label?: string;
 }) {
   const frame = FRAME[platform];
+  const radius = frame.outer - frame.padding;
+  const box = useRef<HTMLDivElement>(null);
+  // null until measured; the screen stays hidden on a phone until then, while
+  // CSS has already reserved its final size, so nothing jumps.
+  const [scale, setScale] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const media = matchMedia(MOBILE);
+    const measure = () =>
+      setScale(media.matches ? el.clientWidth / width : 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    media.addEventListener("change", measure);
+    return () => {
+      observer.disconnect();
+      media.removeEventListener("change", measure);
+    };
+  }, [width]);
+
+  const k = scale ?? 1;
+  const toLocal = useCallback(
+    (point: { x: number; y: number }) => ({ x: point.x / k, y: point.y / k }),
+    [k]
+  );
+
   return (
+    // On a phone: a full-bleed track, so the screen can use the whole width.
     <div
-      className={cn("max-w-full shrink-0 bg-card shadow-(--custom-shadow)", className)}
-      style={{ borderRadius: frame.outer, padding: frame.padding, width: width + frame.padding * 2 }}
+      className={cn("phone-track flex max-w-full shrink-0 justify-center", className)}
     >
       <div
-        aria-label={label}
-        data-phone={platform}
-        className={cn(
-          "relative isolate w-full overflow-clip bg-background select-none [-webkit-tap-highlight-color:transparent]",
-          screenClassName
-        )}
-        role={label ? "group" : undefined}
-        // The clip-path repeats what overflow-clip already does, for tools
-        // (like the Critly check) that only read clip-path as clipping.
-        style={{
-          borderRadius: frame.outer - frame.padding,
-          clipPath: `inset(0 round ${frame.outer - frame.padding}px)`,
-          height,
-        }}
+        // On a phone the bezel goes; the hairline stays, on the screen's corners.
+        className="rounded-(--frame-r) bg-card p-1.5 shadow-(--custom-shadow) max-sm:mx-auto max-sm:w-fit max-sm:rounded-(--screen-r) max-sm:bg-transparent max-sm:p-0"
+        style={
+          {
+            "--frame-r": `${frame.outer}px`,
+            "--screen-r": `${radius * k}px`,
+            "--phone-w": width,
+            "--phone-h": height,
+          } as React.CSSProperties
+        }
       >
-        {children}
-        {chrome ? <StatusBar platform={platform} /> : null}
-        {chrome ? <HomeIndicator platform={platform} /> : null}
+        {/* The box the screen scales into: its layout size on desktop; on a
+            phone the full width, capped so the whole screen fits the view. */}
+        <div
+          ref={box}
+          className="phone-box relative mx-auto overflow-clip"
+          style={{
+            borderRadius: radius * k,
+            clipPath: `inset(0 round ${radius * k}px)`,
+          }}
+        >
+          <div
+            aria-label={label}
+            data-phone={platform}
+            className={cn(
+              "absolute top-0 left-0 isolate origin-top-left overflow-clip bg-background select-none [-webkit-tap-highlight-color:transparent]",
+              scale === null && "max-sm:invisible",
+              screenClassName
+            )}
+            role={label ? "group" : undefined}
+            // The clip-path repeats what overflow-clip already does, for tools
+            // (like the Critly check) that only read clip-path as clipping.
+            style={{
+              borderRadius: radius,
+              clipPath: `inset(0 round ${radius}px)`,
+              width,
+              height,
+              transform: k === 1 ? undefined : `scale(${k})`,
+            }}
+          >
+            <PhoneScaleContext.Provider value={k}>
+              <MotionConfig transformPagePoint={k === 1 ? undefined : toLocal}>
+                {children}
+              </MotionConfig>
+            </PhoneScaleContext.Provider>
+            {chrome ? <StatusBar platform={platform} /> : null}
+            {chrome ? <HomeIndicator platform={platform} /> : null}
+          </div>
+        </div>
       </div>
     </div>
   );

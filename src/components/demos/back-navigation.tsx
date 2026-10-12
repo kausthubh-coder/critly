@@ -35,6 +35,16 @@ const SLOP = 8;
 
 type Sample = { t: number; x: number };
 
+/**
+ * Screen pixels per layout pixel. On a phone the Phone screen is scaled up
+ * (see usePhoneScale), so pointer coordinates are divided by this before they
+ * move anything laid out in the 248px screen.
+ */
+function scaleOf(el: Element) {
+  const width = (el as HTMLElement).offsetWidth;
+  return width ? el.getBoundingClientRect().width / width : 1;
+}
+
 function track(samples: Sample[], t: number, x: number) {
   samples.push({ t, x });
   while (samples.length > 2 && t - samples[0].t > 100) samples.shift();
@@ -91,6 +101,7 @@ export function EdgeSwipeBackDemo() {
     id: number;
     sx: number;
     sy: number;
+    k: number;
     mode: "pending" | "drag" | "ignore" | "fired";
     samples: Sample[];
   } | null>(null);
@@ -116,24 +127,28 @@ export function EdgeSwipeBackDemo() {
 
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    const left = screen.current?.getBoundingClientRect().left ?? 0;
-    const fromEdge = event.clientX - left;
+    const el = screen.current;
+    if (!el) return;
+    const k = scaleOf(el);
+    const fromEdge = (event.clientX - el.getBoundingClientRect().left) / k;
     if (reach === "edge" && fromEdge > EDGE) return;
     x.stop();
     gesture.current = {
       id: event.pointerId,
-      sx: event.clientX,
-      sy: event.clientY,
+      sx: event.clientX / k,
+      sy: event.clientY / k,
+      k,
       mode: "pending",
-      samples: [{ t: event.timeStamp, x: event.clientX }],
+      samples: [{ t: event.timeStamp, x: event.clientX / k }],
     };
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const g = gesture.current;
     if (!g || g.id !== event.pointerId || g.mode === "ignore" || g.mode === "fired") return;
-    const dx = event.clientX - g.sx;
-    const dy = event.clientY - g.sy;
+    const px = event.clientX / g.k;
+    const dx = px - g.sx;
+    const dy = event.clientY / g.k - g.sy;
     if (g.mode === "pending") {
       // Only a pan that starts left-to-right and mostly sideways is back.
       if (dx > SLOP && dx > Math.abs(dy)) {
@@ -146,14 +161,14 @@ export function EdgeSwipeBackDemo() {
       } else return;
     }
     if (mode === "canned") {
-      if (event.clientX - g.sx > 40) {
+      if (px - g.sx > 40) {
         g.mode = "fired";
         canned();
       }
       return;
     }
-    track(g.samples, event.timeStamp, event.clientX);
-    x.set(Math.max(0, Math.min(W, event.clientX - g.sx)));
+    track(g.samples, event.timeStamp, px);
+    x.set(Math.max(0, Math.min(W, px - g.sx)));
   }
 
   function onPointerEnd(event: React.PointerEvent<HTMLDivElement>) {
@@ -239,7 +254,7 @@ export function EdgeSwipeBackDemo() {
                 Notes
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-8">
+            <div className="min-h-0 flex-1 touch-pan-y overflow-y-auto px-4 pb-8">
               <h3 className="mb-2 text-[18px] font-bold tracking-tight">{current?.title}</h3>
               {[0, 1, 2].map((i) => (
                 <p key={i} className="mb-3 text-[12px] leading-relaxed text-foreground/85">
@@ -332,6 +347,7 @@ export function PredictiveBackDemo() {
     sx: number;
     sy: number;
     dir: 1 | -1;
+    k: number;
     mode: "pending" | "drag" | "ignore";
     raw: number;
     samples: Sample[];
@@ -372,31 +388,35 @@ export function PredictiveBackDemo() {
 
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (!open || (event.pointerType === "mouse" && event.button !== 0)) return;
-    const rect = screen.current?.getBoundingClientRect();
-    if (!rect) return;
-    const fromLeft = event.clientX - rect.left;
-    const fromRight = rect.right - event.clientX;
+    const el = screen.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const k = scaleOf(el);
+    const fromLeft = (event.clientX - rect.left) / k;
+    const fromRight = (rect.right - event.clientX) / k;
     // Back comes from either edge.
     const dir = fromLeft <= A_EDGE ? 1 : fromRight <= A_EDGE ? -1 : 0;
     if (!dir) return;
     progress.stop();
     gesture.current = {
       id: event.pointerId,
-      sx: event.clientX,
-      sy: event.clientY,
+      sx: event.clientX / k,
+      sy: event.clientY / k,
       dir,
+      k,
       mode: "pending",
       raw: 0,
-      samples: [{ t: event.timeStamp, x: event.clientX }],
+      samples: [{ t: event.timeStamp, x: event.clientX / k }],
     };
-    arrowY.set(event.clientY - rect.top - 18);
+    arrowY.set((event.clientY - rect.top) / k - 18);
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const g = gesture.current;
     if (!g || g.id !== event.pointerId || g.mode === "ignore") return;
-    const inward = (event.clientX - g.sx) * g.dir;
-    const dy = event.clientY - g.sy;
+    const px = event.clientX / g.k;
+    const inward = (px - g.sx) * g.dir;
+    const dy = event.clientY / g.k - g.sy;
     if (g.mode === "pending") {
       if (inward > SLOP && inward > Math.abs(dy)) {
         g.mode = "drag";
@@ -408,12 +428,12 @@ export function PredictiveBackDemo() {
         return;
       } else return;
     }
-    track(g.samples, event.timeStamp, event.clientX * g.dir);
-    g.raw = Math.max(0, Math.min(1, ((event.clientX - g.sx) * g.dir) / (W * 0.6)));
+    track(g.samples, event.timeStamp, px * g.dir);
+    g.raw = Math.max(0, Math.min(1, ((px - g.sx) * g.dir) / (W * 0.6)));
     progress.set(decelerate(g.raw));
     fingerY.set(dy);
     const rect = screen.current?.getBoundingClientRect();
-    if (rect) arrowY.set(event.clientY - rect.top - 18);
+    if (rect) arrowY.set((event.clientY - rect.top) / g.k - 18);
   }
 
   function onPointerEnd(event: React.PointerEvent<HTMLDivElement>) {
@@ -479,7 +499,7 @@ export function PredictiveBackDemo() {
               >
                 <button
                   aria-label="Back"
-                  className="grid size-11 cursor-pointer place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-muted"
+                  className="grid size-10 cursor-pointer place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-muted"
                   onClick={commit}
                   type="button"
                 >

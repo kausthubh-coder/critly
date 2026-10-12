@@ -212,11 +212,16 @@ const CONTACTS = [
   ["Frances Allen", "Compilers, Friday?"],
 ] as const;
 
-// About 8dp of touch slop at this phone's scale (0.63).
+// About 8dp of touch slop, in the phone's 248px layout (0.63 of real size).
 const SLOP = 6;
 // Android's TAP_TIMEOUT: how long a press waits inside a scrolling parent.
 const PRESS_DELAY = 100;
 const FLING = springFromFeel(0.7, 0);
+
+/** Screen px per layout px inside a Phone: 1 on desktop, about 1.5 on a phone. */
+function scaleOf(el: HTMLElement) {
+  return el.getBoundingClientRect().width / el.offsetWidth || 1;
+}
 
 type ScrollMode = "instant" | "delayed";
 
@@ -245,6 +250,7 @@ export function ScrollCancelDemo() {
     moved: false,
     mouse: false,
     waitingTouchEnd: false,
+    k: 1,
     timer: 0,
     unpress: 0,
     samples: [] as { t: number; y: number }[],
@@ -297,6 +303,8 @@ export function ScrollCancelDemo() {
       moved: false,
       mouse: event.pointerType === "mouse",
       waitingTouchEnd: false,
+      // On a phone the screen is scaled up; distances below are in its units.
+      k: scaleOf(el),
       samples: [{ t: event.timeStamp, y: event.clientY }],
     });
     // A mouse can't scroll by dragging, so the demo scrolls for it. A finger
@@ -319,8 +327,8 @@ export function ScrollCancelDemo() {
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const s = g.current;
     if (!s.active || event.pointerId !== s.pointerId) return;
-    const dx = event.clientX - s.x;
-    const dy = event.clientY - s.y;
+    const dx = (event.clientX - s.x) / s.k;
+    const dy = (event.clientY - s.y) / s.k;
     if (!s.moved && Math.hypot(dx, dy) > SLOP) {
       s.moved = true;
       if (mode === "delayed") {
@@ -345,7 +353,7 @@ export function ScrollCancelDemo() {
     const dt = b.t - a.t;
     if (dt <= 0 || dt > 120) return;
     // Finger velocity in px/s; the list moves the opposite way.
-    const velocity = -((b.y - a.y) / dt) * 1000;
+    const velocity = -((b.y - a.y) / s.k / dt) * 1000;
     const max = el.scrollHeight - el.clientHeight;
     const from = el.scrollTop;
     const to = Math.max(0, Math.min(max, from + projectMomentum(velocity, 0.997)));

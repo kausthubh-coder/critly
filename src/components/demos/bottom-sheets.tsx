@@ -39,6 +39,16 @@ function rubberBand(over: number, size: number, c = 0.55) {
 
 type Sample = { t: number; y: number };
 
+/**
+ * Screen pixels per layout pixel. On a phone the Phone screen is scaled up
+ * (see usePhoneScale), so pointer coordinates are divided by this before they
+ * move anything laid out in the 248px screen.
+ */
+function scaleOf(el: Element) {
+  const width = (el as HTMLElement).offsetWidth;
+  return width ? el.getBoundingClientRect().width / width : 1;
+}
+
 function track(samples: Sample[], t: number, y: number) {
   samples.push({ t, y });
   while (samples.length > 2 && t - samples[0].t > 100) samples.shift();
@@ -89,7 +99,8 @@ function Grabber({
 /* Detents: a Maps-style sheet over an interactive map */
 
 const LARGE = PHONE_INSETS.ios.top + 10; // 44: just under the status bar
-const MEDIUM = Math.round(SCREEN_H * 0.5); // 230: about half
+// 244, about half; set so no text rests under the home indicator.
+const MEDIUM = 244;
 const PEEK = SCREEN_H - PHONE_INSETS.ios.bottom - 70; // 370: grabber + search
 const DETENTS = [LARGE, MEDIUM, PEEK];
 const DETENT_NAMES: Record<number, string> = {
@@ -165,7 +176,7 @@ export function SheetDetentsDemo() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [aim, setAim] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
-  const gesture = useRef<{ id: number; sy: number; start: number; mode: "pending" | "drag"; samples: Sample[] } | null>(null);
+  const gesture = useRef<{ id: number; sy: number; start: number; k: number; mode: "pending" | "drag"; samples: Sample[] } | null>(null);
   const dragged = useRef(false);
 
   // The map dims only between medium and large, and stays tappable below.
@@ -181,19 +192,22 @@ export function SheetDetentsDemo() {
     top.stop();
     dragged.current = false;
     setAim(null);
+    const k = scaleOf(event.currentTarget);
     gesture.current = {
       id: event.pointerId,
-      sy: event.clientY,
+      sy: event.clientY / k,
       start: top.get(),
+      k,
       mode: "pending",
-      samples: [{ t: event.timeStamp, y: event.clientY }],
+      samples: [{ t: event.timeStamp, y: event.clientY / k }],
     };
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const g = gesture.current;
     if (!g || g.id !== event.pointerId) return;
-    const dy = event.clientY - g.sy;
+    const py = event.clientY / g.k;
+    const dy = py - g.sy;
     if (g.mode === "pending") {
       if (Math.abs(dy) < SLOP) return;
       g.mode = "drag";
@@ -202,8 +216,8 @@ export function SheetDetentsDemo() {
       setDragging(true);
       event.currentTarget.setPointerCapture(event.pointerId);
     }
-    track(g.samples, event.timeStamp, event.clientY);
-    const raw = g.start + event.clientY - g.sy;
+    track(g.samples, event.timeStamp, py);
+    const raw = g.start + py - g.sy;
     // Rubber band past the largest and smallest detents.
     const next =
       raw < LARGE
@@ -308,7 +322,7 @@ export function SheetDetentsDemo() {
           />
           <div className="flex flex-col gap-4 px-3 pt-2.5">
             <button
-              className="relative flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-muted px-3 text-left text-[12px] text-foreground/65 outline-none after:absolute after:inset-x-0 after:top-0 after:-bottom-2 focus-visible:ring-2 focus-visible:ring-ring/50 dark:bg-muted/60"
+              className="relative flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-muted px-3 text-left text-[12px] text-foreground/65 outline-none focus-visible:ring-2 focus-visible:ring-ring/50 dark:bg-muted/60"
               onClick={() => settle(LARGE)}
               type="button"
             >
@@ -328,7 +342,7 @@ export function SheetDetentsDemo() {
                 ].map(({ label, icon: Icon }) => (
                   <button
                     key={label}
-                    className="relative flex cursor-pointer flex-col items-center gap-1 rounded-lg text-[10px] outline-none after:absolute after:-inset-x-1 after:inset-y-0 focus-visible:ring-2 focus-visible:ring-ring/50"
+                    className="flex cursor-pointer flex-col items-center gap-1 rounded-lg text-[10px] outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                     type="button"
                   >
                     <span className="grid size-10 place-items-center rounded-full bg-muted dark:bg-muted/60">
@@ -436,7 +450,7 @@ function CommentRows({ onFocusRow }: { onFocusRow?: (index: number) => void }) {
           </span>
           <button
             aria-label={`Like ${name}'s comment`}
-            className="relative grid size-7 shrink-0 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="relative grid size-7 shrink-0 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none after:absolute after:-inset-px hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
             onFocus={() => onFocusRow?.(index)}
             type="button"
           >
@@ -462,7 +476,7 @@ function SheetHeader({
         <span className="text-[14px] font-semibold">Comments</span>
         <button
           aria-label="Close comments"
-          className="relative grid size-7 cursor-pointer place-items-center rounded-full bg-muted text-muted-foreground outline-none after:absolute after:-inset-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 dark:bg-muted/60"
+          className="relative grid size-7 cursor-pointer place-items-center rounded-full bg-muted text-muted-foreground outline-none after:absolute after:-inset-px hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 dark:bg-muted/60"
           onClick={onClose}
           type="button"
         >
@@ -485,7 +499,7 @@ function VideoPage({ onOpen, open }: { onOpen: () => void; open: boolean }) {
       </div>
       <button
         aria-expanded={open}
-        className="h-11 cursor-pointer rounded-xl bg-muted text-[12px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/50 dark:bg-muted/60"
+        className="h-9 cursor-pointer rounded-xl bg-muted text-[12px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/50 dark:bg-muted/60"
         onClick={onOpen}
         type="button"
       >
@@ -551,6 +565,7 @@ function HandoffSheet() {
     id: number;
     lastY: number;
     sy: number;
+    k: number;
     mode: "pending" | "drag";
     movedSheet: boolean;
     over: number; // finger travel past the end of the list, before rubber banding
@@ -587,30 +602,33 @@ function HandoffSheet() {
     scroll.stop();
     dragged.current = false;
     const s = scroll.get();
+    const k = scaleOf(event.currentTarget);
     gesture.current = {
       id: event.pointerId,
-      lastY: event.clientY,
-      sy: event.clientY,
+      lastY: event.clientY / k,
+      sy: event.clientY / k,
+      k,
       mode: "pending",
       movedSheet: false,
       over: s > MAX_SCROLL ? s - MAX_SCROLL : 0,
-      samples: [{ t: event.timeStamp, y: event.clientY }],
+      samples: [{ t: event.timeStamp, y: event.clientY / k }],
     };
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const g = gesture.current;
     if (!g || g.id !== event.pointerId) return;
+    const py = event.clientY / g.k;
     if (g.mode === "pending") {
-      if (Math.abs(event.clientY - g.sy) < SLOP) return;
+      if (Math.abs(py - g.sy) < SLOP) return;
       g.mode = "drag";
-      g.lastY = g.sy + Math.sign(event.clientY - g.sy) * SLOP;
+      g.lastY = g.sy + Math.sign(py - g.sy) * SLOP;
       dragged.current = true;
       event.currentTarget.setPointerCapture(event.pointerId);
     }
-    track(g.samples, event.timeStamp, event.clientY);
-    let rest = event.clientY - g.lastY; // positive = finger moving down
-    g.lastY = event.clientY;
+    track(g.samples, event.timeStamp, py);
+    let rest = py - g.lastY; // positive = finger moving down
+    g.lastY = py;
 
     if (rest < 0) {
       // Finger up: grow the sheet to its top detent first, then scroll.

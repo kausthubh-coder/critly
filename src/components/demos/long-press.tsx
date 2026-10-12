@@ -29,6 +29,7 @@ import {
   HapticRing,
   Phone,
   PHONE_INSETS,
+  usePhoneScale,
   vibrate,
   type Platform,
 } from "@/components/app/phone";
@@ -59,6 +60,8 @@ function useHold({
   onFire: (point: Point) => void;
 }) {
   const reduce = useReducedMotion();
+  // Screen px per phone px; the 10pt slop is in the phone's units.
+  const k = usePhoneScale();
   const scale = useMotionValue(1);
   const s = useRef({ timer: 0, id: -1, x: 0, y: 0, active: false });
   const shrink = useRef<AnimationPlaybackControls | null>(null);
@@ -98,7 +101,7 @@ function useHold({
     onPointerMove(event: React.PointerEvent) {
       const state = s.current;
       if (!state.active || event.pointerId !== state.id) return;
-      if (Math.hypot(event.clientX - state.x, event.clientY - state.y) > HOLD_SLOP) cancel();
+      if (Math.hypot(event.clientX - state.x, event.clientY - state.y) / k > HOLD_SLOP) cancel();
     },
     onPointerUp: cancel,
     onPointerCancel: cancel,
@@ -111,9 +114,17 @@ function useHold({
   return { bind, scale, holding };
 }
 
+/** Screen px per layout px inside a Phone: 1 on desktop, about 1.5 on a phone. */
+function scaleOf(el: HTMLElement) {
+  return el.getBoundingClientRect().width / el.offsetWidth || 1;
+}
+
+/** A pointer position in the phone screen's own (unscaled) coordinates. */
 function relative(el: HTMLElement | null, point: Point) {
-  const r = el?.getBoundingClientRect();
-  return r ? { x: point.x - r.left, y: point.y - r.top } : point;
+  if (!el) return point;
+  const r = el.getBoundingClientRect();
+  const k = scaleOf(el);
+  return { x: (point.x - r.left) / k, y: (point.y - r.top) / k };
 }
 
 /* Long press: show the hold, then the menu ------------------------------- */
@@ -208,6 +219,7 @@ export function LongPressDemo() {
   const screenRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const openRef = useRef(false);
+  const openedAt = useRef(0);
   const shown = mode === "shown";
 
   useEffect(() => {
@@ -221,9 +233,11 @@ export function LongPressDemo() {
     openRef.current = true;
     const s = screen.getBoundingClientRect();
     const r = row.getBoundingClientRect();
-    const top = r.top - s.top;
-    const below = top + r.height + 8 + MENU_H < s.height - PHONE_INSETS.ios.bottom;
-    setOpen({ id, top, height: r.height, below, point });
+    const top = (r.top - s.top) / scaleOf(screen);
+    const height = row.offsetHeight;
+    const below = top + height + 8 + MENU_H < screen.offsetHeight - PHONE_INSETS.ios.bottom;
+    openedAt.current = performance.now();
+    setOpen({ id, top, height, below, point });
     if (point && shown) {
       const p = relative(screen, point);
       setHaptic((h) => ({ pulse: h.pulse + 1, ...p }));
@@ -237,7 +251,8 @@ export function LongPressDemo() {
   }
 
   function act(action: "pin" | "copy" | "share" | "delete") {
-    if (!open) return;
+    // The click that ends a touch hold can land on an item under the finger.
+    if (!open || performance.now() - openedAt.current < 300) return;
     const id = open.id;
     close();
     if (action === "pin") setNotes((list) => list.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)));
@@ -324,7 +339,9 @@ export function LongPressDemo() {
               <button
                 aria-label="Close menu"
                 className="absolute inset-0 cursor-default outline-none"
-                onClick={close}
+                // Close on a new press, not on click: the click that ends the hold
+                  // that opened the menu lands here on touch and would close it.
+                  onPointerDown={close}
                 tabIndex={-1}
                 type="button"
               />
@@ -348,7 +365,9 @@ export function LongPressDemo() {
                 <button
                   aria-label="Close menu"
                   className="absolute inset-0 cursor-default bg-black/20 outline-none backdrop-blur-[3px] dark:bg-black/45"
-                  onClick={close}
+                  // Close on a new press, not on click: the click that ends the hold
+                  // that opened the menu lands here on touch and would close it.
+                  onPointerDown={close}
                   tabIndex={-1}
                   type="button"
                 />
@@ -526,6 +545,7 @@ export function ContextMenuDemo() {
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const screenRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const previewAt = useRef(0);
   const selecting = selected.size > 0;
   const insets = PHONE_INSETS[platform];
 
@@ -543,9 +563,13 @@ export function ContextMenuDemo() {
   function hold(index: number, el: HTMLElement, point: Point | null) {
     pulse(point);
     if (platform === "ios") {
-      const s = screenRef.current?.getBoundingClientRect();
+      const screen = screenRef.current;
       const r = el.getBoundingClientRect();
-      setPreview({ index, tileTop: s ? r.top - s.top : 100 });
+      const tileTop = screen
+        ? (r.top - screen.getBoundingClientRect().top) / scaleOf(screen)
+        : 100;
+      previewAt.current = performance.now();
+      setPreview({ index, tileTop });
     } else {
       setSelected((set) => new Set(set).add(index));
     }
@@ -671,7 +695,9 @@ export function ContextMenuDemo() {
                 <button
                   aria-label="Close menu"
                   className="absolute inset-0 cursor-default bg-black/20 outline-none backdrop-blur-md dark:bg-black/45"
-                  onClick={() => setPreview(null)}
+                  // Close on a new press, not on click: the click that ends the hold
+                  // that opened the menu lands here on touch and would close it.
+                  onPointerDown={() => setPreview(null)}
                   tabIndex={-1}
                   type="button"
                 />
@@ -706,6 +732,8 @@ export function ContextMenuDemo() {
                             "[&:not(:first-child)]:border-t [&:not(:first-child)]:border-border/60"
                           )}
                           onClick={() => {
+                            // Ignore the click that ends the hold itself.
+                            if (performance.now() - previewAt.current < 300) return;
                             if (label === "Favorite" || label === "Unfavorite") {
                               setFavorites((set) => {
                                 const next = new Set(set);
