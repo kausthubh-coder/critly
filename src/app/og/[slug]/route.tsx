@@ -11,6 +11,14 @@ export const dynamic = "force-static";
 // Standalone pages that get an OG card but aren't concepts. Titles and
 // descriptions mirror each page's `metadata` export.
 const PAGES: Record<string, { title: string; description: string }> = {
+  skills: {
+    title: "Skills",
+    description: "Critly's concepts as agent skills: build, review and audit with them.",
+  },
+  check: {
+    title: "Check",
+    description: "Lint the running app against Critly's concepts. Every finding names the fix.",
+  },
   credits: {
     title: "Credits",
     description: "The projects and people Critly is built on.",

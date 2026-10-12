@@ -1,10 +1,10 @@
-import { codeToHtml, type BundledLanguage } from "shiki";
+import { codeToHtml, type BundledLanguage, type SpecialLanguage } from "shiki";
 
 import { CodeBlockClient } from "@/components/app/code-block-client";
 
 export type CodeTab = {
   label: string;
-  language: BundledLanguage;
+  language: BundledLanguage | SpecialLanguage;
   code: string;
   icon?: "css" | "tailwind";
   /** Header filename; derived from the language when omitted. */

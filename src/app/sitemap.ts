@@ -7,6 +7,8 @@ import { isConceptAvailable } from "@/lib/concepts";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: SITE_URL },
+    { url: `${SITE_URL}/skills` },
+    { url: `${SITE_URL}/check` },
     { url: `${SITE_URL}/credits` },
     { url: `${SITE_URL}/resources` },
     ...allConcepts

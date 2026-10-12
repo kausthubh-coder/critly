@@ -1,6 +1,10 @@
 "use client";
 
-import { CopyIcon as CopyGlyph } from "@phosphor-icons/react";
+import {
+  CopyIcon as CopyGlyph,
+  FileTextIcon,
+  TerminalWindowIcon,
+} from "@phosphor-icons/react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
@@ -19,11 +23,13 @@ export type HighlightedCodeTab = {
   filename?: string;
 };
 
+type FileKind = "css" | "react" | "terminal" | "file";
+
 // The header shows a made-up filename for the active tab, so the snippet
 // reads as "where this goes" rather than a bare code dump.
 const FILE_BY_LANGUAGE: Record<
   string,
-  { name: string; kind: "css" | "react" }
+  { name: string; kind: FileKind }
 > = {
   css: { name: "styles.css", kind: "css" },
   html: { name: "app.tsx", kind: "react" },
@@ -31,16 +37,26 @@ const FILE_BY_LANGUAGE: Record<
   jsx: { name: "app.jsx", kind: "react" },
   ts: { name: "app.ts", kind: "react" },
   js: { name: "app.js", kind: "react" },
+  bash: { name: "Terminal", kind: "terminal" },
+  sh: { name: "Terminal", kind: "terminal" },
+  text: { name: "Output", kind: "terminal" },
+  json: { name: "config.json", kind: "file" },
+  markdown: { name: "README.md", kind: "file" },
+  yaml: { name: "config.yml", kind: "file" },
 };
 
 function getFile(tab: HighlightedCodeTab) {
   const fallback = FILE_BY_LANGUAGE[tab.language] ?? FILE_BY_LANGUAGE.tsx;
   const name = tab.filename ?? fallback.name;
-  const kind = name.endsWith(".css") ? "css" : fallback.kind;
+  const kind: FileKind = name.endsWith(".css") ? "css" : fallback.kind;
   return { name, kind };
 }
 
-function FileIcon({ kind }: { kind: "css" | "react" }) {
+function FileIcon({ kind }: { kind: FileKind }) {
+  if (kind === "terminal" || kind === "file") {
+    const Glyph = kind === "terminal" ? TerminalWindowIcon : FileTextIcon;
+    return <Glyph aria-hidden="true" className="size-3 shrink-0" />;
+  }
   if (kind === "css") {
     return (
       <Image

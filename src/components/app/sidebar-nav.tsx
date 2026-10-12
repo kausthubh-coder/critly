@@ -20,6 +20,8 @@ const SHOW_NEW_BADGE = false;
 
 const PAGES = [
   { href: "/", label: "Index" },
+  { href: "/skills", label: "Skills" },
+  { href: "/check", label: "Check" },
   { href: "/credits", label: "Credits" },
   { href: "/resources", label: "Resources" },
 ];

@@ -41,12 +41,15 @@ export function GET() {
   lines.push(
     "## Pages",
     "",
+    `- [Skills](${SITE_URL}/skills): Install the critly and critly-audit skills, and the two AGENTS.md lines that keep an agent on them.`,
+    `- [Check](${SITE_URL}/check): \`critly check\` lints the running app against these concepts; every finding names the fix.`,
     `- [Credits](${SITE_URL}/credits): The projects and people Critly is built on.`,
     `- [Resources](${SITE_URL}/resources): Tools, references, and reading for design engineering.`,
     "",
     "## Agents",
     "",
     `- [llms-full.txt](${SITE_URL}/llms-full.txt): Every concept in full, in one Markdown file.`,
+    `- [setup.md](${SITE_URL}/setup.md): Steps for an agent to set up the Critly check in a project.`,
     `- [Critly skill](${GITHUB_URL}/tree/main/skills/critly): Install with \`npx skills add ${GITHUB_REPO}\` to give your coding agent these concepts as a checklist.`,
     "",
   );

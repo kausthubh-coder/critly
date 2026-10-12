@@ -1,6 +1,6 @@
 ---
 name: critly-audit
-description: 'Audit the design of an existing app or website and optionally fix it, using the Critly design engineering concepts. Works from a running URL (localhost or deployed), the codebase, or both. Use when the user runs /audit, says "audit my app", "audit the design", "what is wrong with this UI", "fix the design", "make this app look and feel better", or hands over a localhost link and asks to improve the design. Checks the system (type scale, spacing, color roles, tokens, dark mode), composition (alignment, whitespace, hierarchy, density, responsive, layout shift), and details (states, focus, hit areas, inputs, overlays, motion, copy, feedback), and times the main actions for performance (load, navigation, typing, scrolling). Also use when the user asks to audit speed, "why is my app slow", or "make the whole app faster".'
+description: 'Audit the design of an existing app or website and optionally fix it, using the Critly design engineering concepts. Works from a running URL (localhost or deployed), the codebase, or both. Use when the user runs /audit, says "audit my app", "audit the design", "what is wrong with this UI", "fix the design", "make this app look and feel better", or hands over a localhost link and asks to improve the design. Checks the system (type scale, spacing, color roles, tokens, dark mode), composition (alignment, whitespace, hierarchy, density, responsive, layout shift), and details (states, focus, hit areas, inputs, overlays, motion, copy, feedback), and times the main actions for performance (load, navigation, typing, scrolling). Also use when the user asks to audit speed, "why is my app slow", or "make the whole app faster", and to set up the Critly check (critly check, lint:ui, .critly/policy.json) in a project.'
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
@@ -57,7 +57,15 @@ Measure what the app actually uses before reading any component.
   `gap-*`, `rounded-*`, `shadow-*`, arbitrary `[...]` values), CSS custom
   properties and the theme config.
 
-Then compare against the concepts:
+Then run the check, which measures the rendered app against the concepts:
+
+- If the project has `lint:ui` or `.critly/policy.json`, run that.
+- Otherwise run `npx @kausthubh/critly check <url>` (with no policy it runs
+  every rule that doesn't need one), or, in a browser tool, paste
+  `scripts/check.js` and call `window.__critlyCheck({})`.
+
+Its findings already name the fix and the concept; put them in the report.
+Then compare the inventory against the concepts:
 
 | Look for | Concept |
 | --- | --- |
@@ -181,9 +189,36 @@ When applying:
 - For performance fixes, measure again the same way and put before and
   after numbers side by side. Measure each fix on its own, so you know which
   one helped. Run the exact checks CI runs before saying anything passes.
+- Run the check again after each batch and keep going until it exits 0.
+  Never edit the policy or add an exception to get there without asking.
 - Finish with a short before and after table: what changed, where, and the
   concept. If you ran the inventory before, run it again and show the change
-  in distinct values (for example, font sizes 11 to 6).
+  in distinct values (for example, font sizes 11 to 6). Quote the check's
+  last line before and after.
+
+## 9. Set up the check
+
+At the end of an audit, if the project has no `.critly/policy.json`, offer to
+set up the check so the fixes stay fixed. When the user agrees, follow
+https://critly.vercel.app/setup.md step by step. In short:
+
+1. Install it: `npm i -D @kausthubh/critly` (the command is `critly`).
+2. Write `.critly/policy.json` from the app's tokens and the inventory: fonts,
+   type scale, how dark mode switches, the pages to check. Show it to the user
+   and get their OK before going on.
+3. Add `"lint:ui": "critly check <dev server URL>"` to `package.json`.
+4. Add these two lines to AGENTS.md (and `@AGENTS.md` to a CLAUDE.md that
+   doesn't import it). AGENTS.md is in context for every task and survives
+   compaction; this skill isn't and doesn't.
+
+   ```markdown
+   - UI work: use the `critly` skill. Read `.critly/policy.json` before choosing spacing, type or color, use only its values, and never edit it to pass.
+   - After any UI change, run `npm run lint:ui` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then screenshot each changed screen at 390 and 1440 and look at it before saying it's done.
+   ```
+5. Run it once. With many findings, ask whether to fix them now or record a
+   baseline (`--update-baseline`, then `--baseline` in the script).
+6. If the project vendors an old copy of the Critly skills, suggest
+   `npx skills add kausthubh-coder/critly -g` instead.
 
 The code samples in the references use Tailwind v4. Check the project's
 Tailwind version or styling approach and translate as needed.

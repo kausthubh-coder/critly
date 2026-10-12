@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ConceptThumbnail } from "@/components/thumbnails";
+import { CHECKED_CONCEPTS } from "@/lib/check";
 import { isConceptAvailable } from "@/lib/concepts";
 import type { Section } from "@/lib/sections";
 
@@ -32,6 +33,14 @@ export function ConceptCardBody({
           <h3 className="truncate text-[13px] font-medium text-foreground">
             {title}
           </h3>
+          {available && CHECKED_CONCEPTS.has(slug) && (
+            <span
+              title="The Critly check measures this concept"
+              className="shrink-0 rounded-full bg-muted px-1.5 py-px text-[10px] leading-4 font-medium text-muted-foreground shadow-(--custom-shadow)"
+            >
+              Checked
+            </span>
+          )}
           {!available && (
             <span className="shrink-0 rounded-full border border-dashed border-sky-300 bg-sky-500/10 px-1.5 py-px text-[10px] leading-4 font-medium text-sky-600 dark:border-sky-900 dark:bg-sky-400/10 dark:text-sky-400">
               Soon

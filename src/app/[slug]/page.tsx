@@ -1,11 +1,13 @@
 import { allConcepts } from "content-collections";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ConceptPager } from "@/components/app/concept-pager";
 import { JsonLd } from "@/components/app/json-ld";
 import { Resources } from "@/components/app/resources";
 import { Mdx } from "@/components/app/mdx";
+import { rulesForConcept } from "@/lib/check";
 import { isConceptAvailable } from "@/lib/concepts";
 import { groupBySection } from "@/lib/sections";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -70,6 +72,7 @@ export default async function ConceptPage({
   const concept = allConcepts.find((c) => c.slug === slug);
   if (!concept || !isConceptAvailable(slug)) notFound();
 
+  const checkedBy = rulesForConcept(slug);
   const ordered = orderedConcepts();
   const index = ordered.findIndex((c) => c.slug === slug);
 
@@ -97,6 +100,23 @@ export default async function ConceptPage({
       />
       <header>
         <h1 className="text-lg font-medium text-balance">{concept.title}</h1>
+        {checkedBy.length > 0 && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            Checked by{" "}
+            {checkedBy.map((rule, index) => (
+              <span key={rule.id}>
+                {index > 0 && ", "}
+                <Link
+                  href={`/check#${rule.id}`}
+                  className="font-mono text-foreground underline decoration-foreground/20 underline-offset-4 hover:decoration-foreground"
+                >
+                  {rule.id}
+                </Link>
+                {rule.stage === "guarded" && " (opt-in)"}
+              </span>
+            ))}
+          </p>
+        )}
       </header>
       <div className="mt-4">
         <Mdx code={concept.mdx} />

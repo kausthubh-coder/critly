@@ -9,14 +9,18 @@ metadata:
 
 # Critly
 
-A collection of design engineering concepts, forked from Gustavo Fior's
-Craft and extended. Each concept is a short explainer with a rule you can
-apply directly, plus the CSS, Tailwind, or React to do it. The live site
-pairs every concept with an interactive demo.
+Design engineering concepts for building interfaces. Each concept is a short
+explainer with a rule you can apply directly, plus the CSS, Tailwind, or React
+to do it. The live site pairs every concept with an interactive demo.
+
+Critly also has a check: `critly check <url>` loads the running app, measures
+what it renders, and fails when the interface breaks a concept, naming the
+value to use (https://critly.vercel.app/check). This skill tells you what good
+looks like; the check proves you did it.
 
 `references/rules.md` lists every concept's rule in one line. It is short on
-purpose: re-read it whenever you start a new piece of work and before you
-finish. Open the full reference for any rule you are about to apply.
+purpose: read it whenever you start a new piece of work. Open the full
+reference for any rule you are about to apply.
 
 ## How to use this skill
 
@@ -26,34 +30,47 @@ it runs a full top-down pass with these concepts.
 
 ### Build mode: writing or changing UI
 
-1. Start from the feel. Before picking any value, decide in one line who uses
+1. **Find the project's policy and check first.** If `.critly/policy.json`
+   exists, read it now: its fonts, type scale and other values are the only
+   ones to use, and you never edit it to make something pass. If
+   `package.json` has a `lint:ui` script (or the project otherwise runs
+   `critly check`), this task ends with it at exit 0.
+2. Start from the feel. Before picking any value, decide in one line who uses
    this, how often, and how it should feel: compact or comfortable, instant
    or animated, quiet or expressive. Read **Product Feel** for how each
    choice maps to values. If the project already has tokens (spacing scale,
    type scale, color roles, radii), use them instead of adding new ones.
-2. Map the work to concepts with the table in **What to open** below, and
+3. Map the work to concepts with the table in **What to open** below, and
    skim `references/rules.md`.
-3. Read the matching sections in `references/` before writing code. Each
+4. Read the matching sections in `references/` before writing code. Each
    concept there has the full reasoning, the rule, and the code. Do not apply
    a concept from its one-line summary alone.
-4. Apply the rule, and prefer the exact values from the reference (durations,
+5. Apply the rule, and prefer the exact values from the reference (durations,
    easings, scales, radii, opacities, spacing steps) over inventing your own.
    Reuse the same few values everywhere instead of tuning each component.
-5. **Come back when the work changes shape.** What you read at the start only
+6. **Come back when the work changes shape.** What you read at the start only
    covers what you planned. The moment the work grows a new kind of thing (you
    add a blur, an animation, a long list, an image or video, a slow action, a
    drag), stop and open the concepts for that row of the table before writing
    that code.
-6. **Check before you say it's done.** Re-read `references/rules.md` and, for
-   every concept your change touched, confirm the rule holds in the code you
-   wrote. Check the states, not just the resting one. For anything that
-   affects speed or smoothness, measure it as **Measuring Performance**
-   describes and report before and after numbers with the environment. Never
-   say tests or checks pass unless you ran them. If what you built differs
-   from an approved mockup or design, say what changed and why before the
-   user finds it.
-7. Mention the concepts you applied in one line at the end, so the user can
-   look them up.
+7. **Check before you say it's done.**
+   - Run the check on every route you changed: `npm run lint:ui` when the
+     project has it, otherwise `npx @kausthubh/critly check <url>` against the
+     running app. Fix every error and every `review` finding until it exits 0.
+     Exit 2 means it couldn't run: say so in one line; it is not a pass. Fix
+     the interface, not the policy.
+   - Then screenshot each changed screen at 390 and 1440 wide, in light and
+     dark, and look at them. The check only rules out what it can measure;
+     states, hierarchy and spacing that reads wrong are yours to catch. Check
+     the states, not just the resting one.
+   - For anything that affects speed or smoothness, measure it as
+     **Measuring Performance** describes and report before and after numbers.
+   - If what you built differs from an approved mockup or design, say what
+     changed and why before the user finds it.
+8. **End with evidence**, not a list of concepts: quote the check's last line,
+   say which screens you looked at, and name anything you couldn't check.
+   Never say tests or checks pass unless you ran them. If the project has no
+   check yet, offer once to set it up (the `critly-audit` skill does it).
 
 ### What to open
 

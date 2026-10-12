@@ -4,7 +4,9 @@ import { NextResponse, type NextRequest } from "next/server";
 // that asks for `text/markdown` via the Accept header. Both rewrite to the
 // prerendered route handler at `/md/<slug>`.
 
-const NON_CONCEPT_PAGES = new Set(["credits", "resources"]);
+const NON_CONCEPT_PAGES = new Set(["credits", "resources", "skills", "check"]);
+// Standalone Markdown documents served by their own route handlers.
+const MARKDOWN_DOCS = new Set(["setup"]);
 
 function prefersMarkdown(accept: string | null) {
   if (!accept) return false;
@@ -28,7 +30,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const explicit = pathname.match(/^\/([\w-]+)\.md$/);
-  if (explicit) {
+  if (explicit && !MARKDOWN_DOCS.has(explicit[1])) {
     const url = request.nextUrl.clone();
     url.pathname = `/md/${explicit[1]}`;
     return NextResponse.rewrite(url);
