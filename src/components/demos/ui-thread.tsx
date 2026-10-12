@@ -256,8 +256,12 @@ export function ThreadJankDemo() {
   }
 
   function localPoint(event: React.PointerEvent) {
-    const rect = stage.current?.getBoundingClientRect();
-    return { x: event.clientX - (rect?.left ?? 0), y: event.clientY - (rect?.top ?? 0) };
+    const el = stage.current;
+    if (!el) return { x: 0, y: 0 };
+    const rect = el.getBoundingClientRect();
+    // On a phone the screen is scaled up; convert screen px to the 248px layout.
+    const k = rect.width / el.offsetWidth || 1;
+    return { x: (event.clientX - rect.left) / k, y: (event.clientY - rect.top) / k };
   }
 
   function onPointerDown(event: React.PointerEvent<HTMLButtonElement>) {

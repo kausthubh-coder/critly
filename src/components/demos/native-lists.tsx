@@ -337,7 +337,7 @@ function PullList({ platform }: { platform: Platform }) {
   const [refreshing, setRefreshing] = useState(false);
   const [fresh, setFresh] = useState(0);
   const [pulse, setPulse] = useState(0);
-  const drag = useRef<{ startY: number; armed: boolean } | null>(null);
+  const drag = useRef<{ startY: number; armed: boolean; k: number } | null>(null);
   const timer = useRef<number>(undefined);
   const reduce = useReducedMotion();
 
@@ -367,13 +367,16 @@ function PullList({ platform }: { platform: Platform }) {
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (refreshing) return;
     event.currentTarget.setPointerCapture(event.pointerId);
-    drag.current = { startY: event.clientY, armed: false };
+    // On a phone the screen is scaled up; pointer px divide by that scale.
+    const el = event.currentTarget;
+    const k = el.getBoundingClientRect().height / el.offsetHeight || 1;
+    drag.current = { startY: event.clientY, armed: false, k };
   }
 
   function onPointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const d = drag.current;
     if (!d) return;
-    const shown = rubberBand(event.clientY - d.startY);
+    const shown = rubberBand((event.clientY - d.startY) / d.k);
     offset.set(shown);
     const p = Math.min(1, shown / THRESHOLD);
     setProgress((prev) => (Math.round(prev * 8) === Math.round(p * 8) ? prev : p));

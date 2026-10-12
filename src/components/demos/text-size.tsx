@@ -65,7 +65,7 @@ export function TextSizeDemo() {
 
   return (
     <Demo className="gap-6 px-4 sm:px-8">
-      <Phone height={440} label="Account settings on iPhone" platform="ios">
+      <Phone height={400} label="Account settings on iPhone" platform="ios">
         <div
           className={cn(
             "h-full px-3 pb-8",

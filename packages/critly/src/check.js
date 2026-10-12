@@ -197,8 +197,32 @@
     hiddenCache.set(el, out);
     return out;
   }
+  // The rect of `el` after every ancestor that clips its overflow (overflow other than
+  // visible, or contain: paint), up to but not including `stop`. Follows the containing
+  // block: an absolute box escapes clippers below its positioned ancestor, a fixed box
+  // escapes them all. Border radius is ignored, so the result is slightly generous.
+  function overflowClip(el, stop = null) {
+    const r = el.getBoundingClientRect(), out = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+    let pos = cs(el).position;
+    for (let n = el.parentElement; n && n !== stop && n !== document.documentElement; n = n.parentElement) {
+      const st = cs(n), positioned = st.position !== 'static' || st.transform !== 'none';
+      if (pos === 'fixed' && st.transform === 'none') continue;
+      if (pos === 'absolute' && !positioned) continue;
+      const clips = /hidden|clip|auto|scroll/.test(st.overflowX + st.overflowY) || /paint|strict|content/.test(st.contain);
+      if (clips) {
+        const b = n.getBoundingClientRect(), left = b.left + n.clientLeft, top = b.top + n.clientTop;
+        out.left = Math.max(out.left, left); out.right = Math.min(out.right, left + n.clientWidth);
+        out.top = Math.max(out.top, top); out.bottom = Math.min(out.bottom, top + n.clientHeight);
+      }
+      if (st.position !== 'static') pos = st.position; else if (st.transform !== 'none') pos = 'static';
+    }
+    return out;
+  }
+  // Only boxes with area can be clipped away; zero-size ones (display: contents) are judged below.
+  const clippedAway = el => { const r = el.getBoundingClientRect(); if (r.width < 1 || r.height < 1) return false; const c = overflowClip(el); return c.right - c.left < 1 || c.bottom - c.top < 1; };
   function visible(el) {
     if (!el?.isConnected || el.closest('[inert]') || visuallyHidden(el)) return false;
+    if (clippedAway(el)) return false;
     const b = el.getBoundingClientRect();
     if (el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) && b.width > 0 && b.height > 0) return true;
     if (!generatedText(el).length && (cs(el).visibility !== 'visible' || !textRects(el).length)) return false;
@@ -384,10 +408,12 @@
       const a = luminance(dark), b = luminance(light);
       return t >= Math.min(a, b) && t <= Math.max(a, b) ? 1 : Math.min(contrast(unpm(F), dark), contrast(unpm(F), light));
     };
-    // Where a box can paint: its rect, cut by inset() clip-paths up to the shared ancestor
-    // (a segmented control's active pill is often a clipped overlay). Other shapes: null.
+    // Where a box can paint: its rect, cut by ancestors that clip overflow (rows scrolled out
+    // of a list, a sheet's content below a phone frame) and by inset() clip-paths up to the
+    // shared ancestor (a segmented control's active pill is often a clipped overlay). Other
+    // clip-path shapes: null.
     function paintedArea(box, ca) {
-      const r = box.getBoundingClientRect(), out = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+      const out = overflowClip(box, ca);
       for (let n = box; n && n !== ca; n = n.parentElement) {
         const cp = cs(n).clipPath;
         if (cp === 'none') continue;

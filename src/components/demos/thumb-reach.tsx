@@ -35,10 +35,9 @@ const HEIGHT = 460;
 const INSET = PHONE_INSETS.ios;
 const FOCUS =
   "outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-inset";
-/* 30px icons with 44px targets (an ::after, so the look doesn't change). */
+/* 30px icon buttons: 44px under the finger once the phone scales up. */
 const ICON_BUTTON = cn(
-  "relative grid size-[30px] cursor-pointer place-items-center rounded-full text-foreground active:bg-foreground/10",
-  "after:absolute after:-inset-[7px]",
+  "grid size-[30px] cursor-pointer place-items-center rounded-full text-foreground active:bg-foreground/10",
   FOCUS
 );
 
@@ -148,7 +147,7 @@ function TopBarScreen() {
           <ListIcon aria-hidden="true" className="size-[16px]" weight="bold" />
         </button>
         <p className="text-[12px] font-semibold">Inbox</p>
-        <span className="flex gap-3.5">
+        <span className="flex gap-1">
           <button aria-label="Search" className={ICON_BUTTON} type="button">
             <MagnifyingGlassIcon aria-hidden="true" className="size-[16px]" weight="bold" />
           </button>
@@ -185,7 +184,7 @@ function TopBarScreen() {
                 <button
                   key={id}
                   className={cn(
-                    "flex h-[44px] cursor-pointer items-center gap-2 rounded-lg px-2 text-left text-[11px] active:bg-foreground/10",
+                    "flex h-[30px] cursor-pointer items-center gap-2 rounded-lg px-2 text-left text-[11px] active:bg-foreground/10",
                     FOCUS
                   )}
                   onClick={() => setDrawer(false)}
@@ -212,7 +211,7 @@ function BottomBarScreen() {
       <div className="flex h-[24px] items-center justify-end px-3">
         <button
           className={cn(
-            "relative cursor-pointer rounded-md px-1 text-[11px] text-indigo-600 after:absolute after:-inset-x-2 after:top-1/2 after:h-[44px] after:-translate-y-1/2 dark:text-indigo-400",
+            "relative cursor-pointer rounded-md px-1 text-[11px] text-indigo-600 after:absolute after:-inset-x-2 after:top-1/2 after:h-[30px] after:-translate-y-1/2 dark:text-indigo-400",
             FOCUS
           )}
           type="button"
@@ -228,7 +227,7 @@ function BottomBarScreen() {
       <button
         aria-label="Compose"
         className={cn(
-          "absolute right-3 z-10 grid size-[34px] cursor-pointer place-items-center rounded-full bg-background/90 shadow-(--custom-shadow) backdrop-blur-md active:scale-95 after:absolute after:-inset-[5px]",
+          "absolute right-3 z-10 grid size-[34px] cursor-pointer place-items-center rounded-full bg-background/90 shadow-(--custom-shadow) backdrop-blur-md active:scale-95",
           FOCUS
         )}
         style={{ bottom: INSET.bottom + 46 }}
@@ -250,7 +249,7 @@ function BottomBarScreen() {
               key={id}
               aria-pressed={tab === id}
               className={cn(
-                "relative flex h-full flex-1 cursor-pointer flex-col items-center justify-center gap-px rounded-full text-[8px] font-medium after:absolute after:inset-x-0 after:-inset-y-[6px]",
+                "flex h-full flex-1 cursor-pointer flex-col items-center justify-center gap-px rounded-full text-[8px] font-medium",
                 FOCUS,
                 tab === id
                   ? "bg-foreground/8 text-indigo-600 dark:text-indigo-400"
@@ -267,7 +266,7 @@ function BottomBarScreen() {
         <button
           aria-label="Search"
           className={cn(
-            "relative grid size-[38px] shrink-0 cursor-pointer place-items-center rounded-full bg-background/90 shadow-(--custom-shadow) backdrop-blur-md active:scale-95 after:absolute after:-inset-[3px]",
+            "grid size-[38px] shrink-0 cursor-pointer place-items-center rounded-full bg-background/90 shadow-(--custom-shadow) backdrop-blur-md active:scale-95",
             FOCUS
           )}
           type="button"
