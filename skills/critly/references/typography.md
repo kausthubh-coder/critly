@@ -644,9 +644,8 @@ at 1.5.
 > **Interactive demo: Line Height.** Open https://critly.vercel.app/line-length to try it.
 
 Butterick suggests 1.2 to 1.45, WCAG asks for at least 1.5. On screens I side
-with 1.5. This page is a good reference: its column is 576px, about 85
-characters of 14px Inter, so it runs past the band and makes up for it with a
-1.8 line height.
+with 1.5. This page is a good reference: its column is 576px, about 72
+characters of 16px Inter, inside the band, with a 1.75 line height.
 
 ### Usage
 
