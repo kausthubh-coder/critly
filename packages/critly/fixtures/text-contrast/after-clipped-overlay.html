@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrast</title>
+<link rel="stylesheet" href="/_base.css">
+<style>.seg { position: relative; display: inline-flex; } .seg button { border: 0; width: 96px; color: var(--muted-foreground); } .seg .active { position: absolute; inset: 0; z-index: 10; display: flex; background: var(--primary); clip-path: inset(0 96px 0 0 round 9999px); pointer-events: none; } .seg .active span { width: 96px; display: grid; place-items: center; color: var(--primary-foreground); }</style>
+</head>
+<body>
+<main>
+<h1>Contrast</h1>
+<div class="seg"><button>Linear</button><button>Ease in</button><div class="active" aria-hidden="true"><span>Linear</span><span>Ease in</span></div></div>
+</main>
+</body>
+</html>

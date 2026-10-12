@@ -171,7 +171,7 @@ export function CodeBlockClient({
         <div className="flex items-center justify-between gap-3 border-b border-[#E7E7E7] dark:border-[#1E1E1E] py-2 pr-2 pl-4">
           {/* One label per tab, stacked and crossfaded on the same 200ms
             curve as the code panels below. */}
-          <div className="grid min-w-0 font-mono text-[11px] text-muted-foreground">
+          <div className="grid min-w-0 font-mono text-xs text-muted-foreground">
             {tabs.map((tab, index) => {
               const active = index === activeIndex;
               const file = getFile(tab);
@@ -195,7 +195,7 @@ export function CodeBlockClient({
               <div
                 role="tablist"
                 aria-label="Code examples"
-                className="inline-flex h-8 items-center rounded-full bg-card p-0.5"
+                className="inline-flex h-8 max-sm:h-auto items-center rounded-full bg-card p-0.5"
               >
                 {tabs.map((tab, index) => {
                   const active = index === activeIndex;
@@ -213,7 +213,7 @@ export function CodeBlockClient({
                       onClick={() => selectTab(index)}
                       onKeyDown={(event) => handleTabKeyDown(event, index)}
                       className={cn(
-                        "relative flex h-7 cursor-pointer items-center rounded-full px-2.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                        "relative flex h-7 max-sm:h-11 cursor-pointer items-center rounded-full px-2.5 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                         active
                           ? "text-foreground"
                           : "text-muted-foreground hover:text-foreground",

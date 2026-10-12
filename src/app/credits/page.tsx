@@ -118,15 +118,15 @@ const GROUPS: Group[] = [
 export default function CreditsPage() {
   return (
     <article>
-      <h1 className="text-base font-medium">Credits</h1>
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <h1 className="text-2xl font-semibold tracking-[-0.02em]">Credits</h1>
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         Critly stands on other people&apos;s work. Each concept page also lists
         the posts it draws from.
       </p>
       <div className="mt-8 flex flex-col gap-10">
         {GROUPS.map((group) => (
           <section key={group.heading}>
-            <h2 className="text-sm font-medium">{group.heading}</h2>
+            <h2 className="text-lg font-medium">{group.heading}</h2>
             <ul className="mt-2 flex flex-col">
               {group.credits.map((credit) => (
                 <li key={credit.url}>

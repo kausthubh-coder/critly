@@ -1,6 +1,6 @@
 [
   { "id": "text-contrast", "concept": "color-roles", "stage": "v1", "policy": false, "fails": "Text is below 4.5:1 against what's behind it (3:1 for large text), in every color scheme. Text over images, gradients or blends is reported for review instead of guessed." },
-  { "id": "hit-area", "concept": "hit-areas", "stage": "v1", "policy": false, "fails": "A button, link-as-button or input is smaller than 24px, or 44px on screens 640px wide or less." },
+  { "id": "hit-area", "concept": "hit-areas", "stage": "v1", "policy": false, "fails": "A button, standalone link or input is smaller than 24px, or 44px on screens 640px wide or less. Links inside a sentence are exempt." },
   { "id": "icon-button-name", "concept": "icons", "stage": "v1", "policy": false, "fails": "A button that shows only an icon has no accessible name." },
   { "id": "input-details", "concept": "input-details", "stage": "v1", "policy": false, "fails": "An input has no label, or its text is under 16px on a phone, which makes iOS zoom in on focus." },
   { "id": "overflow", "concept": "responsive", "stage": "v1", "policy": false, "fails": "Something is wider than the screen at 390px, text is clipped, or a fixed element or open dialog sits off-screen." },
@@ -11,8 +11,8 @@
   { "id": "tabular-numbers", "concept": "tabular-numbers", "stage": "v1", "policy": false, "fails": "Numbers in table cells (or marked data-critly-number) don't use tabular figures, or a numeric column isn't end-aligned." },
   { "id": "html-background", "concept": "html-background", "stage": "v1", "policy": false, "fails": "The html element has no background, or it differs from the body's, so overscroll shows a different color." },
   { "id": "transition-all", "concept": "effect-cost", "stage": "v1", "policy": false, "fails": "An element uses transition: all." },
-  { "id": "layout-animation", "concept": "smooth-animation", "stage": "v1", "policy": false, "fails": "A running animation or transition moves width, height, top, left, margin or padding instead of transform." },
-  { "id": "image-dimensions", "concept": "image-loading", "stage": "v1", "policy": false, "fails": "An image has no width and height or aspect-ratio, or an image above the fold is lazy-loaded." },
+  { "id": "layout-animation", "concept": "smooth-animation", "stage": "v1", "policy": false, "fails": "An animation or transition moves width, height, top, left, margin or padding instead of transform and opacity." },
+  { "id": "image-dimensions", "concept": "image-loading", "stage": "v1", "policy": false, "fails": "An image has no width and height or aspect-ratio, so the page jumps when it loads, or a large image above the fold is lazy-loaded." },
   { "id": "placeholder-content", "concept": "real-content", "stage": "v1", "policy": false, "fails": "The page shows lorem ipsum, \"John Doe\", TODO, or a phrase the policy bans." },
   { "id": "spacing-scale", "concept": "spacing-scale", "stage": "guarded", "policy": true, "fails": "A gap or padding isn't on the policy's spacing scale. Opt-in until it's proven quiet on real apps." },
   { "id": "off-token-color", "concept": "design-tokens", "stage": "guarded", "policy": true, "fails": "A text, background or border color matches none of the app's color tokens. Opt-in until it's proven quiet on real apps." },

@@ -99,7 +99,9 @@ export default async function ConceptPage({
         }}
       />
       <header>
-        <h1 className="text-lg font-medium text-balance">{concept.title}</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.02em] text-balance">
+          {concept.title}
+        </h1>
         {checkedBy.length > 0 && (
           <p className="mt-1 text-xs text-muted-foreground">
             Checked by{" "}

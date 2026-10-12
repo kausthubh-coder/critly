@@ -189,17 +189,17 @@ import { cn } from "@/lib/utils";
 const components: MDXComponents = {
   h2: ({ className, ...props }) => (
     <h2
-      className={cn("mt-10 mb-4 text-base font-medium", className)}
+      className={cn("mt-10 mb-4 text-lg font-medium", className)}
       {...props}
     />
   ),
   h3: ({ className, ...props }) => (
-    <h3 className={cn("mt-8 mb-3 text-sm font-medium", className)} {...props} />
+    <h3 className={cn("mt-8 mb-3 text-base font-medium", className)} {...props} />
   ),
   p: ({ className, ...props }) => (
     <p
       className={cn(
-        "my-4 text-sm leading-[1.8] text-pretty text-muted-foreground",
+        "my-4 text-base leading-[1.75] text-pretty text-muted-foreground",
         className
       )}
       {...props}
@@ -209,7 +209,7 @@ const components: MDXComponents = {
   ul: ({ className, ...props }) => (
     <ul
       className={cn(
-        "my-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground",
+        "my-4 list-disc space-y-2 pl-5 text-base leading-[1.75] text-muted-foreground",
         className
       )}
       {...props}
@@ -218,7 +218,7 @@ const components: MDXComponents = {
   ol: ({ className, ...props }) => (
     <ol
       className={cn(
-        "my-4 list-decimal space-y-2 pl-5 text-sm text-muted-foreground",
+        "my-4 list-decimal space-y-2 pl-5 text-base leading-[1.75] text-muted-foreground",
         className
       )}
       {...props}
@@ -233,7 +233,7 @@ const components: MDXComponents = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "rounded-[3px] bg-primary/7 shadow-(--custom-shadow) px-1 py-0.5 font-mono text-[0.8em] text-foreground mx-0.75",
+        "rounded-[3px] bg-primary/7 shadow-(--custom-shadow) px-1 py-0.5 font-mono text-[13px] text-foreground mx-0.75",
         className
       )}
       {...props}
@@ -251,7 +251,7 @@ const components: MDXComponents = {
   blockquote: ({ className, ...props }) => (
     <blockquote
       className={cn(
-        "my-6 border-l-2 pl-4 text-sm text-muted-foreground italic",
+        "my-6 border-l-2 pl-4 text-base text-muted-foreground italic",
         className
       )}
       {...props}

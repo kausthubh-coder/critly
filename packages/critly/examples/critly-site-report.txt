@@ -1,0 +1,28 @@
+Checking http://localhost:3123/…
+http://localhost:3123/
+
+  no findings
+
+http://localhost:3123/easings
+
+  no findings
+
+http://localhost:3123/tabular-numbers
+
+  no findings
+
+http://localhost:3123/check
+
+  no findings
+
+http://localhost:3123/skills
+
+  no findings
+
+http://localhost:3123/credits
+
+  no findings
+
+12 findings suppressed by policy exceptions (type-scale 11, placeholder-content 1); --json lists them with reasons.
+checked 6 pages × 2 viewports × 2 schemes · 10,988 elements · 15 rules · skipped: spacing-scale, off-token-color, nested-radius (opt-in); focus-ring (opt-in; the CLI presses Tab); reduced-motion, layout-shift, overlay-focus (needs interaction; not in this version)
+critly check: 0 errors · 6 pages × 2 viewports × 2 schemes · 12 suppressed · exit 0

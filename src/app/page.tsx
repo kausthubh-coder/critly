@@ -46,7 +46,7 @@ export default function IndexPage() {
       <h1 className="text-2xl font-semibold tracking-[-0.02em] text-balance">
         Design taste your coding agent can use, and a check it can&apos;t skip.
       </h1>
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         Critly is a library of design-engineering concepts, skills that bring
         them into your agent&apos;s work, and a check that measures your
         running app against them. The three point at each other: a failing
@@ -75,8 +75,8 @@ export default function IndexPage() {
         ))}
       </ul>
 
-      <h2 className="mt-10 text-sm font-medium">Start</h2>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <h2 className="mt-10 text-lg font-medium">Start</h2>
+      <p className="mt-2 text-base text-muted-foreground">
         Install the skills for every agent you use, then ask yours to set up the
         check.
       </p>
@@ -86,15 +86,15 @@ export default function IndexPage() {
           { label: "Check", language: "bash", code: CHECK_RUN },
         ]}
       />
-      <p className="mt-3 text-sm text-muted-foreground">
+      <p className="mt-3 text-base text-muted-foreground">
         Critly is open source. To contribute, here&apos;s the repo:
       </p>
       <RepoCard />
 
-      <h2 id="library" className="mt-12 scroll-mt-28 text-sm font-medium">
+      <h2 id="library" className="mt-12 scroll-mt-28 text-lg font-medium">
         Library
       </h2>
-      <p className="mt-2 text-sm text-muted-foreground text-pretty">
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
         Short ideas and tricks rather than an exhaustive resource. Concepts
         marked <span className="font-medium text-foreground">Checked</span>{" "}
         have a rule the check measures.
@@ -102,7 +102,7 @@ export default function IndexPage() {
       <div className="mt-8 flex flex-col gap-12">
         {sections.map(({ section, concepts }) => (
           <section key={section}>
-            <h3 className="flex items-center gap-1.5 text-sm font-medium">
+            <h3 className="flex items-center gap-1.5 text-base font-medium">
               <SectionIcon section={section} size={14} className="mb-px" />
               {section}
             </h3>

@@ -1,0 +1,59 @@
+{
+  "$schema": "../packages/critly/policy.schema.json",
+  "fonts": [
+    "Inter",
+    "JetBrains Mono"
+  ],
+  "typeScale": [
+    12,
+    13,
+    14,
+    16,
+    18,
+    24
+  ],
+  "tailwind": true,
+  "schemes": {
+    "light": {},
+    "dark": {
+      "class": "dark",
+      "on": "html",
+      "storage": [
+        "theme",
+        "dark"
+      ]
+    }
+  },
+  "pages": [
+    "/",
+    "/easings",
+    "/tabular-numbers",
+    "/check",
+    "/skills",
+    "/credits"
+  ],
+  "note": "Tokens live in src/app/globals.css; read it before changing a color, size or font.",
+  "exceptions": [
+    {
+      "selector": "figure *",
+      "rules": [
+        "type-scale",
+        "font-family",
+        "letter-spacing",
+        "layout-animation",
+        "tabular-numbers"
+      ],
+      "reason": "Concept demos show the mistake next to the fix on purpose (proportional figures, loose tracking, fallback fonts, height animations) at demo sizes."
+    },
+    {
+      "selector": "#placeholder-content p",
+      "rules": [
+        "placeholder-content"
+      ],
+      "reason": "The Check page describes this rule, so it names the placeholder text it looks for."
+    }
+  ],
+  "ignore": [
+    "[data-thumbnail]"
+  ]
+}

@@ -61,7 +61,7 @@ export function SegmentedControl<T extends string>({
             <span
               key={option.value}
               className={cn(
-                "flex h-8 items-center gap-1.5 px-3 text-xs font-medium text-foreground",
+                "flex h-8 max-sm:h-11 items-center gap-1.5 px-3 text-xs font-medium text-foreground",
                 option.icon && "pl-2.25"
               )}
             >
@@ -78,7 +78,7 @@ export function SegmentedControl<T extends string>({
           ref={value === option.value ? activeRef : null}
           aria-pressed={value === option.value}
           className={cn(
-            "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+            "inline-flex h-8 max-sm:h-11 cursor-pointer items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
             option.icon && "pl-2.25",
             value === option.value
               ? "text-foreground"

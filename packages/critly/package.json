@@ -1,0 +1,35 @@
+{
+  "name": "@kausthubh/critly",
+  "version": "0.1.0",
+  "description": "Check your running app against Critly's design concepts. Loads the page, measures what it renders, and fails with the fix named.",
+  "keywords": ["design", "ui", "lint", "accessibility", "contrast", "agents", "claude", "codex", "cursor", "playwright"],
+  "homepage": "https://critly.vercel.app/check",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kausthubh-coder/critly.git",
+    "directory": "packages/critly"
+  },
+  "bugs": "https://github.com/kausthubh-coder/critly/issues",
+  "license": "MIT",
+  "author": "Kausthubh",
+  "type": "module",
+  "bin": { "critly": "bin/critly.js" },
+  "exports": {
+    ".": "./src/index.js",
+    "./playwright": "./src/playwright.js",
+    "./check.js": "./src/check.js",
+    "./rules.json": "./src/rules.json",
+    "./policy.schema.json": "./policy.schema.json",
+    "./package.json": "./package.json"
+  },
+  "files": ["bin", "src", "policy.schema.json", "README.md", "LICENSE", "NOTICE.md"],
+  "scripts": {
+    "test": "node --test",
+    "sync:skill": "node scripts/sync-skill.mjs",
+    "readme:rules": "node scripts/readme-rules.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.64.0"
+  },
+  "engines": { "node": ">=20" }
+}

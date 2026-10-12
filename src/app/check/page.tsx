@@ -35,20 +35,20 @@ export const metadata: Metadata = {
 
 const SAMPLE_OUTPUT = `http://localhost:3000/settings/billing
 
-✕ hit-area  error · 390x844 · light
+✕ hit-area  error · 390x844 · light, dark
   where   button "Close" in <dialog> "Edit payment method"
   actual  20×20px
-  fix     Make it at least 44×44px at ≤ 640px wide (p-3, or a larger icon button)
+  fix     Make it at least 44×44px at ≤ 640px wide: add 12px of padding (p-3), or extend the target with an ::after inset.
   concept https://critly.vercel.app/hit-areas
 
 ✕ text-contrast  error · 1440x900 · dark
   where   p.hint "Billed yearly, cancel any time" under "Plan"
-  actual  3.1:1 on the card
-  fix     Use --muted-foreground (5.2:1) or darker; needs 4.5:1
+  actual  3.1:1, #6b6b6b on #1c1c1c
+  fix     Use text-muted-foreground (--muted-foreground, 5.2:1); needs 4.5:1.
   concept https://critly.vercel.app/color-roles
 
-checked 3 pages × 2 viewports × 2 schemes · 1,284 elements · 14 rules
-critly check: 2 errors, 0 review · exit 1`;
+checked 3 pages × 2 viewports × 2 schemes · 4,812 elements · 15 rules
+critly check: 2 errors, 0 review · 3 pages × 2 viewports × 2 schemes · exit 1`;
 
 const POLICY = `{
   "fonts": ["Inter", "JetBrains Mono"],
@@ -86,7 +86,7 @@ const STAGES: { stage: CheckStage; title: string; note: string }[] = [
   {
     stage: "v2",
     title: "Coming",
-    note: "These need interaction: pressing Tab, opening dialogs, watching the page load.",
+    note: "These need interaction: pressing Tab, opening dialogs, watching the page load. focus-ring already runs as an opt-in from the command line.",
   },
 ];
 
@@ -96,8 +96,8 @@ const linkClass =
 export default function CheckPage() {
   return (
     <article>
-      <h1 className="text-base font-medium">Check</h1>
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <h1 className="text-2xl font-semibold tracking-[-0.02em]">Check</h1>
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         <code className="font-mono text-[13px] text-foreground">critly check</code>{" "}
         opens your running app, measures what it renders at phone and desktop
         widths in light and dark, and fails when the interface breaks a
@@ -106,8 +106,8 @@ export default function CheckPage() {
         the exit code is the one thing it can&apos;t talk its way past.
       </p>
 
-      <h2 className="mt-10 text-sm font-medium">Set it up with your agent</h2>
-      <p className="mt-2 text-sm text-muted-foreground text-pretty">
+      <h2 className="mt-10 text-lg font-medium">Set it up with your agent</h2>
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
         Paste this to your agent. It reads the{" "}
         <a href="/setup.md" className={linkClass}>
           setup guide
@@ -117,9 +117,9 @@ export default function CheckPage() {
       </p>
       <CodeBlock tabs={[{ label: "Prompt", language: "text", code: SETUP_PROMPT }]} hideHeader />
 
-      <h2 className="mt-10 text-sm font-medium">Or run it yourself</h2>
+      <h2 className="mt-10 text-lg font-medium">Or run it yourself</h2>
       <CodeBlock tabs={[{ label: "Run", language: "bash", code: CHECK_RUN }]} hideHeader />
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         It uses the Chrome or Edge you already have. Exit 0 means it passed, 1
         means there are findings (including ones it couldn&apos;t decide), and 2
         means it couldn&apos;t run. The last line is the summary worth quoting.
@@ -128,8 +128,8 @@ export default function CheckPage() {
         tabs={[{ label: "Output", language: "text", code: SAMPLE_OUTPUT, filename: "critly check" }]}
       />
 
-      <h2 className="mt-10 text-sm font-medium">The policy</h2>
-      <p className="mt-2 text-sm text-muted-foreground text-pretty">
+      <h2 className="mt-10 text-lg font-medium">The policy</h2>
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
         <code className="font-mono text-[13px] text-foreground">.critly/policy.json</code>{" "}
         is your design system as numbers: fonts, the type scale, how dark mode
         switches, which pages to check, and exceptions. Every exception needs a
@@ -140,11 +140,11 @@ export default function CheckPage() {
         tabs={[{ label: "Policy", language: "json", code: POLICY, filename: ".critly/policy.json" }]}
       />
 
-      <h2 className="mt-10 text-sm font-medium">Rules</h2>
+      <h2 className="mt-10 text-lg font-medium">Rules</h2>
       {STAGES.map(({ stage, title, note }) => (
         <section key={stage} className="mt-6">
-          <h3 className="text-sm text-foreground">{title}</h3>
-          <p className="mt-1 text-sm text-muted-foreground text-pretty">{note}</p>
+          <h3 className="text-base text-foreground">{title}</h3>
+          <p className="mt-1 text-base text-muted-foreground text-pretty">{note}</p>
           <ul className="mt-3 flex flex-col">
             {CHECK_RULES.filter((rule) => rule.stage === stage).map((rule) => (
               <li
@@ -161,11 +161,14 @@ export default function CheckPage() {
                       </span>
                     )}
                   </code>
-                  <Link href={`/${rule.concept}`} className="text-xs text-muted-foreground hover:text-foreground">
+                  <Link
+                    href={`/${rule.concept}`}
+                    className="-my-1 inline-flex min-h-6 items-center text-xs text-muted-foreground hover:text-foreground max-sm:min-h-11"
+                  >
                     {conceptTitle(rule.concept)} →
                   </Link>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground text-pretty">
+                <p className="mt-1 text-base text-muted-foreground text-pretty">
                   {rule.fails}
                 </p>
               </li>
@@ -174,8 +177,8 @@ export default function CheckPage() {
         </section>
       ))}
 
-      <h2 className="mt-10 text-sm font-medium">In your tests</h2>
-      <p className="mt-2 text-sm text-muted-foreground text-pretty">
+      <h2 className="mt-10 text-lg font-medium">In your tests</h2>
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
         Already use Playwright? Check any state your tests reach: an open
         dialog, a filled form, a signed-in page.
       </p>
@@ -183,8 +186,8 @@ export default function CheckPage() {
         tabs={[{ label: "Playwright", language: "ts", code: PLAYWRIGHT, filename: "billing.spec.ts" }]}
       />
 
-      <h2 className="mt-10 text-sm font-medium">What it can&apos;t tell you</h2>
-      <p className="mt-2 text-sm text-muted-foreground text-pretty">
+      <h2 className="mt-10 text-lg font-medium">What it can&apos;t tell you</h2>
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
         The check rules out the mistakes you can measure. It can&apos;t judge
         hierarchy, whitespace, copy or whether a screen feels right; that&apos;s
         what the{" "}
@@ -195,7 +198,7 @@ export default function CheckPage() {
         like text over an image, it reports the finding for review instead of
         passing it.
       </p>
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         The method comes from{" "}
         <a href="https://github.com/gholtzap/lintapple" className={linkClass}>
           lintapple

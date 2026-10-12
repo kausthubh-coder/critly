@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animation</title>
+<link rel="stylesheet" href="/_base.css">
+<style>@keyframes grow { from { transform: scaleX(0.5); } to { transform: scaleX(1); } } .bar { width: 80px; height: 8px; background: var(--foreground); transform-origin: left; animation: grow 1s ease-in-out infinite alternate; } .panel { transition: opacity 0.3s ease, transform 0.3s ease; }</style>
+</head>
+<body>
+<main>
+<h1>Animation</h1>
+<div class="bar"></div>
+<div class="panel">A panel that fades and slides with transform.</div>
+</main>
+</body>
+</html>

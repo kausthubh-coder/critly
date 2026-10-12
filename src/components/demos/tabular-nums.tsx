@@ -179,7 +179,7 @@ export function TabularTableDemo() {
                   "min-w-12 text-right",
                   row.change.startsWith("-")
                     ? "text-rose-600 dark:text-rose-400"
-                    : "text-emerald-600 dark:text-emerald-400"
+                    : "text-emerald-700 dark:text-emerald-400"
                 )}
                 style={numericStyles[mode]}
               >

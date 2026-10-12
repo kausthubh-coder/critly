@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://critly.vercel.app/policy.schema.json",
+  "title": "Critly policy (.critly/policy.json)",
+  "description": "The app's design system as numbers, for critly check. Fix the UI, not the policy: changing this file or adding an exception needs the user's OK.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "ruleId": {
+      "enum": [
+        "text-contrast",
+        "hit-area",
+        "icon-button-name",
+        "input-details",
+        "overflow",
+        "type-scale",
+        "font-family",
+        "line-length",
+        "letter-spacing",
+        "tabular-numbers",
+        "html-background",
+        "transition-all",
+        "layout-animation",
+        "image-dimensions",
+        "placeholder-content",
+        "spacing-scale",
+        "off-token-color",
+        "nested-radius",
+        "focus-ring",
+        "reduced-motion",
+        "layout-shift",
+        "overlay-focus"
+      ]
+    },
+    "px": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "pair": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "scheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How to switch to this scheme. {} uses the default. Keys combine: storage is set before the page loads, class and attribute after.",
+      "properties": {
+        "media": {
+          "type": "boolean",
+          "description": "Emulate prefers-color-scheme (scheme must be named light or dark)."
+        },
+        "class": {
+          "type": "string",
+          "pattern": "^[\\w-]+$",
+          "description": "Class to add, e.g. \"dark\"."
+        },
+        "attribute": {
+          "$ref": "#/$defs/pair",
+          "description": "[name, value], e.g. [\"data-theme\", \"dark\"]."
+        },
+        "storage": {
+          "$ref": "#/$defs/pair",
+          "description": "localStorage [key, value] set before load, e.g. [\"theme\", \"dark\"] for next-themes."
+        },
+        "on": {
+          "type": "string",
+          "description": "Selector for class or attribute; default html."
+        }
+      }
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "fonts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "description": "Font families interface text may use. Enables font-family. Code, kbd, pre and samp are excluded."
+    },
+    "typeScale": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/px"
+      },
+      "minItems": 1,
+      "description": "Allowed font sizes in px. Enables type-scale."
+    },
+    "typeRoles": {
+      "type": "array",
+      "description": "Text inside a selector that uses its own sizes. The first match wins.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "selector",
+          "sizes"
+        ],
+        "properties": {
+          "selector": {
+            "type": "string"
+          },
+          "sizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/px"
+            },
+            "minItems": 1
+          }
+        }
+      }
+    },
+    "spacing": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0
+      },
+      "minItems": 1,
+      "description": "Spacing steps in px for the opt-in spacing-scale rule."
+    },
+    "colorTokens": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^--"
+      },
+      "minItems": 1,
+      "description": "Custom properties that are the app's colors (a trailing * matches a prefix). Default: every color custom property on :root except Tailwind's palette."
+    },
+    "lineLength": {
+      "type": "integer",
+      "minimum": 20,
+      "maximum": 200,
+      "default": 75,
+      "description": "Most characters per line for paragraphs."
+    },
+    "bannedPhrases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Phrases the UI must not show, on top of lorem ipsum, John Doe and TODO."
+    },
+    "tailwind": {
+      "type": "boolean",
+      "default": false,
+      "description": "Name Tailwind classes in fixes."
+    },
+    "schemes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/scheme"
+      },
+      "default": {
+        "light": {},
+        "dark": {
+          "media": true
+        }
+      }
+    },
+    "viewports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "width",
+          "height"
+        ],
+        "properties": {
+          "width": {
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 4000
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 4000
+          }
+        }
+      },
+      "default": [
+        {
+          "width": 390,
+          "height": 844
+        },
+        {
+          "width": 1440,
+          "height": 900
+        }
+      ]
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "description": "Paths to check, resolved against each URL given to critly check."
+    },
+    "ready": {
+      "type": "string",
+      "description": "Selector to wait for on every page before checking."
+    },
+    "rules": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/ruleId"
+      },
+      "additionalProperties": {
+        "enum": [
+          "error",
+          "off"
+        ]
+      },
+      "description": "Turn opt-in rules on (\"error\") or a rule off. Ask the user first."
+    },
+    "exceptions": {
+      "type": "array",
+      "description": "Findings the user accepted. Each matches an element or its ancestors. Suppressed findings are counted in every run.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "selector",
+          "rules",
+          "reason"
+        ],
+        "properties": {
+          "selector": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ruleId"
+            },
+            "minItems": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "ignore": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Selectors to skip entirely, for third-party widgets."
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 300,
+      "description": "One line appended to every finding."
+    },
+    "maxElements": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 5000
+    }
+  }
+}

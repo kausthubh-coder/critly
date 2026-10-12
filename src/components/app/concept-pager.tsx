@@ -13,7 +13,7 @@ export function ConceptPager({
         {prev && (
           <Link
             href={`/${prev.slug}`}
-            className="-mx-2 inline-flex min-h-8 items-center rounded-md px-2 text-muted-foreground hover:text-foreground pointer-coarse:min-h-11"
+            className="-mx-2 inline-flex min-h-8 items-center rounded-md px-2 text-muted-foreground hover:text-foreground max-sm:min-h-11"
           >
             ← <span className="ml-1">{prev.title}</span>
           </Link>
@@ -23,7 +23,7 @@ export function ConceptPager({
         {next && (
           <Link
             href={`/${next.slug}`}
-            className="-mx-2 inline-flex min-h-8 items-center rounded-md px-2 text-muted-foreground hover:text-foreground pointer-coarse:min-h-11"
+            className="-mx-2 inline-flex min-h-8 items-center rounded-md px-2 text-muted-foreground hover:text-foreground max-sm:min-h-11"
           >
             <span className="mr-1">{next.title}</span> →
           </Link>

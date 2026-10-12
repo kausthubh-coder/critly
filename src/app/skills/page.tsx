@@ -48,15 +48,15 @@ const AGENTS_LINES = `- UI work: use the \`critly\` skill. Read \`.critly/policy
 export default function SkillsPage() {
   return (
     <article>
-      <h1 className="text-base font-medium">Skills</h1>
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <h1 className="text-2xl font-semibold tracking-[-0.02em]">Skills</h1>
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         The same concepts as the library, written for your coding agent. They
         are plain files: your agent reads them while it builds and reviews, and
         nothing runs until it does. They work in Claude Code, Codex, Cursor and
         most other agents.
       </p>
 
-      <h2 className="mt-10 text-sm font-medium">Install</h2>
+      <h2 className="mt-10 text-lg font-medium">Install</h2>
       <CodeBlock
         tabs={[
           { label: "Every agent", language: "bash", code: SKILLS_INSTALL },
@@ -68,22 +68,22 @@ export default function SkillsPage() {
           { label: "Update", language: "bash", code: "npx skills update -g" },
         ]}
       />
-      <p className="mt-3 text-sm text-muted-foreground text-pretty">
+      <p className="mt-3 text-base text-muted-foreground text-pretty">
         Install globally so every project gets updates. A copy vendored inside
         one project goes stale; the skill notices and tells you once.
       </p>
 
-      <h2 className="mt-10 text-sm font-medium">The skills</h2>
+      <h2 className="mt-10 text-lg font-medium">The skills</h2>
       <ul className="mt-2 flex flex-col">
         {SKILLS.map((skill) => (
           <li key={skill.name} className="border-b border-border/60 py-4 last:border-b-0">
             <code className="font-mono text-[13px] text-foreground">
               {skill.name}
             </code>
-            <p className="mt-1.5 text-sm text-muted-foreground text-pretty">
+            <p className="mt-1.5 text-base text-muted-foreground text-pretty">
               {skill.detail}
             </p>
-            <p className="mt-2 text-sm text-pretty">
+            <p className="mt-2 text-base text-pretty">
               <span className="text-muted-foreground">Ask: </span>
               <span className="text-foreground">&ldquo;{skill.ask}&rdquo;</span>
             </p>
@@ -91,8 +91,8 @@ export default function SkillsPage() {
         ))}
       </ul>
 
-      <h2 className="mt-10 text-sm font-medium">Keep your agent on it</h2>
-      <p className="mt-2 text-sm text-muted-foreground text-pretty">
+      <h2 className="mt-10 text-lg font-medium">Keep your agent on it</h2>
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
         Agents read a skill once and rarely come back to it. AGENTS.md is in
         context for every task, whether or not the agent picks the skill, and
         it survives when a long session is compacted. In our tests, agents with

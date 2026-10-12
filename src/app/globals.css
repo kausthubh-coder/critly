@@ -379,3 +379,27 @@
   border-radius: 9999px;
   background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
 }
+
+/* Contrast fixes for the two highlighter palettes. Inline code sits on a grey
+   chip, where github-light's greens and blues fall under 4.5:1, so tokens are
+   pulled toward ink. Vesper's comments (#8B8B8B at 58%) land at 2.6:1 on the
+   dark code card, and github-light's orange is 3.5:1 on white. */
+.shiki-inline span {
+  color: color-mix(in oklab, var(--shiki-light) 70%, black);
+}
+.dark .shiki-inline span {
+  color: color-mix(in oklab, var(--shiki-dark) 80%, white);
+}
+.dark .shiki span[style*="--shiki-dark:#8B8B8B94" i] {
+  color: #8b8b8b;
+}
+html:not(.dark) .shiki span[style*="--shiki-light:#E36209" i] {
+  color: #b34a00;
+}
+
+/* Code blocks scroll, so they take keyboard focus; show it. */
+.code-block-panel .shiki:focus-visible,
+pre:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+}

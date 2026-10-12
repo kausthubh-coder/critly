@@ -25,7 +25,11 @@ export function ConceptCardBody({
 }) {
   return (
     <>
-      <div className="flex h-36 items-center justify-center">
+      <div
+        aria-hidden="true"
+        data-thumbnail=""
+        className="flex h-36 items-center justify-center"
+      >
         <ConceptThumbnail slug={slug} section={section} />
       </div>
       <div className="p-4">
@@ -36,13 +40,13 @@ export function ConceptCardBody({
           {available && CHECKED_CONCEPTS.has(slug) && (
             <span
               title="The Critly check measures this concept"
-              className="shrink-0 rounded-full bg-muted px-1.5 py-px text-[10px] leading-4 font-medium text-muted-foreground shadow-(--custom-shadow)"
+              className="shrink-0 rounded-full bg-muted px-1.5 py-px text-xs font-medium text-foreground/75 shadow-(--custom-shadow)"
             >
               Checked
             </span>
           )}
           {!available && (
-            <span className="shrink-0 rounded-full border border-dashed border-sky-300 bg-sky-500/10 px-1.5 py-px text-[10px] leading-4 font-medium text-sky-600 dark:border-sky-900 dark:bg-sky-400/10 dark:text-sky-400">
+            <span className="shrink-0 rounded-full border border-dashed border-sky-300 bg-sky-500/10 px-1.5 py-px text-xs font-medium text-sky-700 dark:border-sky-900 dark:bg-sky-400/10 dark:text-sky-400">
               Soon
             </span>
           )}

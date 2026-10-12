@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "build:skill": "bun scripts/build-skill.ts"
+    "build:skill": "bun scripts/build-skill.ts",
+    "lint:ui": "node packages/critly/bin/critly.js check http://localhost:3000"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

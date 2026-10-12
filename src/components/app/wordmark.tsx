@@ -30,7 +30,7 @@ export function CritlyMark({ className }: { className?: string }) {
 export function Wordmark() {
   return (
     <Link
-      className="group flex items-center gap-1.5 text-base font-semibold tracking-[-0.01em] text-foreground"
+      className="group -my-2.5 flex items-center gap-1.5 py-2.5 text-base font-semibold tracking-[-0.01em] text-foreground"
       href="/"
       onClick={() => playSound("tick")}
     >

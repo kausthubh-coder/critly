@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrast</title>
+<link rel="stylesheet" href="/_base.css">
+<style>.soft { opacity: 0.9; } .card { position: relative; padding: 16px; isolation: isolate; } .card .bg { position: absolute; inset: 0; background: #f0f0f0; z-index: -1; } .dark .card .bg { background: #222222; } .card .inner { background: var(--background); padding: 8px; }</style>
+</head>
+<body>
+<main>
+<h1>Contrast</h1>
+<p class="soft">Slightly faded text that still clears 4.5:1.</p>
+<div class="card"><div class="bg"></div><div class="inner"><p style="margin:0">Text on an opaque surface above a decorative layer.</p></div></div>
+</main>
+</body>
+</html>

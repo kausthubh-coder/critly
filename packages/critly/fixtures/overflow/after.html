@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overflow</title>
+<link rel="stylesheet" href="/_base.css">
+<style>.wide { width: 1600px; max-width: 100%; border: 1px solid var(--border); } .scroller { overflow-x: auto; } .scroller div { width: 1600px; } .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }</style>
+</head>
+<body>
+<main>
+<h1>Overflow</h1>
+<div class="wide">A panel that shrinks to fit.</div>
+<div class="scroller"><div>A wide table in its own horizontal scroll region.</div></div>
+<p class="truncate">A long title truncated on purpose with an ellipsis so it stays on one line at any width at all</p>
+</main>
+</body>
+</html>

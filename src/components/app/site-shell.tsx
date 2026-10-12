@@ -84,9 +84,12 @@ export function SiteShell({
             and animation - only the first one animates in. */}
         <TooltipProvider timeout={500}>
           <div className="flex items-center gap-1">
-            {isConcept && <CopyMarkdownButton href={`/${slug}.md`} />}
-            <CopyLinkButton />
-            <ViewInRepoButton href={repoUrl} />
+            {/* Three 44px targets fit a 390px header; these three wait for desktop. */}
+            <div className="hidden items-center gap-1 sm:flex">
+              {isConcept && <CopyMarkdownButton href={`/${slug}.md`} />}
+              <CopyLinkButton />
+              <ViewInRepoButton href={repoUrl} />
+            </div>
             <ThemeSwitcher />
             <SoundToggle />
           </div>
