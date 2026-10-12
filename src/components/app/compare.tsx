@@ -22,7 +22,7 @@ export function CompareLabel({
     <div
       className={cn(
         "flex items-center gap-1.5 text-sm font-medium",
-        verdict === "wrong" ? "text-destructive" : "text-emerald-500",
+        verdict === "wrong" ? "text-destructive" : "text-emerald-700 dark:text-emerald-400",
         className
       )}
     >
@@ -89,7 +89,7 @@ export const WRONG_ICON = (
 export const RIGHT_ICON = (
   <CheckCircleIcon
     aria-hidden="true"
-    className="size-4 text-emerald-500"
+    className="size-4 text-emerald-700 dark:text-emerald-400"
     weight="fill"
   />
 );

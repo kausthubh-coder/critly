@@ -8,12 +8,12 @@ export function ConceptPager({
   next?: { title: string; slug: string };
 }) {
   return (
-    <nav className="mt-16 flex items-baseline justify-between border-t pt-6 text-xs">
+    <nav className="mt-16 flex items-center justify-between gap-4 border-t pt-4 text-xs">
       <span>
         {prev && (
           <Link
             href={`/${prev.slug}`}
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="-mx-2 inline-flex min-h-8 items-center rounded-md px-2 text-muted-foreground hover:text-foreground pointer-coarse:min-h-11"
           >
             ← <span className="ml-1">{prev.title}</span>
           </Link>
@@ -23,7 +23,7 @@ export function ConceptPager({
         {next && (
           <Link
             href={`/${next.slug}`}
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="-mx-2 inline-flex min-h-8 items-center rounded-md px-2 text-muted-foreground hover:text-foreground pointer-coarse:min-h-11"
           >
             <span className="mr-1">{next.title}</span> →
           </Link>

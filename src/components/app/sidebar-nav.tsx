@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { playSound, progressionDetune } from "@/lib/sounds";
 import type { NavSection } from "@/lib/sections";
@@ -124,6 +124,20 @@ export function SidebarNav({
   // The nav renders twice (sidebar + mobile sheet) - keep the dot's
   // shared-layout animation scoped to each instance.
   const dotId = useId();
+  const navRef = useRef<HTMLElement>(null);
+
+  // On a deep link the active row can sit below the fold of the list's own
+  // scroll area. Bring it to the middle once, on mount, without moving the page.
+  useEffect(() => {
+    const nav = navRef.current;
+    const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !active) return;
+    const navBox = nav.getBoundingClientRect();
+    const rowBox = active.getBoundingClientRect();
+    if (rowBox.top >= navBox.top + 48 && rowBox.bottom <= navBox.bottom - 48) return;
+    nav.scrollTop += rowBox.top - navBox.top - navBox.height / 2;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Every row in nav order, so we can measure how far the dot travels and
   // which colour it is leaving behind. Unavailable concepts still count as
@@ -172,10 +186,11 @@ export function SidebarNav({
   let step = 0;
 
   const linkClass =
-    "inline-block rounded-[3px] py-1 outline-none transition-colors duration-200 focus-visible:ring-[1.5px] focus-visible:ring-inset focus-visible:ring-ring/60";
+    "inline-block rounded-[3px] py-1 pointer-coarse:py-3.5 outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-foreground";
 
   return (
     <nav
+      ref={navRef}
       aria-label="Concepts"
       // py-12 matches the 3rem fade-mask-y stops, so at rest the list sits
       // fully inside the opaque zone and only overflow fades at the edges.
@@ -202,6 +217,7 @@ export function SidebarNav({
               {active && renderDot("foreground")}
               <Link
                 href={page.href}
+                aria-current={active ? "page" : undefined}
                 onClick={() => playSound("tick")}
                 onMouseEnter={() => playSound("hover", { detune: 0 })}
                 className={cn(
@@ -241,6 +257,7 @@ export function SidebarNav({
                     {available ? (
                       <Link
                         href={`/${concept.slug}`}
+                        aria-current={active ? "page" : undefined}
                         onClick={() => playSound("tick")}
                         onMouseEnter={() => playSound("hover", { detune })}
                         className={cn(

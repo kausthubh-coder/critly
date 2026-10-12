@@ -8,292 +8,182 @@ import { LinkList } from "@/components/app/resources";
 import {
   AlignmentDemo,
   AlignmentIconsDemo,
-} from "@/components/demos/alignment";
-import {
   ButtonPressDemo,
   PressAmountDemo,
   PressEverywhereDemo,
-} from "@/components/demos/button-press";
-import {
   ClipPathCompareDemo,
   ClipPathHoldDemo,
   ClipPathRevealDemo,
   ClipPathTabsDemo,
-} from "@/components/demos/clip-path";
-import {
   ColorRolesDemo,
   ColorTintDemo,
-} from "@/components/demos/color-roles";
-import {
   CommandMenuDemo,
   CommandSearchDemo,
   CommandShortcutsDemo,
-} from "@/components/demos/command-menu";
-import {
   CurveOvershootDemo,
   CurveSmoothingDemo,
-} from "@/components/demos/curve-smoothing";
-import {
   DarkElevationDemo,
   DarkModeDemo,
-} from "@/components/demos/dark-mode";
-import {
   DensityDemo,
   DensityPaddingDemo,
-} from "@/components/demos/density";
-import {
   DesignTokensDemo,
   TokenRolesDemo,
-} from "@/components/demos/design-tokens";
-import {
   ConfirmDialogDemo,
   DeleteUndoDemo,
-} from "@/components/demos/destructive-actions";
-import {
   EasingCurveDemo,
   EasingsDemo,
   StrongEasingDemo,
-} from "@/components/demos/easings";
-import {
   EmptySearchDemo,
   EmptyStatesDemo,
-} from "@/components/demos/empty-states";
-import { EffectCountDemo } from "@/components/demos/effect-cost";
-import {
+  EffectCountDemo,
   ExitAnimationsDemo,
   ExitListDemo,
-} from "@/components/demos/exit-animations";
-import { FontRaceDemo } from "@/components/demos/font-loading";
-import {
+  FontRaceDemo,
   FocusForcedColorsDemo,
   FocusObscuredDemo,
   FocusOffsetDemo,
   FocusRingsDemo,
-} from "@/components/demos/focus-rings";
-import {
   FontSmoothingDemo,
   FontSmoothingWeightsDemo,
-} from "@/components/demos/font-smoothing";
-import {
   HitAreasExpandDemo,
   HitAreasGapDemo,
   HitAreasToolbarDemo,
-} from "@/components/demos/hit-areas";
-import {
   HoverRestraintDemo,
   HoverTooltipDemo,
   KeyboardActionDemo,
-} from "@/components/demos/hover-restraint";
-import { HtmlBackgroundDemo } from "@/components/demos/html-background";
-import {
+  HtmlBackgroundDemo,
   HamburgerMorphDemo,
   IconMorphDemo,
   IconMorphTuningDemo,
-} from "@/components/demos/icon-morph";
-import {
   IconMixDemo,
   IconTextSizeDemo,
   IconWeightsDemo,
-} from "@/components/demos/icon-weights";
-import {
   ImageOutlineAvatarDemo,
   ImageOutlineDemo,
   ImageOutlineStrengthDemo,
-} from "@/components/demos/image-outline";
-import {
   InputKeyboardDemo,
   InputValidationDemo,
-} from "@/components/demos/input-details";
-import {
   DisabledReasonDemo,
   HoverShiftDemo,
   InteractionStatesDemo,
-} from "@/components/demos/interaction-states";
-import {
   HoverSoundDemo,
   SoundCuesDemo,
   SoundLevelDemo,
-} from "@/components/demos/interface-sfx";
-import {
   InterruptibilityDemo,
   SpringVelocityDemo,
   ToastStackDemo,
-} from "@/components/demos/interruptibility";
-import {
   ArpeggioSpacingDemo,
   SoundLayersDemo,
   TextureLayersDemo,
-} from "@/components/demos/layering-sounds";
-import {
   HydrationGapDemo,
   LoadOnIntentDemo,
-} from "@/components/demos/javascript-cost";
-import { FontSwapDemo, LayoutShiftDemo } from "@/components/demos/layout-shift";
-import { ReadySignalDemo, RepeatRunsDemo } from "@/components/demos/measuring";
-import { ChatAnchorDemo, LongListDemo } from "@/components/demos/long-lists";
-import {
+  FontSwapDemo,
+  LayoutShiftDemo,
+  ReadySignalDemo,
+  RepeatRunsDemo,
+  ChatAnchorDemo,
+  LongListDemo,
   LetterSpacingDemo,
   UppercaseTrackingDemo,
-} from "@/components/demos/letter-spacing";
-import {
   LineHeightDemo,
   LineLengthDemo,
   LineReturnDemo,
-} from "@/components/demos/line-length";
-import {
   ImageArrivalDemo,
   PlaceholderDemo,
-} from "@/components/demos/image-loading";
-import {
   PrefetchDemo,
   SpinnerDelayDemo,
-} from "@/components/demos/instant-navigation";
-import {
   GlassLegibilityDemo,
   LiquidGlassDemo,
-} from "@/components/demos/liquid-glass";
-import {
   GooeyTabsDemo,
   MorphDemo,
   StretchDemo,
-} from "@/components/demos/liquid-motion";
-import {
   LivingBarsDemo,
   LivingChartsDemo,
-} from "@/components/demos/living-charts";
-import {
   ErrorMessagesDemo,
   MicrocopyDemo,
   PluralCountDemo,
-} from "@/components/demos/microcopy";
-import { ProjectionDemo, VelocityHandoffDemo } from "@/components/demos/momentum";
-import {
+  ProjectionDemo,
+  VelocityHandoffDemo,
   NestedRadiusDemo,
   NestedRadiusExamplesDemo,
   RadiusCalculatorDemo,
-} from "@/components/demos/nested-radius";
-import {
   NoiseBandingDemo,
   NoiseDemo,
   NoiseFrequencyDemo,
   NoiseSurfaceDemo,
-} from "@/components/demos/noise";
-import {
   AnimationCostDemo,
   NoveltyBudgetDemo,
-} from "@/components/demos/novelty-budget";
-import {
   OklchDemo,
   OklchGradientDemo,
   OklchPaletteDemo,
-} from "@/components/demos/oklch";
-import {
   HangingPunctuationDemo,
   OpticalAlignmentDemo,
   OpticalButtonDemo,
   OpticalSizingDemo,
   OpticalWeightDemo,
-} from "@/components/demos/optical-alignment";
-import {
   OverlayFocusDemo,
   OverlayScrollDemo,
-} from "@/components/demos/overlays";
-import {
   LoadingFlashDemo,
   OptimisticDemo,
   PerceivedPerformanceDemo,
   SpinnerSpeedDemo,
-} from "@/components/demos/perceived-performance";
-import {
   FeelMismatchDemo,
   ProductFeelDemo,
-} from "@/components/demos/product-feel";
-import {
   RealContentDemo,
   RealContentGridDemo,
-} from "@/components/demos/real-content";
-import { ReducedMotionDemo } from "@/components/demos/reduced-motion";
-import {
+  ReducedMotionDemo,
   PaintFirstDemo,
   TypingLagDemo,
-} from "@/components/demos/responsiveness";
-import {
   DepthOfFieldDemo,
   RubberBandDemo,
-} from "@/components/demos/references";
-import {
   ContainerQueryDemo,
   FluidTypeDemo,
-} from "@/components/demos/responsive";
-import {
   ScaleEntrancesDemo,
   StartingScaleDemo,
   TransformOriginDemo,
-} from "@/components/demos/scale-entrances";
-import {
   ScrollFadesDemo,
   ScrollFadesEdgeDemo,
   ScrollFadesHorizontalDemo,
-} from "@/components/demos/scroll-fades";
-import {
   ShadowDarkModeDemo,
   ShadowElevationDemo,
   ShadowLayersDemo,
   ShadowsNotBordersDemo,
-} from "@/components/demos/shadows-not-borders";
-import {
   SharedLayoutDemo,
   SharedLayoutDetailDemo,
-} from "@/components/demos/shared-layout";
-import {
   MainThreadDemo,
   ShadowLiftDemo,
-} from "@/components/demos/smooth-animation";
-import {
   SpacingScaleDemo,
   SpacingStepsDemo,
-} from "@/components/demos/spacing-scale";
-import { SpringBounceDemo, SpringTunerDemo } from "@/components/demos/springs";
-import {
+  SpringBounceDemo,
+  SpringTunerDemo,
   SquircleCompareDemo,
   SquircleCurvatureDemo,
   SquircleExamplesDemo,
-} from "@/components/demos/squircles";
-import {
   StaggerCapDemo,
   StaggerCompareDemo,
   StaggerDemo,
-} from "@/components/demos/stagger";
-import {
   TabularNumsDemo,
   TabularTableDemo,
   TabularTimerDemo,
-} from "@/components/demos/tabular-nums";
-import {
   PairJudgementDemo,
   SpotTheDifferenceDemo,
-} from "@/components/demos/taste";
-import { TextBalanceDemo, TextPrettyDemo } from "@/components/demos/text-wrapping";
-import {
+  TextBalanceDemo,
+  TextPrettyDemo,
   StructureErasDemo,
   SurfaceErasDemo,
-} from "@/components/demos/timelessness";
-import { ToastStackingDemo, ToastsDemo } from "@/components/demos/toasts";
-import {
+  ToastStackingDemo,
+  ToastsDemo,
   TypeScaleDemo,
   TypeScaleRatioDemo,
-} from "@/components/demos/type-scale";
-import {
   HierarchyActionsDemo,
   HierarchyLabelsDemo,
   VisualHierarchyDemo,
-} from "@/components/demos/visual-hierarchy";
-import { EmbedFacadeDemo, VideoRevealDemo } from "@/components/demos/video-embeds";
-import {
+  EmbedFacadeDemo,
+  VideoRevealDemo,
   WhitespaceDemo,
   WhitespaceDividersDemo,
   WhitespaceSquintDemo,
-} from "@/components/demos/whitespace";
+} from "@/components/app/demos";
 import { cn } from "@/lib/utils";
 
 const components: MDXComponents = {

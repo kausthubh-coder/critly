@@ -46,6 +46,12 @@ export function SiteShell({
 
   return (
     <div className="min-h-dvh">
+      <a
+        href="#main"
+        className="sr-only rounded-md bg-background px-3 py-2 text-sm shadow-(--custom-shadow) focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50"
+      >
+        Skip to content
+      </a>
       <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-background/80 sm:bg-transparent p-5 backdrop-blur-sm sm:backdrop-blur-none sm:px-8 sm:py-6.5">
         <div className="flex items-center gap-1">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -95,7 +101,11 @@ export function SiteShell({
 
       {/* px-7 on mobile lines the content up with the header icon glyphs,
           which sit 8px inside their size-8 ghost buttons (20px pad + 8px). */}
-      <main className="mx-auto w-full max-w-160 px-7 pt-28 pb-24 sm:px-8">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-160 px-7 pt-28 pb-24 outline-none sm:px-8"
+      >
         {children}
       </main>
 
