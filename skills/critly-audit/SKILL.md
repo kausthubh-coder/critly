@@ -4,7 +4,6 @@ description: 'Audit the design of an existing app or website and optionally fix 
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
-  forked-from: https://github.com/gustavo-fior/craft
 ---
 
 # Audit

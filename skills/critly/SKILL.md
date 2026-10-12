@@ -5,7 +5,6 @@ metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
   version: "2026-10-12"
-  forked-from: https://github.com/gustavo-fior/craft
 ---
 
 # Critly
