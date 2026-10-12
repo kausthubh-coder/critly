@@ -7,7 +7,7 @@
 - Section: Motion
 - URL: https://critly.vercel.app/icon-morph
 - Published: 2026-07-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/icon-morph.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/icon-morph.mdx
 
 When an icon changes state, like copy to check or play to pause, the default
 is a hard swap. One frame shows the old icon, the next frame shows the new
@@ -101,7 +101,7 @@ this component.
 - Section: Motion
 - URL: https://critly.vercel.app/button-press
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/button-press.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/button-press.mdx
 
 A real button moves when you push it. A button on screen can borrow that with
 one rule: **scale it down a little while it is pressed.** It tells you the
@@ -182,7 +182,7 @@ hover too, and you don't want the press timing to leak into that.
 - Section: Motion
 - URL: https://critly.vercel.app/easings
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/easings.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/easings.mdx
 
 An **easing** is the speed profile of an animation: how fast it starts and how
 it settles. Duration says how long a menu takes to open. Easing decides
@@ -280,7 +280,7 @@ it gets its own name.
 - Section: Motion
 - URL: https://critly.vercel.app/springs
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/springs.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/springs.mdx
 
 An [easing](https://critly.vercel.app/easings) bends a fixed amount of time. A **spring** has no clock.
 It pulls a value toward its target, and the pull and the friction decide how
@@ -413,7 +413,7 @@ on an open is fine. Keep closes and opacity flat.
 - Section: Motion
 - URL: https://critly.vercel.app/stagger
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/stagger.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/stagger.mdx
 
 When a list appears all at once, it reads as one block. When each row arrives
 a moment after the one above, it reads as a list. **Stagger** is that small
@@ -519,7 +519,7 @@ only notice it once the delays get long.
 - Section: Motion
 - URL: https://critly.vercel.app/interruptibility
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/interruptibility.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/interruptibility.mdx
 
 People change their mind halfway through an animation. They open a sheet and
 close it before it lands, or hit a toggle twice in a row. An
@@ -624,7 +624,7 @@ isn't interruptible yet.
 - Section: Motion
 - URL: https://critly.vercel.app/momentum
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/momentum.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/momentum.mdx
 
 When you let go of something you're dragging, it's still moving. Whatever
 animation takes over has to start at that speed, or there's a seam: the
@@ -736,7 +736,7 @@ and settle the release with no bounce and no long coast.
 - Section: Motion
 - URL: https://critly.vercel.app/hover-restraint
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/hover-restraint.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/hover-restraint.mdx
 
 Hover fires more than any other interaction. When you sweep the cursor across a nav
 you can cross ten items in a second. If each one fades in, the
@@ -803,7 +803,7 @@ Notable examples of interactions that would be worse if animated:
 - Section: Motion
 - URL: https://critly.vercel.app/shared-layout
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/shared-layout.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/shared-layout.mdx
 
 When a tab highlight jumps from one tab to the next, your eye has to find it
 again. When it slides, you never lose it. A **shared layout** animation
@@ -904,7 +904,7 @@ fast second click makes the morph snap to its end instead of turning around.
 - Section: Motion
 - URL: https://critly.vercel.app/liquid-motion
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/liquid-motion.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/liquid-motion.mdx
 
 The Dynamic Island doesn't open a window. It grows. Apple's newer controls
 pop open into menus right where you tapped, and the Family wallet's tray
@@ -1045,7 +1045,7 @@ around, and the page can't be clicked while one plays.
 - Section: Motion
 - URL: https://critly.vercel.app/exit-animations
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/exit-animations.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/exit-animations.mdx
 
 The lazy exit is the entrance played backwards: same distance, same
 duration, same curve. It looks tidy, but it gives a goodbye as much time as a
@@ -1153,7 +1153,7 @@ fade has finished.
 - Section: Motion
 - URL: https://critly.vercel.app/scale-entrances
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/scale-entrances.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/scale-entrances.mdx
 
 Menus, popovers and dialogs often enter with a bit of scale, so they seem to
 arrive instead of switching on. But a **scale entrance** that starts at zero
@@ -1251,7 +1251,7 @@ like `origin-top-right` for a menu that opens below a right-aligned button.
 - Section: Motion
 - URL: https://critly.vercel.app/reduced-motion
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/motion/reduced-motion.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/reduced-motion.mdx
 
 Movement on screen can make some people dizzy or sick. Sliding panels, zooms
 and parallax are the usual triggers, which is why every major operating system

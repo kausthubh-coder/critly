@@ -236,7 +236,7 @@ This copy is dated by `version` above. The live index is
 https://critly.vercel.app/llms.txt. If a concept named in this file or on the
 live site is missing from `references/`, this copy is out of date: tell the
 user once, and suggest `npx skills update -g` to update it (or
-`npx skills add kausthubh-coder/craft -g` if it wasn't installed that way).
+`npx skills add kausthubh-coder/critly -g` if it wasn't installed that way).
 Don't keep a vendored copy inside a project; install it globally so every
 project gets updates.
 

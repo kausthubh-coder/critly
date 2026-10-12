@@ -7,7 +7,7 @@
 - Section: Color
 - URL: https://critly.vercel.app/oklch
 - Published: 2026-07-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/oklch.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/oklch.mdx
 
 In HSL, lightness is a number the math likes and your eyes don't. A yellow at
 65% looks bright and a blue at 65% looks far darker. **OKLCH** defines lightness the
@@ -115,7 +115,7 @@ in, and its lightness can shift on the way, so check new colors at
 - Section: Color
 - URL: https://critly.vercel.app/noise
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/noise.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/noise.mdx
 
 When the UI feels too flat, sometimes I like to add noise to some components to give them some texture.
 
@@ -232,7 +232,7 @@ As a rule: use the live filter on small surfaces and in demos where you want to 
 - Section: Color
 - URL: https://critly.vercel.app/shadows-not-borders
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/shadows-not-borders.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/shadows-not-borders.mdx
 
 A 1px border is the default way to give a card an edge. It works, but every
 border is a line, and a screen full of lines starts to look like a
@@ -348,7 +348,7 @@ shadow for things that hold other things.
 - Section: Color
 - URL: https://critly.vercel.app/image-outlines
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/image-outlines.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/image-outlines.mdx
 
 Images do not know what is behind them. A pale sky on a white card has no
 edge at all, and a photo with a bright corner blends into the page.
@@ -437,7 +437,7 @@ img {
 - Section: Color
 - URL: https://critly.vercel.app/color-roles
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/color-roles.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/color-roles.mdx
 
 Give the brand color to everything that could take it, and it stops meaning
 anything. The title is blue, the tabs are blue, the numbers, links and status
@@ -545,7 +545,7 @@ hue wheel, or add an icon, so nobody mistakes your logo color for an error.
 - Section: Color
 - URL: https://critly.vercel.app/dark-mode
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/dark-mode.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/dark-mode.mdx
 
 The quickest dark mode is an inversion: white backgrounds turn black, black
 text turns white, and everything else stays. It looks wrong in ways that are
@@ -672,7 +672,7 @@ this site uses, writes it on the root element for you.
 - Section: Color
 - URL: https://critly.vercel.app/liquid-glass
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/color/liquid-glass.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/liquid-glass.mdx
 
 Frosted glass scatters light: everything behind it turns to fog. Apple's
 Liquid Glass, introduced in 2025, bends light instead. It acts like a lens:

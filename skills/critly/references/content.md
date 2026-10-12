@@ -7,7 +7,7 @@
 - Section: Content
 - URL: https://critly.vercel.app/microcopy
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/content/microcopy.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/content/microcopy.mdx
 
 A button that says "OK" makes you read the whole dialog again to find out what
 OK will do. The words in an interface are controls, just like the buttons they
@@ -117,7 +117,7 @@ translator can't fix a sentence they only see in pieces.
 - Section: Content
 - URL: https://critly.vercel.app/real-content
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/content/real-content.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/content/real-content.mdx
 
 Mockups are full of Jane Doe. Her name is short, her photo is square, and she
 has exactly 12 tasks. Your real users have long names, no photo, zero tasks or

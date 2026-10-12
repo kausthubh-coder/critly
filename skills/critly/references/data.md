@@ -7,7 +7,7 @@
 - Section: Data
 - URL: https://critly.vercel.app/living-charts
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/data/living-charts.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/data/living-charts.mdx
 
 Live data arrives in steps. A server sends a number every second or so, and
 if the chart draws each one the moment it lands, the whole line jumps.
@@ -99,7 +99,7 @@ is set, return 1 from the hook and the chart steps like the left card.
 - Section: Data
 - URL: https://critly.vercel.app/curve-smoothing
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/data/curve-smoothing.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/data/curve-smoothing.mdx
 
 A line chart joins points, and the way it joins them says something about
 the values in between. Straight segments are honest but jagged. Smooth

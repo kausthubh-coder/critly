@@ -16,7 +16,7 @@ export function GET() {
   const lines: string[] = [
     `# ${SITE_NAME}`,
     "",
-    `> ${SITE_DESCRIPTION} Each concept is a short explainer with an interactive demo, forked from Craft by Gustavo Fior.`,
+    `> ${SITE_DESCRIPTION} Each concept is a short explainer with an interactive demo.`,
     "",
     `Every concept is available as Markdown by appending \`.md\` to its URL (links below already do). The full text of every concept in one file is at ${SITE_URL}/llms-full.txt.`,
     "",
@@ -41,7 +41,7 @@ export function GET() {
   lines.push(
     "## Pages",
     "",
-    `- [GOATs](${SITE_URL}/goats): The design engineers whose writing and work shaped this site.`,
+    `- [Credits](${SITE_URL}/credits): The projects and people Critly is built on.`,
     `- [Resources](${SITE_URL}/resources): Tools, references, and reading for design engineering.`,
     "",
     "## Agents",

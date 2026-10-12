@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 // that asks for `text/markdown` via the Accept header. Both rewrite to the
 // prerendered route handler at `/md/<slug>`.
 
-const NON_CONCEPT_PAGES = new Set(["goats", "resources"]);
+const NON_CONCEPT_PAGES = new Set(["credits", "resources"]);
 
 function prefersMarkdown(accept: string | null) {
   if (!accept) return false;

@@ -2,15 +2,11 @@ import { allConcepts } from "content-collections";
 
 import { CodeBlock } from "@/components/app/code-block";
 import { ConceptCard } from "@/components/app/concept-card";
-import { ProseLink } from "@/components/app/prose-link";
 import { RepoCard } from "@/components/app/repo-card";
 import { SectionIcon } from "@/components/app/section-icon";
 import { groupBySection } from "@/lib/sections";
 import {
   GITHUB_REPO,
-  ORIGINAL_AUTHOR,
-  ORIGINAL_NAME,
-  ORIGINAL_URL,
   SITE_DESCRIPTION,
 } from "@/lib/site";
 
@@ -50,16 +46,6 @@ export default function IndexPage() {
         Critly is open source. To contribute, here&apos;s the repo:
       </p>
       <RepoCard />
-      <p className="mt-3 text-sm text-muted-foreground">
-        Critly began as a fork of{" "}
-        <ProseLink href={ORIGINAL_URL}>{ORIGINAL_NAME}</ProseLink> by{" "}
-        {ORIGINAL_AUTHOR}, who built the site, its design language, the demo
-        framework and the first concepts. Critly completes the rest and adds
-        the Interaction and Content sections, the newer motion and
-        performance concepts, and the review and audit skills. Many of the
-        newer concepts were written with AI and checked against their
-        sources.
-      </p>
       <div className="mt-8 flex flex-col gap-12">
         {sections.map(({ section, concepts }) => (
           <section key={section}>

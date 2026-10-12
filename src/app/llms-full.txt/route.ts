@@ -11,7 +11,7 @@ export function GET() {
   const parts: string[] = [
     `# ${SITE_NAME}`,
     "",
-    `> ${SITE_DESCRIPTION} Each concept is a short explainer with an interactive demo, forked from Craft by Gustavo Fior.`,
+    `> ${SITE_DESCRIPTION} Each concept is a short explainer with an interactive demo.`,
     "",
     `This file contains every published concept in full. The index is at ${SITE_URL}/llms.txt, and each concept is also available on its own by appending \`.md\` to its URL.`,
     "",

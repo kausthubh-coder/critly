@@ -47,7 +47,7 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Pages">
           <CommandItem onSelect={() => go("/")}>Index</CommandItem>
-          <CommandItem onSelect={() => go("/goats")}>GOATs</CommandItem>
+          <CommandItem onSelect={() => go("/credits")}>Credits</CommandItem>
           <CommandItem onSelect={() => go("/resources")}>Resources</CommandItem>
         </CommandGroup>
         {sections.map(({ section, concepts }) => (

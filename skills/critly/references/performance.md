@@ -7,7 +7,7 @@
 - Section: Performance
 - URL: https://critly.vercel.app/measuring-performance
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/measuring-performance.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/measuring-performance.mdx
 
 Most performance work goes wrong before any code changes. It measures the
 wrong moment, on the wrong machine, once, and then a fix that changed
@@ -146,7 +146,7 @@ treat a result from one as a best case, not a measurement.
 - Section: Performance
 - URL: https://critly.vercel.app/responsiveness
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/responsiveness.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/responsiveness.mdx
 
 People don't feel how long the work takes. They feel how long the screen
 takes to answer. A tap that changes something within about 50ms feels like
@@ -272,7 +272,7 @@ mobile, because a fast laptop hides almost all of this.
 - Section: Performance
 - URL: https://critly.vercel.app/instant-navigation
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/instant-navigation.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/instant-navigation.mdx
 
 Moving between screens is the most common thing people do in an app, and
 they decide whether it feels fast in the first tenth of a second. Most of
@@ -402,7 +402,7 @@ restore the previous screen and its scroll position from cache.
 - Section: Performance
 - URL: https://critly.vercel.app/image-loading
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/image-loading.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/image-loading.mdx
 
 Images are usually the heaviest thing on a page and the last thing to
 arrive. How they arrive is part of the design: they can drop into an empty
@@ -506,7 +506,7 @@ see [Layout Shift](https://critly.vercel.app/layout-shift).
 - Section: Performance
 - URL: https://critly.vercel.app/font-loading
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/font-loading.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/font-loading.mdx
 
 A web font is a file the page has to wait for. While it's on its way, the
 browser has two choices: hide the text, or show it in a fallback and swap
@@ -637,7 +637,7 @@ look at the layout-shift entries around the moment the font arrives; see
 - Section: Performance
 - URL: https://critly.vercel.app/video-and-embeds
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/video-and-embeds.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/video-and-embeds.mdx
 
 A video player is one of the heaviest things you can put on a page, and
 often nobody presses play. A single YouTube embed downloads about a megabyte
@@ -768,7 +768,7 @@ attribute.
 - Section: Performance
 - URL: https://critly.vercel.app/javascript-cost
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/javascript-cost.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/javascript-cost.mdx
 
 Every kilobyte of JavaScript costs more than a kilobyte of anything else. An
 image is downloaded and decoded mostly off to the side. A script is
@@ -902,7 +902,7 @@ almost all of this.
 - Section: Performance
 - URL: https://critly.vercel.app/long-lists
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/long-lists.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/long-lists.mdx
 
 Feeds, tables, chat logs and search results grow until they're the slowest
 thing in the app. Every row is a handful of elements, and the browser has to
@@ -1037,7 +1037,7 @@ Use a library for chat lists rather than hand-written scroll math.
 - Section: Performance
 - URL: https://critly.vercel.app/smooth-animation
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/smooth-animation.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/smooth-animation.mdx
 
 A browser tab does almost everything on one thread: your JavaScript, React,
 style, layout and paint. Smooth motion needs a new frame every 16ms at 60Hz
@@ -1176,7 +1176,7 @@ Design](https://critly.vercel.app/performance-is-design).
 - Section: Performance
 - URL: https://critly.vercel.app/effect-cost
 - Published: 2026-10-08
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/performance/effect-cost.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/effect-cost.mdx
 
 A blur, a big shadow or a glass surface looks like a styling choice, but each
 one is work the browser repeats. A blur redraws every time anything behind it

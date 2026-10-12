@@ -7,7 +7,7 @@
 - Section: Interaction
 - URL: https://critly.vercel.app/interaction-states
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/interaction-states.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/interaction-states.mdx
 
 A button is usually designed once, at rest. But people meet it in five other
 states: hovered, pressed, focused from the keyboard, disabled and loading. If
@@ -112,7 +112,7 @@ focused button would drop focus to the page while the request runs.
 - Section: Interaction
 - URL: https://critly.vercel.app/focus-rings
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/focus-rings.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/focus-rings.mdx
 
 A focus ring is the keyboard's cursor. Without it, someone pressing Tab is
 moving through the page blind. It gets removed so often because it used to show
@@ -206,7 +206,7 @@ transparent outline for forced colors mode.
 - Section: Interaction
 - URL: https://critly.vercel.app/input-details
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/input-details.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/input-details.mdx
 
 Most of what makes a form pleasant on a phone is invisible. The right keyboard
 appears, the page doesn't jump, the browser offers your email before you type
@@ -295,7 +295,7 @@ focus to the first field with an error.
 - Section: Interaction
 - URL: https://critly.vercel.app/empty-states
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/empty-states.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/empty-states.mdx
 
 A new user's first screen is usually empty. No projects, no messages, no data.
 Whatever sits there is their introduction to the feature, and "No data." doesn't
@@ -402,7 +402,7 @@ page jumps when the first item arrives and again when the last one leaves.
 - Section: Interaction
 - URL: https://critly.vercel.app/command-menu
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/command-menu.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/command-menu.mdx
 
 A command menu puts every action behind one shortcut. Press Cmd+K, or Ctrl+K on
 Windows, type a few letters, press Enter. Nobody has to remember where a
@@ -522,7 +522,7 @@ theme".
 - Section: Interaction
 - URL: https://critly.vercel.app/overlays
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/overlays.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/overlays.mdx
 
 A modal says everything else is on hold until you're done here. Two things
 quietly break that. Scrolling leaks out to the page behind, and focus wanders
@@ -628,7 +628,7 @@ for the scroll that starts inside.
 - Section: Interaction
 - URL: https://critly.vercel.app/toasts
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/toasts.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/toasts.mdx
 
 A toast is a small message that slides in from a corner and leaves on its own.
 It's good at one thing: telling you about something that happened away from
@@ -734,7 +734,7 @@ Sonner's `<Toaster />` does.
 - Section: Interaction
 - URL: https://critly.vercel.app/destructive-actions
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/interaction/destructive-actions.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/interaction/destructive-actions.mdx
 
 "Are you sure?" on every delete stops protecting anyone by the third time.
 People learn where OK is and click it without reading, and the one time it

@@ -7,7 +7,7 @@
 - Section: Layout
 - URL: https://critly.vercel.app/nested-border-radius
 - Published: 2026-07-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/nested-border-radius.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/nested-border-radius.mdx
 
 Rounded corners look best when one curve follows the other. If a box sits
 inside another box, using the same radius on both usually makes the gap wider
@@ -73,7 +73,7 @@ share the same center.
 - Section: Layout
 - URL: https://critly.vercel.app/hit-areas
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/hit-areas.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/hit-areas.mdx
 
 A **hit area** is the part of an element that responds to a click or tap. It
 does not have to match what you can see. A 16px icon can sit in a 32px
@@ -173,7 +173,7 @@ other.
 - Section: Layout
 - URL: https://critly.vercel.app/html-background
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/html-background.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/html-background.mdx
 
 Pull past the top of a dark page in Safari and a white strip can appear behind
 it. The app is dark, but the document canvas is still white.
@@ -236,7 +236,7 @@ that token should change with it.
 - Section: Layout
 - URL: https://critly.vercel.app/clip-path
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/clip-path.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/clip-path.mdx
 
 `clip-path` hides part of an element without touching its layout. The box
 keeps its size and the text keeps its wrapping. Only the visible window
@@ -332,7 +332,7 @@ rings. Negative values give them room. The card in the first demo goes from
 - Section: Layout
 - URL: https://critly.vercel.app/scroll-fades
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/scroll-fades.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/scroll-fades.mdx
 
 A list cut off by a hard edge looks like it ends there. A **scroll fade**
 dissolves the last visible row into the background, so the reader knows there
@@ -452,7 +452,7 @@ the two properties from a `scroll` listener, as the demos on this page do.
 - Section: Layout
 - URL: https://critly.vercel.app/squircles
 - Published: 2026-09-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/squircles.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/squircles.mdx
 
 A normal rounded corner is a quarter circle. The straight edge runs along,
 then the arc starts, and there is a point where one turns into the other. You
@@ -541,7 +541,7 @@ shape is part of the brand, like an app icon, generate the path with
 - Section: Layout
 - URL: https://critly.vercel.app/whitespace
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/whitespace.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/whitespace.mdx
 
 Before borders, cards or dividers, space is how you group things. We read
 elements that sit close together as one unit and elements that sit apart as
@@ -654,7 +654,7 @@ from a [spacing scale](https://critly.vercel.app/spacing-scale).
 - Section: Layout
 - URL: https://critly.vercel.app/spacing-scale
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/spacing-scale.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/spacing-scale.mdx
 
 Spacing drifts. One card gets 14px of padding, the next one 16px, a third
 18px because it looked tight that day. Nobody sees the 2px, but people feel
@@ -754,7 +754,7 @@ values exist. [Whitespace](https://critly.vercel.app/whitespace) decides where t
 - Section: Layout
 - URL: https://critly.vercel.app/alignment
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/alignment.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/alignment.mdx
 
 Every element starts somewhere, and the eye notices where. When a card's
 content starts at 14px, the list below it at 8px and the input text at 10px,
@@ -865,7 +865,7 @@ across, the way [whitespace](https://critly.vercel.app/whitespace) groups them d
 - Section: Layout
 - URL: https://critly.vercel.app/density
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/density.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/density.mdx
 
 The same list can show 6 rows or 9 in the same space. Neither is right on its
 own. Someone triaging issues all day wants to see as much as possible, and
@@ -985,7 +985,7 @@ sets from your [spacing scale](https://critly.vercel.app/spacing-scale), not fro
 - Section: Layout
 - URL: https://critly.vercel.app/layout-shift
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/layout-shift.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/layout-shift.mdx
 
 You go to press a button, and just before you click, something loads above it
 and the button slides away. You hit whatever moved into its place.
@@ -1100,7 +1100,7 @@ there anyway.
 - Section: Layout
 - URL: https://critly.vercel.app/responsive
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/layout/responsive.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/layout/responsive.mdx
 
 A component doesn't know where it will end up. The same card sits in a wide
 column, a narrow sidebar and a phone. Media queries ask how big the screen is,

@@ -7,7 +7,7 @@
 - Section: Typography
 - URL: https://critly.vercel.app/letter-spacing
 - Published: 2026-07-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/letter-spacing.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/letter-spacing.mdx
 
 Most typefaces are spaced for text sizes. Scale one up to a headline and the
 gaps between letters grow with it, until the word reads as a row of letters.
@@ -90,7 +90,7 @@ right at the size you tested.
 - Section: Typography
 - URL: https://critly.vercel.app/text-wrapping
 - Published: 2026-07-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/text-wrapping.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/text-wrapping.mdx
 
 Browsers wrap text greedily. Each line takes as many words as fit, then
 breaks. That is fast, but it often leaves one word alone on the last line of a
@@ -163,7 +163,7 @@ styles and stop thinking about them.
 - Section: Typography
 - URL: https://critly.vercel.app/tabular-numbers
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/tabular-numbers.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/tabular-numbers.mdx
 
 Digits can have two kinds of widths.
 
@@ -236,7 +236,7 @@ among its features.
 - Section: Typography
 - URL: https://critly.vercel.app/optical-alignment
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/optical-alignment.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/optical-alignment.mdx
 
 Aligning icons exactly by their edges doesn't always look right. A tiny shift is often needed because different shapes feel heavier or lighter to the eye.
 
@@ -346,7 +346,7 @@ blockquote {
 - Section: Typography
 - URL: https://critly.vercel.app/icons
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/icons.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/icons.mdx
 
 Icons are part of the type. A set has a voice, like a typeface does: the
 stroke width, the corner radius, the grid it was drawn on. Next to text, that
@@ -431,7 +431,7 @@ them looks like it was drawn by someone else, it probably was.
 - Section: Typography
 - URL: https://critly.vercel.app/font-smoothing
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/font-smoothing.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/font-smoothing.mdx
 
 On a Mac, browsers draw text a little bolder than the font says. macOS
 thickens every glyph slightly, and on a dark background that extra weight
@@ -508,7 +508,7 @@ fine, because the extra weight is a macOS problem. Set them once on the
 - Section: Typography
 - URL: https://critly.vercel.app/visual-hierarchy
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/visual-hierarchy.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/visual-hierarchy.mdx
 
 Every screen has one thing it wants you to see first. When every line is bold
 and dark, nothing gets to be that thing, and you have to read each word to find
@@ -609,7 +609,7 @@ background's own hue instead.
 - Section: Typography
 - URL: https://critly.vercel.app/line-length
 - Published: 2026-10-02
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/line-length.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/line-length.mdx
 
 Long lines are tiring in a way people rarely put into words. Your eyes jump
 along a line a few words at a time, then sweep back to the left to find the
@@ -694,7 +694,7 @@ cleans up.
 - Section: Typography
 - URL: https://critly.vercel.app/type-scale
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/typography/type-scale.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/typography/type-scale.mdx
 
 Font sizes drift the same way spacing does. A heading gets 22px because 20
 looked small, a value gets 17px so it stands out from the 16px next to it, and

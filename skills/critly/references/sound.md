@@ -7,7 +7,7 @@
 - Section: Sound
 - URL: https://critly.vercel.app/interface-sfx
 - Published: 2026-07-14
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/sound/interface-sfx.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/sound/interface-sfx.mdx
 
 An interface sound is a cue, not a soundtrack. It says one thing, that
 worked, and then it's gone. The shortest cue on this page lasts `16ms`
@@ -121,7 +121,7 @@ it by the tenth, lower the gain, shorten the decay, or cut it.
 - Section: Sound
 - URL: https://critly.vercel.app/layering-sounds
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/sound/layering-sounds.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/sound/layering-sounds.mdx
 
 A single sine wave is the plainest sound a speaker can make. It is fine
 for a tick and not much else.

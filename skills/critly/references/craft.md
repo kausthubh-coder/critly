@@ -7,7 +7,7 @@
 - Section: Craft
 - URL: https://critly.vercel.app/performance-is-design
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/performance-is-design.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/performance-is-design.mdx
 
 Two apps can fetch the same data in the same time, and one will still feel
 faster. The difference is what each one shows you while you wait.
@@ -82,7 +82,7 @@ the thing.
 - Section: Craft
 - URL: https://critly.vercel.app/how-to-get-references
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/how-to-get-references.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/how-to-get-references.mdx
 
 If all your references are other interfaces, your work drifts toward the
 average of everything on Dribbble. The work that feels like it came from
@@ -161,7 +161,7 @@ taught you without showing it to anyone, it was a good one.
 - Section: Craft
 - URL: https://critly.vercel.app/novelty-budget
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/novelty-budget.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/novelty-budget.mdx
 
 Say a word twenty times in a row and it stops meaning anything. Rauno Freiberg
 [points out](https://rauno.me/craft/novelty) that interfaces do the same thing:
@@ -228,7 +228,7 @@ moment has something to stand against.
 - Section: Craft
 - URL: https://critly.vercel.app/taste-is-trained
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/taste-is-trained.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/taste-is-trained.mdx
 
 Taste gets talked about like a gift. Some people have the eye, and the rest
 of us install a component library. It is a comfortable story, because it
@@ -298,7 +298,7 @@ right."
 - Section: Craft
 - URL: https://critly.vercel.app/timelessness
 - Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/timelessness.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/timelessness.mdx
 
 You can carbon date an interface. Stitched leather means 2011. Long shadows
 mean 2014. Frosted glass means 2021. Every look that arrives as a wave leaves
@@ -364,7 +364,7 @@ one.
 - Section: Craft
 - URL: https://critly.vercel.app/product-feel
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/product-feel.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/product-feel.mdx
 
 Ask for a task app, a banking app and a habit tracker, and you often get the
 same app three times: 16px padding, 8px corners, a 200ms fade on everything.
@@ -456,7 +456,7 @@ any list of values would.
 - Section: Craft
 - URL: https://critly.vercel.app/design-tokens
 - Published: 2026-10-03
-- Source: https://github.com/kausthubh-coder/craft/blob/main/content/craft/design-tokens.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/design-tokens.mdx
 
 A product makes the same few decisions hundreds of times: which blue, how
 round, how quiet the secondary text is. Write the answer into each component

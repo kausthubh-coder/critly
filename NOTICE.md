@@ -1,6 +1,6 @@
 # Notice
 
-Critly is a fork of **Craft** by Gustavo Fior:
+Critly includes code from **Craft** by Gustavo Fior:
 https://github.com/gustavo-fior/craft
 
 Craft's README states: "MIT. Fonts keep their own licenses." The site, its

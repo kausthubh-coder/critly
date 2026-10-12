@@ -36,30 +36,6 @@ type Group = {
 
 const GROUPS: Group[] = [
   {
-    heading: "My Vaults",
-    resources: [
-      {
-        url: "https://vayo.me/bookmarks/019ce8a2-931e-7308-8bc7-a3f10b2bd9ff",
-        domain: "vayo.me",
-        title: "UI",
-        description: "Interface references and patterns collected on Vayo.",
-      },
-      {
-        url: "https://vayo.me/bookmarks/clublk9rh000113g5qf4tj038",
-        domain: "vayo.me",
-        title: "Cool Stuff",
-        description:
-          "Interesting products, ideas, and details collected on Vayo.",
-      },
-      {
-        url: "https://vayo.me/bookmarks/cltpx1nq70001jw1tc90e4ht6",
-        domain: "vayo.me",
-        title: "Articles",
-        description: "Writing worth returning to, collected on Vayo.",
-      },
-    ],
-  },
-  {
     heading: "Learning",
     resources: [
       {
@@ -213,7 +189,7 @@ export default function ResourcesPage() {
     <article>
       <h1 className="text-base font-medium">Resources</h1>
       <p className="mt-3 text-sm text-muted-foreground text-pretty">
-        Tools and references I keep coming back to. Each concept page also lists
+        Tools and references worth coming back to. Each concept page also lists
         the specific posts it draws from.
       </p>
       <div className="mt-8 flex flex-col gap-10">
