@@ -1,0 +1,113 @@
+---
+title: Interaction States
+description: Every control has more than one face.
+section: Interaction
+order: 1
+publishedAt: "2026-10-02"
+resources:
+  - url: https://m3.material.io/foundations/interaction/states/state-layers
+    title: Material Design state layers
+    description: A complete system of hover, focus, pressed and dragged overlays with fixed opacities.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/hover
+    title: The hover media feature
+    description: How to apply hover styles only on devices that can actually hover.
+  - url: https://adrianroselli.com/2024/02/dont-disable-form-controls.html
+    title: Don't Disable Form Controls
+    description: Adrian Roselli on why a disabled submit button is no replacement for instructions and error messages.
+  - url: https://www.smashingmagazine.com/2021/08/frustrating-design-patterns-disabled-buttons/
+    title: Frustrating design patterns - disabled buttons
+    description: Vitaly Friedman's survey of the problems with disabled buttons and the patterns that replace them.
+---
+
+A button is usually designed once, at rest. But people meet it in five other
+states: hovered, pressed, focused from the keyboard, disabled and loading. If
+nobody designed those, the browser or the component library did.
+
+**Design every state a control can be in, not just the one in the mockup.**
+
+<InteractionStatesDemo />
+
+Each state answers a different question. Hover says "this is clickable".
+Pressed says "I felt that". Focus says "you are here". Disabled says "not
+now", and loading says "working on it". Here hover lightens the fill by 15%,
+pressed by 20% with a [0.97 press](/button-press), disabled drops to 40%
+opacity, and loading swaps the label for a spinner while keeping its width,
+so nothing next to it moves.
+
+## Hover must not move anything
+
+Hover should change color, never size. Bold text is wider than regular text,
+so a hover that switches font weight pushes every neighbor sideways. Sweep the
+pointer across both rows and watch the dashed edge.
+
+<HoverShiftDemo />
+
+Hover also has no place on touch screens, where a tap can leave it stuck on
+until you tap somewhere else. Keep hover styles inside `@media (hover: hover)`.
+Tailwind v4's `hover:` variant already does this. How fast hover should appear
+is its own topic: see [hover restraint](/hover-restraint).
+
+## Disabled needs a reason
+
+A greyed-out button tells you something is wrong without telling you what. It
+can't be focused, so keyboard and screen reader users may never find it, and
+a tooltip on it can't be reached from the keyboard.
+
+<DisabledReasonDemo />
+
+Keep the button enabled, and when it is pressed, say what is missing and move
+focus to the field. If you really must disable a control, put the reason in
+visible text next to it.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button
+  class="bg-neutral-900 transition-transform duration-100 ease-out
+         hover:bg-neutral-900/85
+         active:scale-[0.97]
+         focus-visible:outline-2 focus-visible:outline-offset-2
+         disabled:opacity-40"
+>
+  Save
+</button>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.button {
+  background: rgb(23 23 23);
+  transition: transform 100ms ease-out;
+}
+
+@media (hover: hover) {
+  .button:hover {
+    background: rgb(23 23 23 / 0.85);
+  }
+}
+
+.button:focus-visible {
+  outline: 2px solid;
+  outline-offset: 2px;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  opacity: 0.4;
+}`,
+    },
+  ]}
+/>
+
+Loading is a state, not a disabled button. Keep it focusable with
+`aria-busy="true"` and ignore repeat clicks in the handler. Disabling the
+focused button would drop focus to the page while the request runs.

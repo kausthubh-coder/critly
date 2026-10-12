@@ -1,0 +1,126 @@
+---
+title: Real Content
+description: Design for the data you'll actually get.
+section: Content
+order: 2
+publishedAt: "2026-10-03"
+resources:
+  - url: https://defensivecss.dev/
+    title: Defensive CSS
+    description: Ahmad Shadeed's catalogue of CSS that survives long text, missing images and odd sizes.
+  - url: https://css-tricks.com/flexbox-truncated-text/
+    title: Flexbox and truncated text
+    description: "Why an ellipsis inside a flex item needs min-width: 0 on its parent."
+  - url: https://www.w3.org/International/articles/article-text-size
+    title: Text size in translation
+    description: W3C's guide to how much text grows when it leaves English, by string length.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/line-clamp
+    title: line-clamp
+    description: Cut a block of text after a set number of lines, on MDN.
+---
+
+Mockups are full of Jane Doe. Her name is short, her photo is square, and she
+has exactly 12 tasks. Your real users have long names, no photo, zero tasks or
+a thousand, and they write in German.
+
+**Design with the awkward data you'll actually get, and give every text box a
+plan for when it overflows.**
+
+<RealContentDemo />
+
+Switch to real data. The long name pushes the count out of the card, even
+though the name already has `truncate`. A flex item won't shrink below the width
+of its content, so the ellipsis never gets a chance. `min-width: 0` on the text
+column fixes it.
+
+The person with no name is an empty line, the missing photos are grey holes,
+and "1 tasks" and "1284" finish it off. Fixed mode falls back to the email,
+draws initials, and formats counts with [tabular numbers](/tabular-numbers).
+
+## Test with the worst case
+
+Keep a set of awkward records next to your nice ones:
+
+- A name over 40 characters, and one with no name at all.
+- 0, 1 and 1,000+ of everything. Zero needs an [empty state](/empty-states).
+- No avatar, and photos of every aspect ratio.
+- Another language. W3C quotes IBM's figures: text over 70 characters grows
+  about 30% from English, and labels under 10 can double or triple. German
+  compounds like "Kundenbetreuungsteamleiterin" won't wrap without
+  `hyphens: auto` and `lang="de"`.
+
+## A plan for every box
+
+Each text container needs one of three plans. Truncate single-line things you
+can open elsewhere, like names in a list, and put the full text in a `title`.
+Clamp previews to two or three lines. Wrap anything people have to read in
+full, like errors and addresses, with a sensible [line length](/line-length)
+and [text wrapping](/text-wrapping).
+
+Images need a plan too. Give them a fixed aspect ratio and let them crop.
+
+<RealContentGridDemo />
+
+With placeholders the grid looks perfect, because every grey box is 16:9.
+Real uploads arrive as a panorama, a square, a painting and no image at all.
+Every image is a different height, one title wraps to four lines or more,
+another is missing, and the counts land wherever the text ends. A 4:3 box with
+`object-fit: cover`, a two-line clamp, "Untitled" and a placeholder put it
+back in order.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<li class="flex items-center gap-3">
+  <img class="size-8 shrink-0 rounded-full object-cover" src="..." alt="" />
+  <div class="min-w-0 flex-1">
+    <p class="truncate" title="Maximiliane Wolfeschlegelsteinhausen-Bergdorff">
+      Maximiliane Wolfeschlegelsteinhausen-Bergdorff
+    </p>
+  </div>
+  <span class="shrink-0 tabular-nums">1,284 tasks</span>
+</li>
+
+<img class="aspect-4/3 w-full object-cover" src="..." alt="" />
+<p class="line-clamp-2 break-words">...</p>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.row-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+.thumbnail {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}`,
+    },
+  ]}
+/>
+
+A `title` tooltip never shows on a touch screen, and keyboard users can't reach
+it. Only truncate text that people can read in full somewhere else, like a
+profile or a detail view.

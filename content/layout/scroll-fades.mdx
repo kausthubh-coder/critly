@@ -1,0 +1,130 @@
+---
+title: Scroll Fades
+description: Fade the edge that has more to scroll.
+section: Layout
+order: 5
+publishedAt: "2026-07-16"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/mask-image
+    title: mask-image
+    description: MDN's reference for the property that does the fading.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/animation-timeline/scroll
+    title: scroll()
+    description: The function that ties an animation to a scroll container's position.
+  - url: https://developer.chrome.com/docs/css-ui/scroll-driven-animations
+    title: Animate elements on scroll with scroll-driven animations
+    description: The Chrome team's guide to scroll and view timelines, with live demos.
+  - url: https://www.bram.us/2023/09/16/solved-by-css-scroll-driven-animations-detect-if-an-element-can-scroll-or-not/
+    title: Detect if an element can scroll or not
+    description: Bramus Van Damme on using a scroll timeline to style a container only when it overflows.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@property
+    title: "@property"
+    description: How to register a custom property so it can animate.
+---
+
+A list cut off by a hard edge looks like it ends there. A **scroll fade**
+dissolves the last visible row into the background, so the reader knows there
+is more without looking for a scrollbar.
+
+<ScrollFadesDemo />
+
+The fade is a `mask-image` gradient. Where the gradient is transparent the
+content is hidden, and where it is black the content shows. Because it is a
+mask and not an overlay, it works on any background and never blocks a click.
+
+## Follow the scroll
+
+A static mask fades the first row while you are at the top, and the last row
+when there is nothing below it. That last one lies. The final item looks like
+something is still hiding under it.
+
+**Fade an edge only when there is more to scroll past it.**
+
+<ScrollFadesEdgeDemo />
+
+Scroll both lists to the top and the bottom. The right list grows each fade
+over the first `40px` of scroll in that direction, so it follows the scroll
+instead of popping in.
+
+## With scroll-driven animations
+
+This needs no JavaScript. `animation-timeline: scroll(self)` ties an animation
+to the element's own scroll position, and `animation-range` limits it to the
+first and last `40px`. The two fade sizes are custom properties registered
+with `@property`, so they can animate.
+
+The same rule works sideways with `scroll(self x)`.
+
+<ScrollFadesHorizontalDemo />
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- Static fade, 40px at both ends -->
+<div
+  class="h-44 overflow-y-auto mask-[linear-gradient(to_bottom,transparent,black_40px,black_calc(100%-40px),transparent)]"
+>
+  ...
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fade-start {
+  from { --fade-start: 0px; }
+  to { --fade-start: 40px; }
+}
+
+@keyframes fade-end {
+  from { --fade-end: 40px; }
+  to { --fade-end: 0px; }
+}
+
+.list {
+  overflow-y: auto;
+  --fade-start: 40px;
+  --fade-end: 40px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black var(--fade-start),
+    black calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+@supports (animation-timeline: scroll()) {
+  .list {
+    --fade-start: 0px;
+    --fade-end: 0px;
+    animation: fade-start linear both, fade-end linear both;
+    animation-timeline: scroll(self);
+    animation-range: 0 40px, calc(100% - 40px) 100%;
+  }
+}`,
+    },
+  ]}
+/>
+
+Scroll-driven animations work in Chrome and Edge 115+ and Safari 26+. As of
+October 2026, Firefox only has them in Nightly, so the `@supports` block keeps
+the static fade there. If you need the scroll-linked fade in Firefox too, set
+the two properties from a `scroll` listener, as the demos on this page do.

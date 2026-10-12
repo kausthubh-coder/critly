@@ -1,0 +1,102 @@
+---
+title: Focus Rings
+description: Show keyboard users where they are.
+section: Interaction
+order: 2
+publishedAt: "2026-10-02"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:focus-visible
+    title: :focus-visible
+    description: The pseudo-class that matches focus the browser decides should be shown.
+  - url: https://www.sarasoueidan.com/blog/focus-indicators/
+    title: A guide to designing accessible focus indicators
+    description: Sara Soueidan on contrast, size and why outlines beat box-shadows in forced colors mode.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
+    title: Understanding Focus Not Obscured (Minimum)
+    description: The WCAG 2.2 AA rule that a focused element can't be fully hidden by sticky content.
+  - url: https://www.w3.org/WAI/WCAG22/Techniques/css/C43
+    title: Using CSS scroll-padding to un-obscure content
+    description: The W3C technique for keeping focused elements clear of fixed and sticky bars.
+---
+
+A focus ring is the keyboard's cursor. Without it, someone pressing Tab is
+moving through the page blind. It gets removed so often because it used to show
+up on mouse clicks too, and designers found that ugly.
+
+**Never remove the focus ring. Style `:focus-visible` instead.**
+
+<FocusRingsDemo />
+
+With `:focus`, every mouse click on a button draws a ring. With
+`:focus-visible`, the browser shows it only when it helps: always for keyboard
+focus, and for text fields however they were focused, since you are about to
+type.
+
+## Outline, not box-shadow
+
+A 2px solid `outline` with a 2px `outline-offset` is a good default. The offset
+leaves a gap, so the ring reads as separate from the control even when they
+are the same color. Outlines follow `border-radius` in every major browser, so
+a pill gets a pill-shaped ring.
+
+<FocusOffsetDemo />
+
+Rings drawn with `box-shadow` look the same, until someone turns on forced
+colors mode, such as Windows contrast themes. The browser drops shadows there
+and repaints outlines in the system colors. Here it is simulated:
+
+<FocusForcedColorsDemo />
+
+If you need a shadow ring for its looks, keep a `2px solid transparent` outline
+next to it. It is invisible until forced colors paints it.
+
+## Don't hide it under the header
+
+A sticky header can cover the element you just moved to. Shift+Tab up through
+a list and the browser scrolls each row to the top edge, right under the
+header. WCAG 2.2 asks that focus is never fully hidden this way.
+
+<FocusObscuredDemo />
+
+`scroll-padding-top` tells the scroller how much of its top edge is taken. Set
+it to the header's height plus a little air, here 36px + 4px. On a page with a
+sticky site header, put it on `html`.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- 64px: sticky header height + air -->
+<html class="scroll-pt-16">
+
+<button
+  class="focus-visible:outline-2
+         focus-visible:outline-offset-2
+         focus-visible:outline-neutral-900"
+>
+  Invite
+</button>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `html {
+  scroll-padding-top: 64px; /* sticky header height + air */
+}
+
+:focus-visible {
+  outline: 2px solid rgb(23 23 23);
+  outline-offset: 2px;
+}`,
+    },
+  ]}
+/>
+
+In Tailwind v4, `outline-none` really removes the outline, in forced colors
+too. Use `outline-hidden` when you replace it with a ring, which keeps the
+transparent outline for forced colors mode.

@@ -1,0 +1,114 @@
+---
+title: Empty States
+description: Say why it's empty and what to do next.
+section: Interaction
+order: 4
+publishedAt: "2026-10-02"
+resources:
+  - url: https://www.nngroup.com/articles/empty-state-interface-design/
+    title: Designing empty states in complex applications
+    description: Kate Kaplan's three guidelines - show system status, teach the feature, and give a direct path to the task.
+  - url: https://primer.style/ui-patterns/empty-states
+    title: Primer empty states
+    description: GitHub's blank slate pattern, with a graphic, a welcoming heading, one line of help and a primary action.
+  - url: https://atlassian.design/foundations/content/designing-messages/empty-state
+    title: Atlassian empty state messages
+    description: How to write the heading, body and call to action, and how a cleared state differs from a blank slate.
+  - url: https://baymard.com/blog/no-results-page
+    title: 5 UX strategies for "No Results" pages
+    description: Baymard's research on searches that end at a dead end, and the patterns that recover them.
+---
+
+A new user's first screen is usually empty. No projects, no messages, no data.
+Whatever sits there is their introduction to the feature, and "No data." doesn't
+introduce anything.
+
+**An empty state should say why it's empty, what goes here, and offer one clear
+next action.**
+
+<EmptyStatesDemo />
+
+With "No data." the only way forward is the small plus in the corner, if you
+notice it. The designed version names the thing, says what it's for in one
+line, and puts the action where your eyes already are. Add a project and
+delete it again: the empty state comes back whenever the list does, so it's
+not a one-time screen.
+
+## Three kinds of empty
+
+Empty screens don't all mean the same thing, so they shouldn't all say the same
+thing.
+
+- **First use.** Nothing has been made yet. Teach the feature and offer the first action.
+- **No results.** The data exists, but a query or filter hid it. Help the person change the query.
+- **Cleared.** The person finished everything. Say so and stop there.
+
+## No results
+
+An empty search is one the person caused, so the fix is usually in their own
+input. Echo the query so a typo is easy to spot. If a filter is hiding a match,
+say so and offer to remove it.
+
+<EmptySearchDemo />
+
+"Brand refresh" exists, it's just archived. "No results." makes it look like it
+was never there. The designed version counts what the filter hid and turns that
+into a button.
+
+## Cleared
+
+Inbox zero is the one empty state that has earned some delight. It's rare, it's
+the reward for finishing, and it's the best place to spend your
+[novelty budget](/novelty-budget). A check mark and a short line are enough. There
+is nothing left to do, so don't add a button.
+
+GitHub's Primer asks first-use screens to be playful. Atlassian saves the
+excitement for finished work. I side with Atlassian: on first use the person is
+trying to learn something, and a joke gets between them and the button.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="flex h-48 flex-col items-center justify-center gap-3 text-center">
+  <p class="text-sm font-medium">No projects yet</p>
+  <p class="max-w-56 text-sm text-pretty text-muted-foreground">
+    A project keeps tasks, files and people in one place.
+  </p>
+  <button class="rounded-full bg-foreground px-3 py-1.5 text-sm text-background">
+    New project
+  </button>
+</div>`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `if (projects.length > 0) return <ProjectList projects={projects} />;
+
+if (query) {
+  return (
+    <EmptyState
+      title={\`No projects match “\${query}”\`}
+      description="Check the spelling, or try a shorter word."
+      action={<Button onClick={clearSearch}>Clear search</Button>}
+    />
+  );
+}
+
+return (
+  <EmptyState
+    title="No projects yet"
+    description="A project keeps tasks, files and people in one place."
+    action={<Button onClick={createProject}>New project</Button>}
+  />
+);`,
+    },
+  ]}
+/>
+
+Give the empty state the same height as the list it replaces. Otherwise the
+page jumps when the first item arrives and again when the last one leaves.

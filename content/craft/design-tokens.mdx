@@ -1,0 +1,141 @@
+---
+title: Design Tokens
+description: Name the role, not the value.
+section: Craft
+order: 7
+publishedAt: "2026-10-03"
+resources:
+  - url: https://tailwindcss.com/docs/theme
+    title: Tailwind theme variables
+    description: How theme variables turn into utilities, which namespace makes which class, and how to reset one.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading_variables/Using_custom_properties
+    title: Using CSS custom properties
+    description: MDN on declaring, inheriting and overriding the variables every token system is built on.
+  - url: https://primer.style/product/primitives/token-names/
+    title: Primer token names
+    description: GitHub's naming convention, which separates base values from the functional tokens components use.
+  - url: https://www.designtokens.org/tr/2025.10/format/
+    title: Design Tokens Format Module
+    description: The W3C community group's format for moving tokens between design tools and code.
+---
+
+A product makes the same few decisions hundreds of times: which blue, how
+round, how quiet the secondary text is. Write the answer into each component
+and changing it means finding every copy. You never find every copy.
+
+**Name the role, not the value, and let components use only the names.**
+
+Both cards started out identical. Pick a new accent, or drag the radius.
+
+<DesignTokensDemo />
+
+The hardcoded card had its blue in four places, written three ways:
+`#2563eb`, `#2563EB` and `rgb(37 99 235)`. A find-and-replace caught the
+button. The token card asks for `--accent` everywhere, so one edit reaches all
+four, and the same goes for `--radius-control`.
+
+## Roles, not values
+
+`--gray-100` and `--blue-600` say what a value is. `--surface-sunken`,
+`--text-muted` and `--radius-control` say what it is for, so the value can
+change without the name becoming a lie. Switch the theme.
+
+<TokenRolesDemo />
+
+`--gray-100` can't turn dark, so dark mode needs an override in every
+component, and the ones nobody wrote stay bright. The roles just point at new
+values. The [product feel](/product-feel) demo works the same way: three
+feels are three sets of values for the same roles.
+
+A raw palette is fine as the layer underneath. Components only ever see the
+roles.
+
+## A few per category
+
+Tokens help for the same reason a [spacing scale](/spacing-scale) does: they
+cut choices. Each category needs a handful, not dozens.
+
+- Surface: `surface`, `surface-raised`, `surface-sunken`.
+- Text: `text`, `text-muted`, `text-faint`.
+- Radius: `radius-control`, and `radius-card` as the control radius plus the
+  card's padding, so [nested corners](/nested-border-radius) stay concentric.
+- Shadow: `shadow-raised` and `shadow-overlay`, layered as in
+  [shadows, not borders](/shadows-not-borders).
+
+When a component needs a value no token has, that is a design conversation,
+not a new hex code.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "css",
+      icon: "tailwind",
+      filename: "globals.css",
+      code: `@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --color-surface: oklch(0.985 0 0);
+  --color-surface-raised: oklch(1 0 0);
+  --color-fg: oklch(0.205 0 0);
+  --color-fg-muted: oklch(0.556 0 0);
+  --color-accent: oklch(0.546 0.215 262.9);
+  --radius-control: 8px;
+  --radius-card: calc(var(--radius-control) + 8px);
+}
+
+.dark {
+  --color-surface: oklch(0.17 0 0);
+  --color-surface-raised: oklch(0.205 0 0);
+  --color-fg: oklch(0.945 0 0);
+  --color-fg-muted: oklch(0.66 0 0);
+}
+
+/* <div class="rounded-card bg-surface-raised p-2">
+     <button class="rounded-control bg-accent">Save</button>
+   </div> */`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --surface: oklch(0.985 0 0);
+  --surface-raised: oklch(1 0 0);
+  --text: oklch(0.205 0 0);
+  --text-muted: oklch(0.556 0 0);
+  --accent: oklch(0.546 0.215 262.9);
+  --radius-control: 8px;
+  --radius-card: calc(var(--radius-control) + 8px);
+}
+
+.dark {
+  --surface: oklch(0.17 0 0);
+  --surface-raised: oklch(0.205 0 0);
+  --text: oklch(0.945 0 0);
+  --text-muted: oklch(0.66 0 0);
+}
+
+.card {
+  padding: 8px;
+  border-radius: var(--radius-card);
+  background: var(--surface-raised);
+}
+
+.button {
+  border-radius: var(--radius-control);
+  background: var(--accent);
+}`,
+    },
+  ]}
+/>
+
+In Tailwind v4 the namespace decides the class: `--color-*` makes `bg-`,
+`text-` and `border-` utilities, `--radius-*` makes `rounded-*`. `--text-*` is
+already taken by font sizes, which is why the text roles here are `fg` and
+`fg-muted` (`text-fg-muted`). `--color-*: initial` removes the default
+palette, so a stray `bg-blue-600` generates nothing instead of quietly
+drifting.

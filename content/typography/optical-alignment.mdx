@@ -1,0 +1,118 @@
+---
+title: Optical Alignment
+description: Center for the eye, not the math.
+section: Typography
+order: 4
+publishedAt: "2026-07-15"
+resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/icons
+    title: Apple Human Interface Guidelines on icons
+    description: Apple's rules for optical balance inside an icon's bounding shape.
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: A short list of fixes, several of which are optical adjustments like these.
+  - url: https://www.w3.org/TR/css-inline-3/#hanging-punctuation-property
+    title: hanging-punctuation
+    description: The CSS spec for letting quotes hang outside the text box.
+  - url: https://rsms.me/inter/#features
+    title: Inter features
+    description: What the optical size axis of Inter actually changes.
+---
+
+Aligning icons exactly by their edges doesn't always look right. A tiny shift is often needed because different shapes feel heavier or lighter to the eye.
+
+**Optical alignment** means nudging things until they look right, then keeping
+the nudge.
+
+<OpticalAlignmentDemo />
+
+The play icon moves left, because a triangle pointing right has most of its area on the
+left. The star and the download icon move up a bit. The amounts are tiny and
+specific to each icon, so this is a per icon decision, not a global rule.
+
+### How to align the icon
+
+A good test is to blur the icon. Add a heavy `filter: blur()` to it in
+the inspector, or squint at it, and the shape collapses into a soft blob of
+ink.
+
+The blob sits where the icon's visual weight is, not where its bounding
+box is, so if it lands off the center of the button the nudge you need is
+the distance back. Sharp edges hide this, because your eye reads the outline
+and trusts it. Blur removes the outline and leaves only the weight.
+
+## Buttons with icons
+
+The same thing happens with padding. An icon has air inside its box, and
+that air adds to the padding next to it. Equal padding on both sides ends up
+looking heavier on the icon side.
+
+<OpticalButtonDemo />
+
+Shave a few pixels off the padding on the side that holds the icon.
+
+## Shape weight
+
+Different shapes have varying visual weight. For example, when a circle or triangle is drawn inside the same box as a square, it appears smaller to the eye.
+
+<OpticalWeightDemo />
+
+## Optical sizes
+
+Type has the same problem across sizes. Strokes that are sturdy at 14px look
+clumsy at 40px. Some typefaces ship an **optical size** axis that redraws the
+letters for the size they are set at.
+
+<OpticalSizingDemo />
+
+Browsers turn this on automatically through `font-optical-sizing: auto`, so
+you usually get the right design for free. The demo forces the text design
+onto a display size so you can see what you would be missing.
+
+## Hanging punctuation
+
+A quote that starts with a quotation mark looks indented, because the mark is
+mostly whitespace. Hanging it into the margin lines the first letter up with
+the text below.
+
+<HangingPunctuationDemo />
+
+Safari supports `hanging-punctuation: first`. Elsewhere a small negative
+`text-indent` gets the same result for a known opening character.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button class="grid size-12 place-items-center rounded-full">
+    <PlayIcon class="size-5 translate-x-px" weight="fill" />
+</button>
+
+<blockquote class="indent-[-0.42em]">
+    “Good design is as little design as possible.”
+</blockquote>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.play-icon {
+  transform: translateX(1px);
+}
+
+blockquote {
+  hanging-punctuation: first;
+}
+
+@supports not (hanging-punctuation: first) {
+  blockquote {
+    text-indent: -0.42em;
+  }
+}`,
+},
+]}
+/>

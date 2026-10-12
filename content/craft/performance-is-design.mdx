@@ -1,0 +1,80 @@
+---
+title: Performance Is Design
+description: How fast it feels is a design choice.
+section: Craft
+order: 1
+publishedAt: "2026-07-15"
+resources:
+  - url: https://www.nngroup.com/articles/response-times-3-important-limits/
+    title: Response time limits
+    description: Jakob Nielsen's 0.1, 1 and 10 second thresholds, and what feedback each one needs.
+  - url: https://www.nngroup.com/articles/skeleton-screens/
+    title: Skeleton Screens 101
+    description: When a skeleton beats a spinner, and why neither belongs on a load under a second.
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: Emil Kowalski on speed and frequency, including the faster spinner that makes the same load feel quicker.
+  - url: https://react.dev/reference/react/useOptimistic
+    title: useOptimistic
+    description: React's hook for showing the result of an action before the server confirms it.
+  - url: https://shud.in/thoughts/performance-is-not-a-technical-problem
+    title: Performance is not a technical problem
+    description: Shu Ding on why apps keep getting slower, after about 400 performance pull requests at Vercel.
+---
+
+Two apps can fetch the same data in the same time, and one will still feel
+faster. The difference is what each one shows you while you wait.
+
+**What you show during a wait decides how long it feels.** That makes
+waiting a design problem, and usually a cheaper one to fix than the network.
+
+Press load. Both cards take the same 1.2 seconds.
+
+<PerceivedPerformanceDemo />
+
+The spinner says "please wait". The skeleton shows the shape of what is
+coming, so your eye already has somewhere to go. Same wait, and the second one
+feels shorter.
+
+## Match the wait
+
+Jakob Nielsen's
+[response time limits](https://www.nngroup.com/articles/response-times-3-important-limits/)
+are still the best guide:
+
+- Under 100ms feels instant. Just show the result.
+- Under 1 second, people notice the delay but keep their train of thought. Show nothing, and hold the space so the layout does not jump.
+- Past 1 second, show that something is happening, with a skeleton or a spinner.
+- Past 10 seconds, show progress and an estimate.
+
+The second row is the one people get wrong. A skeleton that lives for 300ms is
+not reassurance. It is a flash.
+
+<LoadingFlashDemo />
+
+## Don't make people watch the round trip
+
+Most actions succeed. When you already know what the result will look like,
+show it right away and let the request catch up. If it fails, roll it back and
+say so.
+
+<OptimisticDemo />
+
+The left list is honest about the network. The right one is honest about the
+outcome, which is the part people care about. React ships this pattern as
+[`useOptimistic`](https://react.dev/reference/react/useOptimistic).
+
+## Even the spinner has a speed
+
+When a spinner is the right call, how fast it turns matters. As
+[Emil Kowalski](https://emilkowal.ski/ui/you-dont-need-animations) points out,
+a faster spinner makes the same load feel quicker.
+
+<SpinnerSpeedDemo />
+
+## The best loading state
+
+None of this replaces being fast. The best loading state is the one you
+deleted: cache the data, render it on the server, prefetch on hover. Then the
+interface gets to do the most confident thing it can, which is to just show
+the thing.

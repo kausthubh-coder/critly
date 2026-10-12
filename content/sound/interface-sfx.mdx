@@ -1,0 +1,123 @@
+---
+title: Interface SFX
+description: Quiet sounds that confirm actions.
+section: Sound
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://audio.raphaelsalaja.com
+    title: "@web-kits/audio"
+    description: Raphael Salaja's synth library and patch collection, where the sounds on this site come from.
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices
+    title: Web Audio API best practices
+    description: Autoplay rules and why sound has to wait for a user gesture.
+  - url: https://developer.apple.com/design/human-interface-guidelines/playing-audio
+    title: Playing audio, Human Interface Guidelines
+    description: Apple on when interface sound helps and when it should stay quiet.
+  - url: https://m2.material.io/design/sound/applying-sound-to-ui.html
+    title: Applying sound to UI
+    description: Material's guidance on matching each sound to what the interface is doing.
+---
+
+An interface sound is a cue, not a soundtrack. It says one thing, that
+worked, and then it's gone. The shortest cue on this page lasts `16ms`
+and the longest is under `300ms`.
+
+Each cue should match the action it confirms. A toggle gets a two-note
+flip, a finished task gets a short tick, a sent message gets a rising
+arpeggio, and a removal gets a falling pop. Try each control below.
+
+<SoundCuesDemo />
+
+These are the sounds this site plays, adapted from patches in Raphael
+Salaja's [@web-kits/audio](https://audio.raphaelsalaja.com). They are
+synthesized in the browser, so there are no audio files to load.
+
+**A sound confirms something you can already see. It never carries the
+message alone.** The switch moves, the text strikes through, the button
+reads Sent. Some people have sound off, some are on a train, and some
+just don't want it.
+
+## Where sound helps
+
+Sound earns its place when an action finishes and your eyes might be
+elsewhere: sending, copying, saving, a long upload completing, a toggle
+you flipped from the keyboard.
+
+It hurts almost everywhere else. Typing, scrolling, opening menus,
+moving between pages, anything that happens dozens of times a minute. If
+a cue can fire twice in the same second, it should probably not exist.
+
+## Keep it quiet
+
+The most common mistake is volume. In `@web-kits/audio` a layer plays at
+a gain of `0.5` unless you set one. Raphael's Minimal patch keeps every
+layer between `0.04` and `0.12`, and the click cues on this site sit
+between `0.04` and `0.1`. Copy the link at each level.
+
+<SoundLevelDemo />
+
+Loud is the same cue with every layer at five times the gain. It still
+tops out at `0.3`, below the library default, and it is already the kind
+of sound people mute an app for.
+
+## Hover is a whisper or nothing
+
+Hover fires constantly, so a real cue on hover turns a sidebar into a
+keyboard. Move across the list with each setting.
+
+<HoverSoundDemo />
+
+The whisper is a sine at a gain of `0.01`, a quarter of what Minimal
+ships for hover. It rises 25 cents, a quarter of a semitone, per item, so
+moving down the list feels like running a finger along a rail. The tick
+is the click sound, and on hover it gets tiring fast.
+
+Browsers keep audio suspended until the first click or key press, so
+drop hover cues before that instead of queueing them. And put a mute
+switch somewhere obvious. This site keeps one in the header and remembers
+it.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { definePatch, ensureReady } from "@web-kits/audio";
+
+const ui = definePatch({
+  name: "ui",
+  sounds: {
+    tick: {
+      source: { type: "sine", frequency: 1200 },
+      envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
+      gain: 0.08,
+    },
+  },
+});
+
+async function play(name: string) {
+  try {
+    await ensureReady(); // resumes the AudioContext inside the click
+    ui.play(name);
+  } catch {
+    // No audio available. The visual change still happens.
+  }
+}
+
+<Button
+  onClick={() => {
+    setDone(true);
+    play("tick");
+  }}
+>
+  Done
+</Button>`,
+    },
+  ]}
+/>
+
+A quick test: trigger your cue twenty times in a row. If you're tired of
+it by the tenth, lower the gain, shorten the decay, or cut it.

@@ -1,0 +1,113 @@
+---
+title: Stagger
+description: Turn one block into a sequence.
+section: Motion
+order: 5
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Jakub Krehel on splitting entering content into parts and staggering them.
+  - url: https://rauno.me/craft/depth
+    title: Depth
+    description: Rauno Freiberg on choreographing elements so they don't all appear at once.
+  - url: https://motion.dev/docs/stagger
+    title: stagger()
+    description: Motion's helper for spreading delays across children, used in the recipe below.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-delay
+    title: animation-delay
+    description: The property behind a CSS stagger, and how negative and long delays behave.
+---
+
+When a list appears all at once, it reads as one block. When each row arrives
+a moment after the one above, it reads as a list. **Stagger** is that small
+offset between siblings.
+
+Drag the slider. Every row fades and rises the same way. Only the gap between
+them changes.
+
+<StaggerDemo />
+
+**Keep the gap between 30ms and 60ms.** That is enough for your eye to pick up
+a direction, top to bottom. Past 100ms the last row is still arriving after
+you have started reading the first, and the detail turns into a wait.
+
+## Block vs sequence
+
+The same list with and without a stagger. The animation on each row is
+identical.
+
+<StaggerCompareDemo />
+
+The staggered list is not faster. It is easier to follow, because your eye
+gets a starting point and a direction. The block gives you five things at
+once.
+
+## Long lists
+
+Stagger adds up. A 60ms gap is fine on five rows and terrible on twenty, where
+the last row starts 1,140ms after the first. For lists that can grow, cap the
+total instead of fixing the step.
+
+<StaggerCapDemo />
+
+A good cap is about 300ms from the first row to the last. Divide that by the
+number of gaps and you have your step: 33ms for ten rows. For very long lists,
+stagger only the rows on screen and show the rest at once.
+
+The rows are content, not decoration. Animate only `opacity` and `transform`
+so every row holds its space from the first frame, and keep rows clickable
+while they fade in.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `/* <li style="--index: 0">, <li style="--index: 1">, ... */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.list > li {
+  animation: rise-in 360ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: calc(var(--index) * 40ms);
+}`,
+    },
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion, stagger } from "motion/react";
+
+const list = {
+  visible: { transition: { delayChildren: stagger(0.04) } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 8 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.36, ease: [0.23, 1, 0.32, 1] },
+  },
+};
+
+<motion.ul initial="hidden" animate="visible" variants={list}>
+  {rows.map((row) => (
+    <motion.li key={row.id} variants={item}>
+      {row.title}
+    </motion.li>
+  ))}
+</motion.ul>`,
+    },
+  ]}
+/>
+
+Keep `both` in the CSS shorthand. It sets `animation-fill-mode`, which holds
+each row at its first frame during the delay. Without it, rows flash at full
+opacity, disappear, then fade in. It is the most common stagger bug, and you
+only notice it once the delays get long.

@@ -1,0 +1,109 @@
+---
+title: Easings
+description: Ease-out for anything the user triggers.
+section: Motion
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/great-animations
+    title: Great animations
+    description: Emil Kowalski on why ease-out is the right curve for most interface motion.
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 practical animation tips
+    description: Short rules for interface motion, including why the built-in curves are not strong enough.
+  - url: https://easings.net
+    title: Easing functions cheat sheet
+    description: Every common curve, drawn out, with the cubic-bezier values ready to copy.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function
+    title: The easing-function type
+    description: The full CSS syntax, including cubic-bezier(), steps() and linear().
+  - url: https://linear-easing-generator.netlify.app/
+    title: Linear easing generator
+    description: Jake Archibald's tool for turning a spring or any JavaScript easing into CSS linear().
+---
+
+An **easing** is the speed profile of an animation: how fast it starts and how
+it settles. Duration says how long a menu takes to open. Easing decides
+whether it opened for you or at you.
+
+Both menus below take 250ms. Open them.
+
+<EasingsDemo />
+
+The left one eases in. It starts slow and reaches full speed at the very end,
+so the menu hesitates, then slams into place. The right one eases out. It
+starts fast and slows as it lands, the way most physical things come to rest.
+
+**Use ease-out for anything that appears because the user did something.**
+They clicked, so the interface should move at once and then settle. Ease-in
+has one good use: things that are leaving, where nobody needs to watch them
+settle. [Exit animations](/exit-animations) covers that.
+
+## Reading a curve
+
+Time runs left to right and progress runs bottom to top. The dot and the ball
+share one clock, slowed down to one second so you can follow them.
+
+<EasingCurveDemo />
+
+Linear is a straight diagonal: the same speed the whole way, which reads as
+mechanical. Ease-in bends down, ease-out bends up. In-out does both, and suits
+something already on screen that moves to a new spot, rather than something
+appearing.
+
+## Stronger than the defaults
+
+The browser's `ease-out` is `cubic-bezier(0, 0, 0.58, 1)`, and it is too
+gentle. This site uses `cubic-bezier(0.23, 1, 0.32, 1)` instead, saved as
+`--ease-snappy`. Scrub through the same 250ms.
+
+<StrongEasingDemo />
+
+At 60ms, `ease-out` has covered 36% of the distance and `ease-snappy` has
+covered 76%. Snappy is 90% of the way there at 90ms. Ease-out needs 185ms to
+reach the same point. The duration is identical, but snappy does almost all
+of its work in the first third and spends the rest settling, so it feels
+twice as fast.
+
+For a little overshoot, CSS can fake a spring with `linear()`, a list of
+points the browser joins with straight lines. The site's `--ease-spring`
+overshoots by 16% before it settles. Pick two or three curves like these and
+use them everywhere. Consistent easing does more for a product than any single
+animation.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "css",
+      icon: "tailwind",
+      filename: "globals.css",
+      code: `@theme {
+  --ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Then: class="duration-250 ease-snappy" */`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.menu {
+  transition:
+    opacity 250ms var(--ease-snappy),
+    transform 250ms var(--ease-snappy);
+}`,
+    },
+  ]}
+/>
+
+Tailwind's own `ease-out` class is not the CSS keyword. It is
+`cubic-bezier(0, 0, 0.2, 1)`, which is already stronger and reaches 90% at
+150ms of a 250ms animation. Snappy still gets there 60ms sooner, which is why
+it gets its own name.

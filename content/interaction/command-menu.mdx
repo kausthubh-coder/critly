@@ -1,0 +1,127 @@
+---
+title: Command Menu
+description: One shortcut to reach everything.
+section: Interaction
+order: 5
+publishedAt: "2026-10-02"
+resources:
+  - url: https://blog.superhuman.com/how-to-build-a-remarkable-command-palette/
+    title: How to build a remarkable command palette
+    description: Superhuman's rules for the pattern - one shortcut everywhere, every command, forgiving search, and context.
+  - url: https://github.com/dip/cmdk
+    title: cmdk
+    description: The React command menu this site uses, with keyword aliases and a pluggable filter.
+  - url: https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+    title: ARIA combobox pattern
+    description: The keyboard and screen reader behavior for an input that controls a list of options.
+  - url: https://maggieappleton.com/command-bar
+    title: Command K bars
+    description: Maggie Appleton on where the pattern came from and why it scales better than menus.
+---
+
+A command menu puts every action behind one shortcut. Press Cmd+K, or Ctrl+K on
+Windows, type a few letters, press Enter. Nobody has to remember where a
+setting lives, only roughly what it does.
+
+**Open it instantly, match what people mean, and show each command's shortcut
+next to it.**
+
+<CommandMenuDemo />
+
+Click the window and press the shortcut, or use the search field. Arrows move,
+Enter runs, Escape closes. Run "Toggle sidebar" from the menu and the footer
+tells you the shortcut for next time.
+
+## Open it instantly
+
+The menu exists to make things fast, so it can't be slow to appear. It opens
+with no animation, the cursor is already in the input, and the same shortcut
+closes it. This is [hover restraint](/hover-restraint) again: something you open
+forty times a day can't afford a fade.
+
+Closing returns focus to the search field, and nothing in the list needs a mouse.
+
+## Match what people mean
+
+People don't type your label, they type their own word. Someone looking for
+dark mode types "dark", not "Change theme". An exact search finds nothing, and
+they decide the feature doesn't exist.
+
+<CommandSearchDemo />
+
+Give every command a few keywords and match loosely against the title and the
+keywords together. When a keyword matched, show it next to the result so the
+match doesn't look random.
+
+## Teach the shortcuts
+
+A command menu is also where people learn your shortcuts. If every row shows
+its keys, the tenth time someone runs "Toggle sidebar" from the menu, they press
+the shortcut instead. A shortcut nobody sees never gets learned.
+
+<CommandShortcutsDemo />
+
+Order the list for the person, not the codebase. With an empty query, show
+recent commands first, then the ones that fit the current screen. Most of the
+time, the thing someone wants is the thing they did a minute ago.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { Command } from "cmdk";
+import { useEffect, useState } from "react";
+
+export function CommandMenu() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  return (
+    <Command.Dialog open={open} onOpenChange={setOpen} label="Command menu">
+      <Command.Input placeholder="Type a command" />
+      <Command.List>
+        <Command.Empty>No commands found.</Command.Empty>
+        <Command.Item
+          value="Change theme"
+          keywords={["dark mode", "light mode", "appearance"]}
+          onSelect={toggleTheme}
+        >
+          Change theme
+          <kbd className="ml-auto text-xs text-muted-foreground">⌘⇧L</kbd>
+        </Command.Item>
+      </Command.List>
+    </Command.Dialog>
+  );
+}`,
+    },
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div
+  cmdk-item
+  class="flex h-8 items-center gap-2.5 rounded-lg px-2.5 text-sm data-[selected=true]:bg-muted"
+>
+  Change theme
+  <kbd class="ml-auto text-xs text-muted-foreground">⌘⇧L</kbd>
+</div>`,
+    },
+  ]}
+/>
+
+Set `value` on every item. Without it, cmdk uses the item's text, so the
+shortcut becomes part of what it searches and "L" starts matching "Change
+theme".

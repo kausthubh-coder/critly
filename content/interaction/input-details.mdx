@@ -1,0 +1,99 @@
+---
+title: Input Details
+description: Small attributes that make typing easy.
+section: Interaction
+order: 3
+publishedAt: "2026-10-02"
+resources:
+  - url: https://css-tricks.com/16px-or-larger-text-prevents-ios-form-zoom/
+    title: 16px or larger text prevents iOS form zoom
+    description: Why Safari on iPhone zooms into small inputs, and the one-line fix.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inputmode
+    title: inputmode
+    description: Every virtual keyboard you can ask for, and when to use it instead of type.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete
+    title: autocomplete
+    description: The full list of tokens that let browsers and password managers fill a form.
+  - url: https://baymard.com/research-articles/inline-form-validation
+    title: Inline form validation
+    description: Baymard's research on when to show an error and when to take it away.
+  - url: https://design-system.service.gov.uk/patterns/validation/
+    title: GOV.UK validation pattern
+    description: The case for validating only on submit, from a design system built for everyone.
+---
+
+Most of what makes a form pleasant on a phone is invisible. The right keyboard
+appears, the page doesn't jump, the browser offers your email before you type
+it. Each of those is one attribute.
+
+**Tell the browser what each field is for, and it does the rest.**
+
+<InputKeyboardDemo />
+
+Tap a few fields in each mode. Safari on iPhone zooms in on any input with text
+under 16px, and it stays zoomed after you leave. A `16px` font size stops
+it. Don't disable zooming to fix it.
+
+## Type, inputmode, autocomplete
+
+`type` sets what the value is, `inputmode` sets which keyboard appears, and
+`autocomplete` says what to fill in. `type="email"` brings the @ key,
+`type="tel"` the phone pad, `inputmode="decimal"` digits with a point. Use
+`inputmode="numeric"` rather than `type="number"` for codes, card numbers and
+anything else that isn't a quantity. `autocomplete="one-time-code"` lets the
+phone offer the code it just received.
+
+Two more rules: wrap fields in a `<form>`, so Enter submits, and never block
+paste. People paste passwords and codes from somewhere safer than their memory.
+
+## When to show errors
+
+An error that appears after the first letter scolds people for not having
+finished. Type an email in both modes.
+
+<InputValidationDemo />
+
+Wait until the person leaves the field, then check it. Once an error is
+showing, check again on every keystroke and remove it the moment the value is
+valid. GOV.UK goes further and validates only on submit. I prefer blur on short
+forms, where hearing about a typo right away saves a trip back.
+
+CSS has this built in: `:user-invalid` matches only after someone has changed
+a field and moved on, or tried to submit.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<form>
+  <input
+    class="text-base user-invalid:outline-2 user-invalid:outline-red-500"
+    type="email"
+    autocomplete="email"
+    spellcheck="false"
+    required
+  />
+  <input class="text-base" inputmode="numeric" autocomplete="one-time-code" />
+</form>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `input {
+  font-size: 16px;
+}
+
+input:user-invalid {
+  outline: 2px solid rgb(239 68 68);
+}`,
+    },
+  ]}
+/>
+
+Keep the submit button enabled until the request starts, and on submit move
+focus to the first field with an error.

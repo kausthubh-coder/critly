@@ -1,0 +1,149 @@
+---
+title: Liquid Motion
+description: One surface that changes shape.
+section: Motion
+order: 10
+publishedAt: "2026-10-08"
+resources:
+  - url: https://benji.org/family-values
+    title: Family Values
+    description: Benji Taylor on the Family wallet's morphing tray, "fly instead of teleport", and spending delight where it counts.
+  - url: https://motion.dev/docs/react-layout-animations
+    title: Layout animations in Motion
+    description: layout and layoutId, scale correction for radius and shadows, and layout="position" for text.
+  - url: https://css-tricks.com/gooey-effect/
+    title: The Gooey Effect
+    description: Lucas Bebber's original SVG filter for shapes that merge like liquid.
+  - url: https://www.joshwcomeau.com/animation/squash-and-stretch/
+    title: Squash and Stretch
+    description: Josh Comeau on stretching with velocity while keeping the area constant.
+  - url: https://developer.apple.com/videos/play/wwdc2025/219/
+    title: Meet Liquid Glass
+    description: Apple on controls that morph as one floating plane, and turning elasticity off for Reduce Motion.
+---
+
+The Dynamic Island doesn't open a window. It grows. Apple's newer controls
+pop open into menus right where you tapped, and the Family wallet's tray
+reshapes itself instead of swapping screens. They feel liquid because the
+thing you touched is the thing that changes.
+
+Open the share menu in both.
+
+<MorphDemo />
+
+On the left a second surface fades in over the button, so your eye has to
+find it. On the right the button itself becomes the menu: the corners
+round off, the label slides up into the title, and the rows fade in once
+the surface is moving. As Benji Taylor puts it, fly instead of teleport.
+
+**Morph the surface the user touched instead of fading in a new one, and
+close it back to where it came from.**
+
+A few details decide whether a morph looks liquid or broken. Put the corner
+radius in `style`, so Motion can correct it while the box scales. Use the
+pill's real half-height, not `9999px`, or the corners stay round until the
+last frame and then snap. Give text inside `layout="position"` so it moves
+instead of squashing. And move focus into the menu and back, because a
+morph changes nothing about what a dialog has to do.
+
+## Pour, don't slide
+
+A gooey filter makes nearby shapes melt together. Switch tabs and watch the
+indicators.
+
+<GooeyTabsDemo />
+
+The second bar blurs two dots, one fast and one trailing, then cuts the
+blur off at a sharp edge. Where the blurs overlap they add up, so the dots
+grow a bridge, stretch out of one tab and pool into the next. It's a filter
+redrawn on every frame, so keep it on a small layer of shapes. Never put
+text through it.
+
+## Stretch with speed
+
+Liquid things deform when they move fast. Drag both thumbs quickly, then
+past the end.
+
+<StretchDemo />
+
+The liquid thumb stretches along its motion in proportion to its speed,
+capped at 1.25 times, and squashes the other way by the same factor so its
+area stays the same. Past the end it gives a little instead of stopping
+dead. More than about 1.25 stops looking like material and starts looking
+like a cartoon.
+
+## Spend it once
+
+Liquid motion is loud. Use it where it explains something (where this came
+from, that it's the same thing, that it can be dragged) and on actions
+people don't repeat a hundred times a day. One liquid signature per screen
+is plenty; see [Novelty Budget](/novelty-budget). Under [reduced
+motion](/reduced-motion), turn morphs into short crossfades and remove every
+stretch and wobble. Apple does the same with Liquid Glass.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { AnimatePresence, motion } from "motion/react";
+
+const spring = { type: "spring", stiffness: 247, damping: 28 } as const;
+
+<AnimatePresence initial={false} mode="popLayout">
+  {open ? (
+    <motion.div
+      key="menu"
+      layoutId="share"
+      style={{ borderRadius: 16 }}
+      transition={spring}
+    >
+      <motion.h3 layoutId="share-label" layout="position">Share</motion.h3>
+      <motion.ul
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.18, delay: 0.06 }}
+      >
+        ...
+      </motion.ul>
+    </motion.div>
+  ) : (
+    <motion.button
+      key="button"
+      layoutId="share"
+      style={{ borderRadius: 16 }} // half of a 32px-tall button
+      transition={spring}
+      onClick={() => setOpen(true)}
+    >
+      <motion.span layoutId="share-label" layout="position">Share</motion.span>
+    </motion.button>
+  )}
+</AnimatePresence>`,
+    },
+    {
+      label: "Gooey",
+      language: "html",
+      code: `<svg width="0" height="0" aria-hidden="true">
+  <filter id="goo" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+    <!-- alpha × 18 − 7: blurred edges snap back to a sharp outline -->
+    <feColorMatrix type="matrix"
+      values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" />
+  </filter>
+</svg>
+
+<!-- Shapes only: labels sit in a separate layer on top. -->
+<div style="filter: url(#goo)">
+  <span class="dot"></span>
+  <span class="dot trailing"></span>
+</div>`,
+    },
+  ]}
+/>
+
+View Transitions can morph elements too, and they're the right tool for
+moving between pages and views. For controls people poke at, prefer Motion:
+starting a new view transition skips the running one instead of turning it
+around, and the page can't be clicked while one plays.

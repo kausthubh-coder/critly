@@ -1,0 +1,106 @@
+---
+title: Scale Entrances
+description: Grow from the trigger, not from zero.
+section: Motion
+order: 12
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 Practical Animation Tips
+    description: Emil Kowalski's list, including why popovers should not start from scale(0) and should grow from their trigger.
+  - url: https://emilkowal.ski/ui/css-transforms
+    title: CSS Transforms
+    description: An interactive walk through scale, translate and transform-origin.
+  - url: https://base-ui.com/react/handbook/animation
+    title: Base UI animation handbook
+    description: The starting and ending style attributes, and the transform origin variable on anchored popups.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin
+    title: transform-origin
+    description: The MDN reference for the property that decides where a scale grows from.
+---
+
+Menus, popovers and dialogs often enter with a bit of scale, so they seem to
+arrive instead of switching on. But a **scale entrance** that starts at zero
+looks like a cartoon zoom. One that starts at `0.95` looks like a small
+settle.
+
+Open both menus. Same duration, same easing, different starting scale.
+
+<ScaleEntrancesDemo />
+
+The left menu spends the start of its animation as an unreadable smudge,
+because the text scales with the box. The right one is readable from the
+first frame. The scale is a hint of movement, not the movement itself.
+
+**Start a scale entrance between 0.9 and 0.97, fade it in, and grow it from
+the thing that opened it.**
+
+## Grow from the trigger
+
+By default an element scales from its center. That suits a dialog in the
+middle of the screen. A menu under a button in the corner should grow out of
+that corner, so it looks attached to what you clicked. The dot marks the
+origin.
+
+<TransformOriginDemo />
+
+Same `0.9` start, same timing. The only change is `transform-origin`.
+
+A positioning library already knows where the trigger is. Base UI exposes it
+on every anchored popup as `--transform-origin`, so one line covers every side
+the menu can open on. Radix has a variable for each component, like
+`--radix-dropdown-menu-content-transform-origin`.
+
+## Find your number
+
+Drag the slider to change where the menu starts. It is slowed to 480ms so you
+can see the shape of it.
+
+<StartingScaleDemo />
+
+Below `0.8` it starts to read as a zoom. Above `0.98` you may as well drop the
+scale and keep the fade.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "tsx",
+      icon: "tailwind",
+      code: `<Popover.Popup
+  className="origin-(--transform-origin) transition-[opacity,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]
+    data-starting-style:scale-95 data-starting-style:opacity-0
+    data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:duration-100"
+>
+  ...
+</Popover.Popup>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.popup {
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    scale 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.popup[data-starting-style],
+.popup[data-ending-style] {
+  opacity: 0;
+  scale: 0.95;
+}
+
+.popup[data-ending-style] {
+  transition-duration: 100ms;
+}`,
+    },
+  ]}
+/>
+
+`--transform-origin` only exists inside Base UI's anchored popups. For a
+menu you place yourself, set the origin to the corner nearest the trigger,
+like `origin-top-right` for a menu that opens below a right-aligned button.

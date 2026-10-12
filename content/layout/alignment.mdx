@@ -1,0 +1,119 @@
+---
+title: Alignment
+description: Fewer edges, less to read.
+section: Layout
+order: 9
+publishedAt: "2026-10-03"
+resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/layout
+    title: Apple Human Interface Guidelines on layout
+    description: Why aligned items read as related and indented items read as subordinate.
+  - url: https://atlassian.design/foundations/grid
+    title: Atlassian grid
+    description: A production grid that aligns top-level containers and leaves the inside to spacing tokens.
+  - url: https://practicaltypography.com/grids.html
+    title: Grids
+    description: Matthew Butterick on grids as a tool for consistency, not a guarantee of good layout.
+  - url: https://ixdf.org/literature/topics/visual-alignment
+    title: What is Visual Alignment?
+    description: An overview of edge, center and left alignment and why fewer alignment lines read calmer.
+---
+
+Every element starts somewhere, and the eye notices where. When a card's
+content starts at 14px, the list below it at 8px and the input text at 10px,
+nobody can say what is wrong, but the section looks unfinished.
+
+**Line things up to as few edges as possible. Every new left edge is one more
+thing the eye has to resolve.**
+
+<AlignmentDemo />
+
+Both versions use the same components. The near-miss one has 6 left edges,
+because each component brought its own padding: 14px in the card, 8px in the
+rows, 10px in the input. The aligned one has 3: the boxes at 0, everything
+else at 12px, and the text after an icon or avatar at 44px.
+
+## Text aligns to text
+
+When a heading sits above a card, it can line up with the card's border or
+with the text inside it. Pick the text. We read down the left edge of the
+words, not the faint boxes around them. In the demo, Members, Invite by email
+and the placeholder all start at 12px.
+
+Atlassian's grid aligns the containers and leaves what's inside to spacing
+tokens. That keeps the frame tidy, but the text inside can still drift. I'd
+give every box in a section the same inset, so the words line up too.
+
+Within a column, keep one axis. The avatars and the card icon share a 24px
+slot, so the text after them shares an edge too. Apple's guidelines note
+that we read indented items as subordinate, so an accidental indent says
+something you didn't mean.
+
+## Hang the icons
+
+Icon rows under a heading have the same choice.
+
+<AlignmentIconsDemo />
+
+Indented, the icons sit on the heading's edge and the text starts 24px in,
+a second edge for the reader to find. Hanging, the icons move out into the
+margin and the text continues the heading's line. The icons work like
+bullets, which is what they are.
+
+Hanging needs room on the left. Inside a card with 16px of padding there
+often isn't any, so indent there, the same way on every row.
+
+## Usage
+
+Share one inset across the boxes in a section, and hang icons by their own
+width plus the gap.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<section class="flex flex-col gap-4 [--inset:12px]">
+  <h2 class="px-(--inset)">Members</h2>
+  <div class="rounded-lg px-(--inset) py-3">...</div>
+  <input class="px-(--inset)" />
+</section>
+
+<!-- 16px icon + 8px gap = 24px of hang -->
+<ul>
+  <li class="-ms-6 flex items-center gap-2">
+    <svg class="size-4" />
+    Unlimited projects
+  </li>
+</ul>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `section {
+  --inset: 12px;
+}
+
+section h2,
+section .card,
+section input {
+  padding-inline: var(--inset);
+}
+
+/* 16px icon + 8px gap = 24px of hang */
+li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: -24px;
+}`,
+    },
+  ]}
+/>
+
+Aligned by the numbers is not always aligned to the eye. A round icon or a
+capital T sits slightly inside its box and may need a nudge, which is what
+[optical alignment](/optical-alignment) is for. Alignment groups things
+across, the way [whitespace](/whitespace) groups them down.

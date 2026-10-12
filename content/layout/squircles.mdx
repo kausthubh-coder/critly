@@ -1,0 +1,99 @@
+---
+title: Squircles
+description: Corners that ease into the edge.
+section: Layout
+order: 6
+publishedAt: "2026-09-14"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape
+    title: corner-shape
+    description: MDN's reference for the property, its keywords and the superellipse() function.
+  - url: https://www.w3.org/TR/css-borders-4/#corner-shaping
+    title: CSS Borders 4, corner shaping
+    description: The specification for corner-shape and how the curve is defined.
+  - url: https://developer.chrome.com/blog/implementing-corner-shape
+    title: The corner cases of implementing CSS corner-shape in Blink
+    description: How Chrome draws borders and shadows that follow a superellipse.
+  - url: https://www.figma.com/blog/desperately-seeking-squircles/
+    title: Desperately seeking squircles
+    description: Figma's story of reverse-engineering Apple's icon curve, and why it feels smoother.
+  - url: https://github.com/phamfoo/figma-squircle
+    title: figma-squircle
+    description: Generates squircle SVG paths for browsers without corner-shape.
+---
+
+A normal rounded corner is a quarter circle. The straight edge runs along,
+then the arc starts, and there is a point where one turns into the other. You
+can feel that point even when you cannot see it.
+
+A squircle removes it. The curve starts earlier and eases into the edge, so
+the corner has no clear beginning or end. It is the shape of an iOS app icon,
+and it is why those icons look softer than a box with the same radius.
+
+<SquircleCompareDemo />
+
+Both tiles use the same `28px` radius. Only the corner shape changes.
+
+**Keep the radius, change the shape.** `border-radius` still sets how big the
+corner is, and `corner-shape` sets the curve that fills it. Because the shape
+belongs to the box, the background, border, outline, shadow and
+`overflow: hidden` all follow it.
+
+## How much curve
+
+The keywords are named points on one scale, `superellipse()`. Drag the slider
+to move along it. The dashed line is a plain round corner with the same
+radius.
+
+<SquircleCurvatureDemo />
+
+`1` is `round`, `2` is `squircle` and `0` is a flat `bevel`. Negative values
+scoop inwards. Past `2` the curve hugs the corner more and more, until it
+looks square again.
+
+Notice that at the same radius a squircle covers more of the corner than a
+round one does. If you swap the shape on an existing component and the
+corner suddenly looks smaller, raise the radius until it feels as soft.
+
+## Where it shows
+
+The effect scales with the radius. A big radius on a small box, like an
+avatar or an app icon, changes character completely. A small radius on a
+button barely moves, and that is fine.
+
+<SquircleExamplesDemo />
+
+The shape is not inherited, so set it on nested boxes too, and keep the outer
+radius equal to the inner radius plus the inset. The card above uses `24px`
+outside, `16px` inside and an `8px` inset.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="rounded-[28px] corner-squircle">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.icon {
+  border-radius: 28px;
+  corner-shape: squircle;
+}`,
+    },
+  ]}
+/>
+
+The Tailwind utility comes from the
+[corner-shape plugin](https://github.com/toolwind/corner-shape). As of October
+2026, `corner-shape` ships in Chrome and Edge 139+. Firefox and Safari only
+have it in preview builds. Everywhere else the property is ignored and you get
+the plain round corner from `border-radius`, which is fine for most UI. If the
+shape is part of the brand, like an app icon, generate the path with
+`figma-squircle` and apply it as a mask inside
+`@supports not (corner-shape: squircle)`.

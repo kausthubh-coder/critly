@@ -1,0 +1,148 @@
+---
+title: Smooth Animation
+description: Animate what the compositor can run.
+section: Performance
+order: 9
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/stick-to-compositor-only-properties-and-manage-layer-count
+    title: Stick to compositor-only properties
+    description: Why transform and opacity are cheap, and what every extra layer costs.
+  - url: https://motion.dev/docs/performance
+    title: Motion animation performance guide
+    description: Which values Motion can hardware-accelerate, and why x and scale aren't among them.
+  - url: https://tobiasahlin.com/blog/how-to-animate-box-shadow/
+    title: How to animate box-shadow
+    description: Tobias Ahlin's technique of fading a pre-rendered shadow instead of animating it.
+  - url: https://developer.chrome.com/docs/devtools/performance/reference
+    title: Chrome DevTools performance reference
+    description: The Frames and Animations tracks, including why an animation wasn't composited.
+  - url: https://developer.chrome.com/blog/scroll-animation-performance-case-study
+    title: Scroll-driven animation performance
+    description: A case study of a CSS animation that stays smooth while JavaScript is busy.
+---
+
+A browser tab does almost everything on one thread: your JavaScript, React,
+style, layout and paint. Smooth motion needs a new frame every 16ms at 60Hz
+and every 8ms at 120Hz. When that thread is busy, anything that needs it
+misses frames.
+
+Some animations don't need it. The browser can hand them to the compositor,
+a separate thread that only moves and fades layers that are already painted.
+Press play, then switch to a busy page, which blocks the main thread for 70ms
+out of every 100, about what a big re-render does on a mid-range phone.
+
+<MainThreadDemo />
+
+All three dots run the same motion. The JavaScript loop needs the main
+thread to compute every frame, and the `left` animation needs it to lay out
+the page every frame, so both stutter. The `transform` animation was handed
+to the compositor once, so it keeps gliding while the page is stuck.
+
+**Animate `transform` and `opacity`, and let CSS or the Web Animations API
+run them.**
+
+## What each property costs
+
+- **Composited everywhere:** `transform`, `translate`, `scale`, `rotate`,
+  `opacity`.
+- **Depends on the browser:** `filter`, `backdrop-filter`, `clip-path` and
+  `background-color` run on the compositor in some engines and on the main
+  thread in others. Treat them as expensive.
+- **Paint every frame:** `box-shadow`, `border-radius`, `color`,
+  `filter: blur()` in Chrome.
+- **Layout every frame:** `width`, `height`, `top`, `left`, `margin`,
+  `padding`. Moving one box can move every box after it.
+
+For size changes, animate a transform and measure once ([shared
+layout](/shared-layout) does this for you). For shadows and blur, paint the
+end state once and fade it in. Lift both cards, then try it on a busy page.
+
+<ShadowLiftDemo />
+
+The left card animates `box-shadow`, which repaints the shadow on every
+frame on the main thread, so it stutters with the page. The right card fades
+the opacity of a layer that already has the big shadow painted, so it stays
+smooth.
+
+## JavaScript animation
+
+JavaScript engines compute each frame on the main thread, so they're only as
+smooth as the page around them. In Motion, `x`, `y` and `scale` run that
+way. A full `transform` string can be handed to the browser instead. Springs
+handed over this way become `linear()` curves, which Safari runs on the main
+thread anyway. In React, never animate through state: a re-render per frame
+is exactly the main-thread work that causes the stutter. Use motion values,
+refs or CSS.
+
+A few more habits keep frames steady:
+
+- Start the animation first, then do the heavy work after a frame or two.
+- Don't run JavaScript entrance animations while the page is hydrating.
+- Set `will-change` just before an animation and remove it afterwards.
+  Every layer costs GPU memory.
+- Pause loops that are off screen.
+
+Effects also cost when nothing moves. A blur, a `backdrop-filter` or a
+`will-change` keeps its own layer even at opacity 0, so hundreds of hidden
+glass buttons cost hundreds of layers. See [Effect Cost](/effect-cost).
+
+## Measure it
+
+In Chrome DevTools, record a trace and open the Animations track. A red
+triangle marks an animation that wasn't composited, and the summary says
+why. CPU throttling shows main-thread problems, but it doesn't slow the GPU,
+so check blur and glass on a real phone. Measure a production build, more
+than once, before and after; [Measuring Performance](/measuring-performance)
+has the full method.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `/* Fade a pre-painted shadow instead of animating box-shadow. */
+.card {
+  position: relative;
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 18px 36px -12px rgb(0 0 0 / 0.35);
+  opacity: 0;
+  transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card:hover::after {
+  opacity: 1;
+}`,
+    },
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+// Runs in JavaScript every frame:
+<motion.div animate={{ x: 100 }} />
+
+// Can be handed to the browser and keep running when the page is busy:
+<motion.div animate={{ transform: "translateX(100px)" }} />`,
+    },
+  ]}
+/>
+
+Composited motion keeps animating while the page is blocked, but the page
+still can't respond to a click until the work finishes. Smooth animation
+hides a slow page; it doesn't fix one. See [Performance Is
+Design](/performance-is-design).

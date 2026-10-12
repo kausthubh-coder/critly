@@ -1,0 +1,108 @@
+---
+title: Spacing Scale
+description: A few spaces, used everywhere.
+section: Layout
+order: 8
+publishedAt: "2026-10-02"
+resources:
+  - url: https://atlassian.design/foundations/spacing
+    title: Atlassian spacing
+    description: A production spacing scale with guidance on which range to use for what.
+  - url: https://spec.fm/specifics/8-pt-grid
+    title: The 8-Point Grid
+    description: The case for multiples of 8, paired with a 4pt baseline grid for text.
+  - url: https://tailwindcss.com/docs/theme
+    title: Tailwind theme variables
+    description: How the spacing namespace works and how to replace the default values.
+  - url: https://tailwindcss.com/blog/tailwindcss-v4
+    title: Tailwind CSS v4.0
+    description: Why every spacing utility in v4 is derived from a single variable.
+---
+
+Spacing drifts. One card gets 14px of padding, the next one 16px, a third
+18px because it looked tight that day. Nobody sees the 2px, but people feel
+that the page is slightly off, and every new screen adds another value.
+
+**Pick every space from a small scale, and let the steps grow as the gaps do.**
+
+<SpacingScaleDemo />
+
+The two cards look almost the same. The one-off version uses seven values,
+each picked by eye, and the check marks sit at three different distances from
+their text. The scale version uses four: 4, 8, 16 and 24. Things that should
+line up now do, and the next person to build a card has four answers instead
+of seven guesses.
+
+## Steps that grow
+
+Start from 4px: 4, 8, 12, 16, 24, 32, 48, 64. The steps are 4px apart at the
+bottom, then 8, then 16.
+
+<SpacingStepsDemo />
+
+We notice spacing in proportion. Going from 8px to 12px adds 50% and is easy
+to see. Going from 48px to 52px adds 8% and nobody would notice, so it should
+not be a separate choice. Each step here is between 1.33x and 2x the one below.
+
+The 8-point grid allows only multiples of 8. I find that too coarse for dense
+interfaces: 4px and 12px come up constantly for icon gaps and compact rows.
+Atlassian builds on 8px too, but adds half steps like 4, 6 and 12 for the same
+reason. A 4px base covers them and still lands on every multiple of 8.
+
+## In Tailwind
+
+Tailwind v4 derives every spacing utility from one variable,
+`--spacing: 0.25rem`, so `gap-3` is 12px and `p-6` is 24px. That is a 4px
+base, but not a scale: `gap-5`, `p-13` and `mt-4.5` all work too. Reset the
+namespace and name only the steps you allow.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "css",
+      icon: "tailwind",
+      code: `@import "tailwindcss";
+
+@theme {
+  --spacing-*: initial;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+}`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+}
+
+.card {
+  padding: var(--space-6);
+  gap: var(--space-2);
+}`,
+    },
+  ]}
+/>
+
+Sizing utilities like `w-64` and `size-10` read the same namespace, so the
+reset removes them too, and arbitrary values like `gap-[13px]` still compile.
+If that is too strict for your codebase, keep the defaults and treat 1, 2, 3,
+4, 6, 8, 12 and 16 as the only numbers you type. The scale decides which
+values exist. [Whitespace](/whitespace) decides where the big ones go.

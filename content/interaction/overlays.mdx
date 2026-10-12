@@ -1,0 +1,116 @@
+---
+title: Overlays
+description: Keep scroll and focus inside the layer.
+section: Interaction
+order: 6
+publishedAt: "2026-10-02"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/overscroll-behavior
+    title: overscroll-behavior
+    description: The property that stops a scroll from chaining out to the page, on MDN.
+  - url: https://developer.chrome.com/blog/overscroll-behavior
+    title: Take control of your scroll
+    description: The Chrome team's walkthrough of scroll chaining and how contain fixes it in modals.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inert
+    title: inert
+    description: The attribute that takes a whole subtree out of focus, clicks and the accessibility tree.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog
+    title: The dialog element
+    description: What showModal() gives you for free, from inert backgrounds to Escape and focus.
+  - url: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+    title: Dialog (Modal) Pattern
+    description: The ARIA Authoring Practices rules for where focus goes when a dialog opens and closes.
+---
+
+A modal says everything else is on hold until you're done here. Two things
+quietly break that. Scrolling leaks out to the page behind, and focus wanders
+off when the layer opens or closes.
+
+## Scroll
+
+Scroll the list below to the end and keep going. Once the list runs out, the
+browser hands the scroll to the next scrollable thing behind it, and the page
+starts moving. This is called scroll chaining.
+
+<OverlayScrollDemo />
+
+One line stops it. `overscroll-behavior: contain` keeps the scroll inside the
+element even at its edges, and keeps the bounce from leaking out too. Put it on
+every scroll area inside an overlay: the dialog body, a drawer, a long menu.
+
+## Focus
+
+**When an overlay opens, focus goes in. When it closes, focus goes back to
+the button that opened it.**
+
+Open one of the fields, then close it with Save, Cancel, Escape or a click on
+the backdrop.
+
+<OverlayFocusDemo />
+
+In the unmanaged version focus stays behind the dialog, so Tab walks through
+buttons you can't use. When the dialog closes, the element that had focus is
+removed and focus falls back to the page body. A keyboard or screen reader user
+has lost their place and has to find it again.
+
+The managed version moves focus to the input, keeps Tab cycling inside the
+dialog, and makes the page behind `inert` so nothing there can be reached.
+Escape and a backdrop click close it, and focus lands back on the button you
+pressed.
+
+Only let the backdrop close overlays that are cheap to reopen, like menus,
+pickers and previews. If closing would throw away typing or skip a destructive
+choice, make people press a button.
+
+## Usage
+
+`<dialog>` opened with `showModal()` does most of this for you. The rest of the
+page becomes inert, Escape closes it, focus moves to the first focusable
+element, and it returns to the trigger on close. The `closedby="any"` attribute
+adds backdrop clicks, but it isn't Baseline yet, so the click handler below is
+still the safe route.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button onclick="language.showModal()">Language</button>
+
+<dialog
+  id="language"
+  class="rounded-xl p-0 backdrop:bg-black/20"
+  onclick="event.target === this && this.close()"
+>
+  <ul class="max-h-64 overflow-y-auto overscroll-contain p-1">
+    <li>English</li>
+    <!-- … -->
+  </ul>
+</dialog>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `dialog {
+  padding: 0;
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.2);
+}
+
+dialog ul {
+  max-height: 16rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}`,
+    },
+  ]}
+/>
+
+A modal dialog doesn't stop the page from scrolling when the wheel is over the
+backdrop itself. If that matters, lock the root while it's open with
+`html:has(dialog:modal) { overflow: hidden }`, and keep `contain` on the lists
+for the scroll that starts inside.

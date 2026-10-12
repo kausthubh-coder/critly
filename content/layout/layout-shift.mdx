@@ -1,0 +1,123 @@
+---
+title: Layout Shift
+description: Hold the space for what arrives late.
+section: Layout
+order: 11
+publishedAt: "2026-10-03"
+resources:
+  - url: https://web.dev/articles/cls
+    title: Cumulative Layout Shift (CLS)
+    description: How Chrome scores unexpected movement, where the 0.1 and 0.25 thresholds come from, and which shifts are excluded.
+  - url: https://web.dev/articles/optimize-cls
+    title: Optimize Cumulative Layout Shift
+    description: The usual causes, from images without dimensions to late embeds and web fonts, with a fix for each.
+  - url: https://developer.chrome.com/blog/font-fallbacks
+    title: Improved font fallbacks
+    description: How size-adjust and the metric overrides make a fallback font take up the same space as the web font.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scrollbar-gutter
+    title: scrollbar-gutter
+    description: Keep room for a scrollbar so content does not move sideways when one appears.
+---
+
+You go to press a button, and just before you click, something loads above it
+and the button slides away. You hit whatever moved into its place.
+
+**Anything that arrives late should land in space that was already waiting for
+it.**
+
+<LayoutShiftDemo />
+
+In the jumpy card, a photo, a banner and an error each push Post down. In the
+reserved card, the photo fills a box that was there from the start, the banner
+floats over the post, and the error has its own line.
+
+## Where shifts come from
+
+- **Images and video:** set `width` and `height`, or an `aspect-ratio`, so the
+  browser can size the box before the file arrives.
+- **Async content:** give the [skeleton](/performance-is-design) the final
+  dimensions, or the container a fixed height.
+- **Validation messages:** reserve the line under the field, as in
+  [input details](/input-details).
+- **Conditional buttons and badges:** keep their slot, or overlay them. A
+  number that changes width as it ticks is a small shift too, which
+  [tabular numbers](/tabular-numbers) fixes.
+- **Scrollbars:** on Windows, a scrollbar appearing narrows the page and
+  everything centered jumps sideways. `scrollbar-gutter: stable` keeps room
+  for it.
+
+## Web fonts
+
+With `font-display: swap`, text renders first in a fallback font, then in the
+web font. If the two have different widths, lines rewrap and everything below
+them moves.
+
+<FontSwapDemo />
+
+Both fall back to Arial. Plain Arial is narrower, so the paragraph loses a
+line and the link jumps 24px when Inter arrives. The adjusted one scales Arial
+with `size-adjust: 107.89%` and matches its ascent and descent, so nothing
+moves. next/font generates these overrides for every font it loads.
+
+## CLS
+
+Chrome measures this as Cumulative Layout Shift, one of the Core Web Vitals.
+0.1 or less is good, over 0.25 is poor. Shifts within 500ms of a click or key press
+don't count, so the error that pushes Post down right after you press it costs
+nothing in CLS. It still costs the person pressing again.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<img src="/pond.jpg" width="1200" height="600" class="h-auto w-full" alt="" />
+
+<div class="aspect-2/1 rounded-lg bg-muted">...</div>
+
+<p class="h-5 text-sm text-red-600">{error}</p>
+
+<html class="[scrollbar-gutter:stable]">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `img {
+  height: auto;
+}
+
+.photo {
+  aspect-ratio: 2 / 1;
+}
+
+.field-error {
+  height: 1.25rem;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  size-adjust: 107.89%;
+  ascent-override: 89.79%;
+  descent-override: 22.36%;
+  line-gap-override: 0%;
+}
+
+body {
+  font-family: "Inter", "Inter Fallback", sans-serif;
+}`,
+    },
+  ]}
+/>
+
+Safari supports `size-adjust` but not yet the ascent and descent overrides.
+Give text an explicit `line-height` and the line boxes stay the same height
+there anyway.

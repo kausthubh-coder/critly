@@ -1,0 +1,142 @@
+---
+title: JavaScript Cost
+description: Ship less script, load the rest on intent.
+section: Performance
+order: 7
+publishedAt: "2026-10-08"
+resources:
+  - url: https://infrequently.org/2025/11/performance-inequality-gap-2026/
+    title: The Performance Inequality Gap, 2026
+    description: Alex Russell's budgets for how much JavaScript a page can afford on the phones most people own.
+  - url: https://web.dev/articles/rendering-on-the-web
+    title: Rendering on the Web
+    description: Server rendering, hydration and its uncanny valley, and the options in between.
+  - url: https://web.dev/articles/reduce-javascript-payloads-with-code-splitting
+    title: Reduce JavaScript payloads with code splitting
+    description: Splitting by route and loading the rest when it's needed.
+  - url: https://developer.chrome.com/docs/devtools/coverage
+    title: Coverage panel
+    description: Finding the JavaScript a page downloads but never runs.
+  - url: https://www.patterns.dev/vanilla/import-on-interaction/
+    title: Import on interaction
+    description: Loading heavy features when someone is about to use them, with real-world savings.
+---
+
+Every kilobyte of JavaScript costs more than a kilobyte of anything else. An
+image is downloaded and decoded mostly off to the side. A script is
+downloaded, then parsed, compiled and run on the main thread, and while it
+runs the page can't answer a tap. The median mobile page now ships about
+650 KB of it, compressed, and about 250 KB of what it loads never runs.
+
+Reload, then tap both buttons as soon as you see them. Try each device.
+
+<HydrationGapDemo />
+
+Both pages look ready at once, because the HTML arrived. But the buttons
+only work once their script has booted. On a fast laptop the gap is short.
+On a mid-range phone, which runs script about 3.5 times slower than a
+current iPhone, the typical page ignores your taps for two seconds; on a
+budget phone, for five. A page that looks ready but ignores taps feels
+broken, not slow.
+
+**Ship the least JavaScript that makes the first screen work. Load the rest
+when someone is about to need it.**
+
+## Make the first screen work early
+
+- **Hydrate less.** Content pages don't need every component to be
+  interactive: render on the server and add script only where something
+  responds, as islands (Astro) or Server Components (Next.js) do.
+- **Make key controls work before script.** A real `<a href>`, a
+  `<form action>`, `<details>` and `<dialog>` work the moment the HTML
+  arrives, so a slow boot makes them slower instead of broken.
+- **Keep the first bundle to the shell and the current route.** Every
+  modern router splits by route; check that yours does.
+
+## Load heavy things on intent
+
+Editors, charts, maps, video players, date pickers and payment SDKs are
+often hundreds of kilobytes each and used by a fraction of visitors. Load
+them when someone shows intent, or when they scroll near.
+
+<LoadOnIntentDemo />
+
+Loading everything upfront makes the editor open instantly but puts 340 KB
+in front of every visitor. Loading on intent ships 40 KB, starts fetching
+the editor when the pointer reaches the box, and by the click most of the
+wait is gone. Click without hovering (with the keyboard, say) and you see
+the short skeleton instead. Google Docs saved 500 KB by loading its share
+dialog this way.
+
+## Watch the third parties
+
+Analytics, tag managers, chat widgets and A/B tools account for over half
+of all script execution on the web. A YouTube embed alone averages about 6
+seconds of main-thread work. Load them after the page is interactive or on
+first interaction, replace widgets with a facade that loads the real thing
+on click, and remove the ones nobody looks at.
+
+## Set a budget and enforce it
+
+For a phone to load a page in about 3 seconds, Alex Russell's 2026
+numbers allow roughly 300 KB of compressed JavaScript on the critical path.
+A good default is 150 KB for content pages and 300 KB for app shells, no
+single chunk over 100 KB, and a check in CI that fails the build when a
+change goes over. Set the limit at today's size and lower it with every win.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { lazy, Suspense, useState } from "react";
+
+// One promise, cached by the module system. Declare outside components.
+const loadEditor = () => import("./RichEditor");
+const RichEditor = lazy(loadEditor);
+
+function CommentBox() {
+  const [open, setOpen] = useState(false);
+  if (open) {
+    return (
+      <Suspense fallback={<EditorSkeleton />}>
+        <RichEditor autoFocus />
+      </Suspense>
+    );
+  }
+  return (
+    <button
+      onPointerEnter={loadEditor} // warm it before the click
+      onFocus={loadEditor}        // keyboard users too
+      onClick={() => setOpen(true)}
+    >
+      Write a comment
+    </button>
+  );
+}`,
+    },
+    {
+      label: "Budget",
+      language: "ts",
+      code: `// .size-limit.json — fails CI when a bundle grows past its budget.
+[
+  { "path": "dist/assets/index-*.js", "limit": "150 KB" },
+  { "path": "dist/assets/vendor-*.js", "limit": "100 KB" }
+]
+
+// package.json
+// "scripts": { "size": "size-limit" }`,
+    },
+  ]}
+/>
+
+To see what you ship, open DevTools' Coverage panel and reload: red is code
+that downloaded but never ran, the first candidates for lazy loading. A
+bundle analyzer (`npx vite-bundle-visualizer`, `npx next analyze`) shows
+what's inside each chunk; look for duplicate libraries, whole utility
+libraries imported for one function, and polyfills modern browsers don't
+need. Then measure on a real mid-range Android: as
+[Measuring Performance](/measuring-performance) explains, a laptop hides
+almost all of this.

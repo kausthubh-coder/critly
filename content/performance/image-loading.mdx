@@ -1,0 +1,112 @@
+---
+title: Image Loading
+description: Hold the space, then fade in.
+section: Performance
+order: 4
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/optimize-lcp
+    title: Optimize Largest Contentful Paint
+    description: The four parts of a slow hero image, and the share of time each should take.
+  - url: https://web.dev/articles/fetch-priority
+    title: Fetch Priority API
+    description: How fetchpriority="high" moves the hero image to the front of the queue.
+  - url: https://web.dev/articles/lcp-lazy-loading
+    title: The performance effects of too much lazy loading
+    description: WordPress's test showing that lazy-loading above-the-fold images makes pages slower.
+  - url: https://evanw.github.io/thumbhash/
+    title: ThumbHash
+    description: A tiny encoding of an image's colours and shape, for placeholders that look like the photo.
+  - url: https://performance.shopify.com/en-ca/blogs/blog/improve-largest-contentful-paint-lcp-by-removing-image-transitions
+    title: Remove image transitions to improve LCP
+    description: Shopify on how a fade-in reveal on the hero image delayed it by seconds.
+---
+
+Images are usually the heaviest thing on a page and the last thing to
+arrive. How they arrive is part of the design: they can drop into an empty
+gap and shove the page around, or settle into a space that was waiting for
+them.
+
+Replay both cards. The network is simulated, so each image takes a moment.
+
+<ImageArrivalDemo />
+
+The left image has no size and no placeholder, so there's nothing, then the
+picture appears all at once and pushes the text down while you're reading
+it. The right one reserves its box from the first frame, fills it with the
+photo's average colour, and fades the picture in over 240ms.
+
+**Give every image its space and a placeholder before it loads, then fade it
+in. Except the hero: load that one first and show it at once.**
+
+## What fills the box
+
+Switch between the placeholder and the loaded image.
+
+<PlaceholderDemo />
+
+A grey box is safe but tells you nothing. The average colour hints at the
+photo for a few bytes. A tiny preview looks like the real image, but only if
+it's blurred: stretched without blur, it looks like a broken JPEG.
+BlurHash and ThumbHash encode a smooth preview in about 25 bytes. In dark
+mode, mix the colour with the page's surface so placeholders don't flash
+bright.
+
+Don't fade images that are already in the cache, or every revisit flickers.
+Crossfade with `opacity` over a still placeholder, and never animate the blur
+itself.
+
+## The hero is different
+
+The main image at the top is usually what Chrome measures as Largest
+Contentful Paint, which should land within 2.5 seconds. The download is
+rarely what makes it late. On slow sites, the browser waits about four times
+longer to *start* downloading the hero than it spends downloading it.
+
+- Put the hero in the HTML as a real `<img>`, not a CSS background or an
+  image added by JavaScript.
+- Mark it `fetchpriority="high"`, and only it.
+- Never lazy-load it. Lazy-load everything below the fold instead.
+- Don't fade it in from invisible. Paints at opacity 0 don't count, so a
+  reveal animation can delay it by seconds.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "HTML",
+      language: "html",
+      code: `<!-- The hero: first in line, shown at once -->
+<img src="/hero-1600.avif" width="1600" height="900" alt="…"
+     fetchpriority="high">
+
+<!-- Everything else: sized, lazy, sized to its slot -->
+<img src="/card-640.avif" width="640" height="400" alt="…"
+     loading="lazy" decoding="async"
+     srcset="/card-320.avif 320w, /card-640.avif 640w, /card-960.avif 960w"
+     sizes="auto, (min-width: 40rem) 45vw, 92vw"
+     style="background: var(--placeholder)">`,
+    },
+    {
+      label: "Next.js",
+      language: "tsx",
+      code: `import Image from "next/image";
+import hero from "./hero.jpg";
+
+// next/image lazy-loads by default, so the hero must opt out.
+<Image src={hero} alt="…" fetchPriority="high" loading="eager"
+       sizes="100vw" placeholder="blur" />
+
+// Below the fold: lazy by default, with a blurred placeholder.
+<Image src={photo} alt="…" sizes="(min-width: 40rem) 45vw, 92vw"
+       placeholder="blur" />`,
+    },
+  ]}
+/>
+
+Serve AVIF with WebP and JPEG fallbacks, or let an image CDN pick, and stop
+at 2× pixel density: the extra pixels on 3× screens are rarely visible. Next.js 16
+deprecated `priority` in favour of `preload`, but its docs recommend
+`fetchPriority="high"` for most heroes. Always set `width` and `height`;
+see [Layout Shift](/layout-shift).

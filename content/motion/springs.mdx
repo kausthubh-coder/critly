@@ -1,0 +1,142 @@
+---
+title: Springs
+description: Tune motion by feel, then convert it.
+section: Motion
+order: 4
+publishedAt: "2026-10-08"
+resources:
+  - url: https://developer.apple.com/videos/play/wwdc2023/10158/
+    title: Animate with springs
+    description: Apple's WWDC23 session on describing springs by duration and bounce, and when bounce belongs.
+  - url: https://www.joshwcomeau.com/animation/a-friendly-introduction-to-spring-physics/
+    title: A friendly introduction to spring physics
+    description: Josh Comeau on mass, tension and friction, with springs you can pull on.
+  - url: https://www.kvin.me/posts/effortless-ui-spring-animations
+    title: Effortless UI spring animations
+    description: Kevin Grajeda's guide to perceptual springs, with the corrected conversion formulas.
+  - url: https://motion.dev/docs/react-transitions
+    title: Transitions in Motion
+    description: Spring options in Motion, including stiffness, damping, visualDuration and bounce.
+  - url: https://developer.android.com/develop/ui/compose/animation/customize
+    title: Customize animations in Compose
+    description: Android's spring constants, and why springs stay smooth when their target changes.
+---
+
+An [easing](/easings) bends a fixed amount of time. A **spring** has no clock.
+It pulls a value toward its target, and the pull and the friction decide how
+long it takes. That's why springs handle interruptions well, and why their
+raw settings (stiffness, damping, mass) are almost impossible to tune by eye.
+
+Apple's fix was to describe a spring with two numbers people can feel:
+**duration**, how long it takes to look finished, and **bounce**, how far it
+overshoots. Change them and press play.
+
+<SpringTunerDemo />
+
+At bounce 0 the spring is critically damped. It's the fastest way to arrive
+without ever passing the target. The overshoot climbs slowly at first, then
+fast:
+
+- Bounce 0.15 overshoots by 0.6%, about 2px on a 300px move. Nobody sees it.
+- Bounce 0.3 overshoots by 4.6%. Clearly bouncy.
+- Bounce 0.4 overshoots by 9.5%, and Apple advises caution above it.
+
+Notice the settle time too. A 0.5s spring takes about 740ms to come fully to
+rest, so never wait for a spring to finish before letting people act.
+
+## Bounce has to be earned
+
+Both sheets open from the same click. Open and close them a few times.
+
+<SpringBounceDemo />
+
+The bouncy one wobbles. Nothing threw it, so the overshoot reads as sloppy,
+not physical. Apple Music opens Now Playing on a tap with no bounce, and
+dismisses it after a swipe with a bounce of 0.2. The swipe gave the sheet
+energy, and the bounce gives it back.
+
+**Start every spring at bounce 0. Add bounce only when a gesture gave the
+motion momentum.**
+
+Bounce also never belongs on an exit, and never on opacity or color. Opacity
+can't go past 1, so the overshoot becomes a flat pause before the fade ends.
+Give those a short tween, as Material does with its "effects" springs, which
+are always critically damped.
+
+## A few springs, everywhere
+
+Pick three or four springs and name them, the same way you name
+[easings](/easings): fast (0.25s, bounce 0) for small controls, default (0.4s,
+bounce 0) for panels and sheets, and one playful spring (0.5s, bounce 0.3)
+for celebrations and thrown things. A product with a dozen hand-tuned springs
+feels like a dozen products.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+// Apple's duration + bounce, converted to physics (mass 1):
+// stiffness = (2π / duration)², damping = 4π × (1 - bounce) / duration
+function spring(duration: number, bounce = 0) {
+  return {
+    type: "spring" as const,
+    stiffness: (2 * Math.PI / duration) ** 2,
+    damping: (4 * Math.PI * (1 - bounce)) / duration,
+  };
+}
+
+<motion.div
+  animate={{ y: open ? 0 : "100%", opacity: open ? 1 : 0 }}
+  transition={{
+    default: spring(0.4),
+    opacity: { duration: 0.15, ease: "easeOut" },
+  }}
+/>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  /* A 0.3s spring with no bounce, sampled into linear().
+     The duration is the full settle time, not the visual one. */
+  --spring-smooth: linear(0, 0.1061, 0.3018, 0.4922, 0.6466, 0.7613,
+    0.8422, 0.8975, 0.9342, 0.9582, 0.9737, 0.9836, 0.9898, 0.9937,
+    0.9961, 0.9976, 0.9985, 0.9991, 1, 1);
+}
+
+.sheet {
+  transition:
+    translate 600ms var(--spring-smooth),
+    opacity 150ms ease-out;
+}`,
+    },
+  ]}
+/>
+
+Motion also accepts `duration` (or `visualDuration`) and `bounce` directly,
+but there are two catches. Since version 12.34.3, those springs ignore the
+velocity they inherit, so a drag release or an interruption starts from
+zero. And Motion's `visualDuration` runs 1.2 times faster than Apple's
+duration, so `visualDuration: 0.42` matches SwiftUI's 0.5. The physics form
+above has neither problem.
+
+CSS `linear()` can draw a spring's shape in every browser, but it's a
+recording: a fixed duration, no velocity when interrupted, and in Safari
+it's not run on the [compositor](/smooth-animation). It's still a good fit for
+hover and open/close motion, where reversing from the current position is
+enough. Use JavaScript springs where velocity matters, like drags and flicks.
+
+JavaScript springs run on the main thread, so they stutter while the page is
+busy, for example during a route change. To get both, compute the spring's
+positions once in JavaScript and play them as `transform` keyframes with the
+Web Animations API, which the browser can run off the main thread. On
+interruption, read the current position and velocity and compute a new set.
+
+If the brand or the person asks for overshoot, a small bounce (0.2 to 0.25)
+on an open is fine. Keep closes and opacity flat.

@@ -1,0 +1,71 @@
+---
+title: HTML Background
+description: Paint the canvas behind your page.
+section: Layout
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://css-tricks.com/html-vs-body-in-css/
+    title: HTML vs Body in CSS
+    description: A practical look at how the root and body elements behave.
+  - url: https://www.w3.org/TR/css-backgrounds-3/#special-backgrounds
+    title: Canvas backgrounds
+    description: How browsers paint the document canvas from the root or body.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior
+    title: overscroll-behavior
+    description: Control what happens when scrolling reaches a boundary.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/theme-color
+    title: theme-color
+    description: Match supported browser chrome to the page background.
+---
+
+Pull past the top of a dark page in Safari and a white strip can appear behind
+it. The app is dark, but the document canvas is still white.
+
+The canvas is the surface the browser paints behind the page.
+
+<HtmlBackgroundDemo />
+
+## The document canvas
+
+A wrapper only paints its own box. When it moves during overscroll, the canvas
+shows through. Set the background on the root element to paint that surface
+too.
+
+Browsers normally use the `body` background when `html` is transparent.
+Setting it on `html` directly makes the intended canvas color clear and does
+not rely on that behavior.
+
+## Other edges
+
+- **Theme color:** The `theme-color` meta tag can tint supported browser UI to
+  match the page. Keep it in sync when the theme changes.
+- **Overscroll:** `overscroll-behavior: none` can remove the bounce and stop
+  scroll chaining. Use it carefully. The bounce is a familiar part of the
+  platform.
+- **Both themes:** The root background must follow the active theme, or the
+  white flash can return in one mode.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<html class="bg-background">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `html {
+  background-color: var(--background);
+}`,
+    },
+  ]}
+/>
+
+Use the same background token for the root and the app. If the theme changes,
+that token should change with it.

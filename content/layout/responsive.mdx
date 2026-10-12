@@ -1,0 +1,129 @@
+---
+title: Responsive
+description: Fit the space you're given.
+section: Layout
+order: 12
+publishedAt: "2026-10-03"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries
+    title: CSS container queries
+    description: MDN's guide to container-type, @container and the container query length units.
+  - url: https://tailwindcss.com/docs/responsive-design
+    title: Tailwind responsive design
+    description: Breakpoints and the built-in @container variants, including the size of each one.
+  - url: https://www.joshwcomeau.com/css/container-queries-introduction/
+    title: A friendly introduction to container queries
+    description: Josh Comeau on how container queries work and the containment that makes them possible.
+  - url: https://www.smashingmagazine.com/2022/01/modern-fluid-typography-css-clamp/
+    title: Modern fluid typography using CSS clamp
+    description: How to build a fluid type scale with clamp(), and why to test it with zoom.
+  - url: https://web.dev/blog/viewport-units
+    title: The large, small and dynamic viewport units
+    description: Why 100vh is too tall on mobile and which of svh, lvh and dvh to use instead.
+---
+
+A component doesn't know where it will end up. The same card sits in a wide
+column, a narrow sidebar and a phone. Media queries ask how big the screen is,
+which is the wrong question for anything smaller than the page.
+
+**A component should respond to the space it is given, not to the size of the
+screen.**
+
+<ContainerQueryDemo />
+
+Drag the edge. The container query card stacks below 256px and goes back to a
+row above it. The viewport card asks whether the window is 768px wide, so on a
+laptop it stays a row in any container and squeezes its title to nothing. On a
+phone it stays stacked even when there is room.
+
+## Change the layout, not just the size
+
+At narrow widths, don't shrink everything until it fits. Stack the row, give
+actions their own line, drop what is secondary. Here the 56px thumbnail
+becomes a banner and the button goes full width.
+
+When a row stays a row, give its text `min-width: 0`. Flex children won't
+shrink below their content by default, so the title pushes the button out
+instead of truncating.
+
+## Fluid type
+
+Type and spacing can scale with the space too, within limits.
+
+<FluidTypeDemo />
+
+The fluid heading uses `clamp(1.25rem, 0.25rem + 8cqi, 2.5rem)`: 20px in
+containers up to 200px wide, 40px from 450px. `cqi` is 1% of the container's
+width, so it follows the card, not the window. Keep a `rem` in the middle
+value. Sizes in `vw` alone don't grow when people zoom.
+
+## On phones
+
+Use `100dvh` for full-height layouts. On phones, `100vh` is the height with the
+toolbars hidden, so it runs under them when they show. And grow targets to the
+44px from [hit areas](/hit-areas) on touch screens, with Tailwind's
+`pointer-coarse:` variant.
+
+## Usage
+
+In Tailwind v4, `@container` marks the container and `@3xs:` applies from 16rem
+(256px) up. `@min-[...]:` takes any value.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="@container">
+  <article class="flex flex-col gap-3 @3xs:flex-row @3xs:items-center">
+    <img class="h-20 w-full object-cover @3xs:size-14" src="..." alt="" />
+    <div class="min-w-0 flex-1">
+      <p class="truncate">Water Lilies, evening effect</p>
+    </div>
+    <button class="h-9 w-full @3xs:w-auto pointer-coarse:h-11">Save</button>
+  </article>
+</div>
+
+<h1 class="text-[length:clamp(1.25rem,0.25rem+8cqi,2.5rem)]">...</h1>
+
+<main class="min-h-dvh">...</main>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.card-wrapper {
+  container-type: inline-size;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@container (width >= 16rem) {
+  .card {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.card-text {
+  min-width: 0;
+}
+
+h1 {
+  font-size: clamp(1.25rem, 0.25rem + 8cqi, 2.5rem);
+}
+
+main {
+  min-height: 100dvh;
+}`,
+    },
+  ]}
+/>
+
+An element can't query its own size, only its ancestors'. Put `@container` on
+a wrapper around the card, not on the card you want to change.

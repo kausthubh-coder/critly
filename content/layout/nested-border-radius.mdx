@@ -1,0 +1,67 @@
+---
+title: Nested Border Radius
+description: Inner radius is outer minus padding.
+section: Layout
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://cloudfour.com/thinks/the-math-behind-nesting-rounded-corners/
+    title: The math behind nesting rounded corners
+    description: Cloud Four’s explanation of the radius formula with practical CSS examples.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/border-radius
+    title: border-radius
+    description: MDN’s reference for the CSS border-radius property.
+  - url: https://www.w3.org/TR/css-backgrounds-3/#corners
+    title: CSS corner shaping
+    description: The specification for outer, padding, and content edge radii.
+---
+
+Rounded corners look best when one curve follows the other. If a box sits
+inside another box, using the same radius on both usually makes the gap wider
+near the corner.
+
+This is one of those little things that makes an interface feel off.
+
+<NestedRadiusDemo />
+
+The fix is a simple relationship:
+
+> **outer radius = inner radius + inset**
+
+The inset is the distance between the two edges. It is often the parent’s
+padding. If the parent has a border, include its width too.
+
+In the demo, the inner radius is `16px` and the inset is `12px`. That makes the
+outer radius `28px`.
+
+## Start from the outer radius
+
+Design systems usually start with a radius on the outer component. In that
+case, reverse the formula:
+
+> **inner radius = outer radius − inset**
+
+<RadiusCalculatorDemo />
+
+The inner radius cannot go below zero. If the inset is larger than the outer
+radius, use a square inner corner. In CSS, `max()` can handle that limit for
+you.
+
+## Real components
+
+The difference is easier to see in a card or a menu than in an empty diagram.
+
+<NestedRadiusExamplesDemo />
+
+The card has a `16px` outer radius and an `8px` inset, so its media uses `8px`.
+The menu has a `12px` outer radius and a `4px` inset, so its highlighted item
+uses `8px`.
+
+## When to adjust it
+
+The formula is a strong starting point, not a rule for every shape. Tune the
+result by eye when the inset changes around the component, the inner element
+does not reach the corner, or the surfaces use different corner shapes.
+
+The fancy name for this is **concentric corners**: nested corners whose curves
+share the same center.

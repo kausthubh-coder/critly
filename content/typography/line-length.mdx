@@ -1,0 +1,95 @@
+---
+title: Line Length
+description: Lines short enough to find the next one.
+section: Typography
+order: 8
+publishedAt: "2026-10-02"
+resources:
+  - url: https://practicaltypography.com/line-length.html
+    title: Line length
+    description: Matthew Butterick's case for 45 to 90 characters, and the easy ways to get there.
+  - url: https://baymard.com/blog/line-length-readability
+    title: Readability - the optimal line length
+    description: Baymard Institute's research summary, which lands on 50 to 75 characters.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html
+    title: Understanding visual presentation
+    description: The WCAG criterion that caps lines at 80 characters and asks for 1.5 line spacing.
+  - url: https://every-layout.dev/rudiments/axioms/
+    title: Axioms
+    description: Every Layout on setting a measure in ch once and letting the whole site inherit it.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/length
+    title: CSS length units
+    description: How ch is defined, as the advance width of the 0 glyph.
+---
+
+Long lines are tiring in a way people rarely put into words. Your eyes jump
+along a line a few words at a time, then sweep back to the left to find the
+next one. The longer the line, the longer that sweep, and the easier it is to
+land on the wrong line.
+
+**Keep body text between 45 and 75 characters per line.**
+
+<LineLengthDemo />
+
+Sources disagree at the edges. Butterick allows up to 90 characters, Baymard
+recommends 50 to 75, and WCAG caps lines at 80. 45 to 75 is where they all
+overlap, so that is the band I use.
+
+## Finding the next line
+
+The cost of a long line shows up at the return. The dashed line traces one,
+from the end of a line to the start of the next.
+
+<LineReturnDemo />
+
+At 120 characters the return is a long, almost flat diagonal, and a small slip
+drops you a line too low. At 65 it is short and steep. Both are set small here
+so that 120 characters fit in this column.
+
+## Line height
+
+Line length and line height move together. More space between lines gives the
+return a bigger target, so longer lines need more of it. For body text, start
+at 1.5.
+
+<LineHeightDemo />
+
+Butterick suggests 1.2 to 1.45, WCAG asks for at least 1.5. On screens I side
+with 1.5. This page is a good reference: its column is 576px, about 85
+characters of 14px Inter, so it runs past the band and makes up for it with a
+1.8 line height.
+
+## Usage
+
+`1ch` is the width of the `0` glyph, which makes it the natural unit for a
+measure. Tailwind's `max-w-prose` is `65ch`. But a zero is wider than the
+average letter in most interface fonts. In Inter, `65ch` holds about 85
+characters and `55ch` about 70.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<p class="max-w-[55ch] leading-normal text-pretty">
+    Exports now run in the background, so you can keep working.
+</p>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `p {
+  max-inline-size: 55ch;
+  line-height: 1.5;
+}`,
+    },
+  ]}
+/>
+
+Pick the `ch` value for your font, then count a few lines. Anything that
+changes letter widths changes the result, including
+[letter spacing](/letter-spacing). A narrower column also strands more single
+words at the end of paragraphs, which [text-wrap: pretty](/text-wrapping)
+cleans up.

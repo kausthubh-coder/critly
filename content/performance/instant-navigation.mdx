@@ -1,0 +1,138 @@
+---
+title: Instant Navigation
+description: Start loading before the click lands.
+section: Performance
+order: 3
+publishedAt: "2026-10-08"
+resources:
+  - url: https://instant.page/
+    title: instant.page
+    description: The measurements behind hover prefetching, including how long people hover before they click.
+  - url: https://developer.chrome.com/docs/web-platform/prerender-pages
+    title: Prerender pages in Chrome
+    description: The Speculation Rules API, its eagerness levels and exactly when each one fires.
+  - url: https://nextjs.org/docs/app/guides/prefetching
+    title: Prefetching in Next.js
+    description: How Next.js prefetches links, and how to prefetch only on hover for long lists.
+  - url: https://web.dev/articles/bfcache
+    title: Back/forward cache
+    description: How browsers make Back instant, and what stops them.
+  - url: https://github.com/smeijer/spin-delay
+    title: spin-delay
+    description: A small hook for spinners that only show after a delay and then stay long enough not to flicker.
+---
+
+Moving between screens is the most common thing people do in an app, and
+they decide whether it feels fast in the first tenth of a second. Most of
+that time can be spent before they even click.
+
+Both apps take 600ms to load each page. Move your pointer onto a page name
+the way you normally would, then click.
+
+<PrefetchDemo />
+
+The left app starts loading when you click, so every page shows a skeleton
+for 600ms. The right one starts loading when you show intent: hovering for
+65ms, pressing down, or focusing with the keyboard. By the time the click
+lands, most of the wait is already over.
+
+**Start loading on intent, not on click, and never show a blank screen while
+you wait.**
+
+## How much head start you get
+
+People hover on a link for a while before they click it. instant.page's
+measurements found that after 65ms of hover, half of users go on to click,
+with over 300ms still to go. Pressing the button gives about 80ms more
+before the click fires, and on touch screens `touchstart` gives about 90ms.
+That's why the right app also loads on press: it's free and wastes nothing.
+
+Match the head start to the cost. A short hover (about 65ms) is right for
+cheap, read-only work like fetching a page's data. Expensive or side-effecting
+work, like starting a video, a stream or a server job, should wait for a
+longer rest (about 300ms) and cancel when the pointer leaves. Prefetch the
+data as well as the code, and let a click join the request already in flight
+instead of starting a new one. On touch screens there's
+no hover, so prefetch only the few links people are most likely to tap,
+such as the first items in a list.
+
+## What to show while it loads
+
+- **Under 100ms:** nothing. Keep the old screen, show the pressed link, then
+  swap.
+- **Longer, and you know the next layout:** show the destination's skeleton
+  straight away, filled with what you already know, like the title from the
+  link.
+- **Longer, and you don't:** keep the old screen and dim it after about
+  100ms.
+
+Spinners need the same care. Load each panel a few times.
+
+<SpinnerDelayDemo />
+
+Most loads take about 100ms. The left spinner appears for every one of them,
+so the panel blinks. The right one only appears if the load is still going
+after 150ms, and then stays for at least 300ms, so fast loads look instant
+and slow ones look steady.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `const inflight = new Map();
+const prefetch = (key, load) => {
+  if (!inflight.has(key)) inflight.set(key, load());
+  return inflight.get(key);
+};
+
+function IntentLink({ href, load, children }) {
+  let timer;
+  return (
+    <a
+      href={href}
+      onPointerEnter={(e) => {
+        if (e.pointerType === "mouse") timer = setTimeout(() => prefetch(href, load), 65);
+      }}
+      onPointerLeave={() => clearTimeout(timer)}
+      onPointerDown={() => prefetch(href, load)}
+      onFocus={() => prefetch(href, load)}
+    >
+      {children}
+    </a>
+  );
+}`,
+    },
+    {
+      label: "HTML",
+      language: "html",
+      code: `<!-- Chromium: prerender same-site links after 200ms of hover or on press -->
+<script type="speculationrules">
+{
+  "prerender": [{
+    "where": {
+      "and": [
+        { "href_matches": "/*" },
+        { "not": { "href_matches": ["/logout", "/cart/*"] } }
+      ]
+    },
+    "eagerness": "moderate"
+  }]
+}
+</script>`,
+    },
+  ]}
+/>
+
+Frameworks already do much of this. Next.js prefetches links as they scroll
+into view, and a dynamic route only prefetches down to its `loading.js`, so
+give every dynamic route one. React Router has `prefetch="intent"`, and
+TanStack Router preloads on a 50ms hover. Speculation Rules only run in
+Chromium, so treat them as a bonus. Never prefetch links that change
+something, like logout or add to cart.
+
+Make Back instant too. Remove every `unload` listener, since it keeps the
+browser from restoring the page from memory, and in single-page apps
+restore the previous screen and its scroll position from cache.

@@ -1,0 +1,72 @@
+---
+title: Novelty Budget
+description: Save delight for the rare moments.
+section: Craft
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://rauno.me/craft/novelty
+    title: Novelty
+    description: Rauno Freiberg on the 90% familiar, 10% novel split, and the novelty tax.
+  - url: https://benji.org/family-values
+    title: Family Values
+    description: Benji Taylor on the Delight-Impact Curve and where Family puts its most expressive moments.
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: Emil Kowalski on frequency of use, and why Raycast opens with no animation at all.
+  - url: https://rauno.me/craft/interaction-design
+    title: Invisible Details of Interaction Design
+    description: Where Rauno first wrote about how frequency wears novelty down.
+  - url: https://en.wikipedia.org/wiki/Semantic_satiation
+    title: Semantic satiation
+    description: The effect where repetition drains a word of its meaning.
+---
+
+Say a word twenty times in a row and it stops meaning anything. Rauno Freiberg
+[points out](https://rauno.me/craft/novelty) that interfaces do the same thing:
+the flourish that delighted you on day one is invisible by day ten and in the
+way by day one hundred.
+
+He borrows a rule from film, where around 10% of the frame is the accent
+color, and suggests making 90% of an experience familiar and 10% novel. Think
+of that 10% as a **novelty budget**. The question isn't whether to spend it,
+but where.
+
+Finish a few tasks and clear a list, in both modes.
+
+<NoveltyBudgetDemo />
+
+When everything animates, nothing stands out and the whole app feels slower.
+When only clearing the list animates, that moment lands.
+
+## Spend by frequency
+
+**The rarer the moment, the more expressive it can be.** Benji Taylor calls
+this the [Delight-Impact Curve](https://benji.org/family-values): the potential
+for delight goes up as the frequency of use goes down.
+
+- Hovering, switching tabs, checking a box. These happen constantly. Spend nothing here.
+- Opening a dialog, sending a message. Occasional. A short, quiet transition is plenty.
+- Finishing onboarding, clearing your inbox, a yearly recap. Rare. This is where the budget goes.
+
+Some moments should only happen once. On Rauno's Devouring Details, the
+welcome transition plays right after you log in and never on a reload.
+
+## Count the cost
+
+Small delays compound. Drag the sliders.
+
+<AnimationCostDemo />
+
+A 300ms transition you see 200 times a day costs about six hours a year. That
+is a lot of waiting to spend on something you stopped noticing in week one.
+
+## Novelty taxes learning too
+
+New interaction patterns cost more than new visuals, because people have to
+learn them before they can use them. Rauno calls this the novelty tax, and
+points to Arc: a browser its fans loved, that most people found too much to
+learn.
+
+None of this means "no delight". It means a calm baseline, so the one loud
+moment has something to stand against.

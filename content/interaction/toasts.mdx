@@ -1,0 +1,113 @@
+---
+title: Toasts
+description: News from somewhere else.
+section: Interaction
+order: 7
+publishedAt: "2026-10-03"
+resources:
+  - url: https://emilkowal.ski/ui/building-a-toast-component
+    title: Building a Toast Component
+    description: Emil Kowalski on the decisions behind Sonner, from the stack that expands on hover to the timer that pauses in hidden tabs.
+  - url: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/status_role
+    title: ARIA status role
+    description: The live region role that announces a message politely, without moving focus.
+  - url: https://adrianroselli.com/2020/01/defining-toast-messages.html
+    title: Defining 'Toast' Messages
+    description: Adrian Roselli's case that toasts should never time out and shouldn't hold interactive content.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html
+    title: Understanding status messages
+    description: The WCAG criterion behind role="status", for messages that are announced without taking focus.
+---
+
+A toast is a small message that slides in from a corner and leaves on its own.
+It's good at one thing: telling you about something that happened away from
+where you're looking. Most apps use it for everything.
+
+**Toast what happened out of sight. If the change already shows where the
+person is looking, show it there instead.**
+
+Star the report, copy the link, then export it.
+
+<ToastsDemo />
+
+Toasting every action turns three clicks into four toasts, and none of them
+say anything the interface didn't. The star already filled in. "Copied"
+belongs on the button you just pressed, under your cursor. Inline first, the
+only toast left is the one that earns it: the export finishing 3 seconds
+later, when you could be anywhere.
+
+Keep the words short and lead with what happened, "Q4 report.pdf is ready",
+not "Success!". One action at most. Plain news here lasts 4 seconds, Sonner's
+default. Toasts with a button get 8, because reading and then reaching takes
+longer.
+
+## Stacking
+
+Toasts arrive in bursts. They shouldn't build a wall over the page, or leave
+while someone is reading them. Add a few, then hover them.
+
+<ToastStackingDemo />
+
+Piled up, five toasts cover most of the inbox and keep expiring under your
+cursor. Stacked, the newest sits in front with two more peeking out 8px
+behind it. Hover or focus fans them out and pauses every timer. How they move
+between those spots is [interruptibility](/interruptibility), and how they
+leave is [exit animations](/exit-animations).
+
+Sonner works the same way: three visible, a stack that opens on hover, and
+timers that stop while it's hovered or the tab is hidden. Alt+T (Option+T on
+a Mac) opens it from the keyboard, but tabbing onto a toast doesn't pause it,
+one more reason to give toasts with a button extra time.
+
+## Errors need a place to stay
+
+"Couldn't save" fades away while the work is still unsaved. An error that
+needs action belongs next to the thing that failed, or in a banner that stays
+until it's fixed.
+
+Adrian Roselli argues no toast should time out, since a message that leaves
+on its own fails slow readers. I'd keep the timer for news you can also find
+elsewhere, and make anything with a button stay until it's dismissed or
+reachable another way.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- In the page from the start, so screen readers are listening -->
+<div role="status" aria-atomic="false" class="fixed right-6 bottom-6 flex w-80 flex-col gap-2">
+  <div class="flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm shadow-lg">
+    Q4 report.pdf is ready
+    <button class="ml-auto rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium">
+      Download
+    </button>
+  </div>
+</div>`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { toast } from "sonner";
+
+// <Toaster /> renders once, at the root of the app.
+
+// A background job finished: the person may be anywhere by now
+toast("Q4 report.pdf is ready", {
+  duration: 8000,
+  action: { label: "Download", onClick: download },
+});
+
+// Nothing to do but read, so the default 4 seconds is fine
+toast("Ada joined Design");`,
+    },
+  ]}
+/>
+
+The live region has to be in the page before the first message lands. A
+`role="status"` element inserted together with its text often isn't announced
+at all. Render the empty container once and add toasts into it, which is what
+Sonner's `<Toaster />` does.

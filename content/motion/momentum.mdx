@@ -1,0 +1,118 @@
+---
+title: Momentum
+description: Finish the throw people started.
+section: Motion
+order: 7
+publishedAt: "2026-10-08"
+resources:
+  - url: https://developer.apple.com/videos/play/wwdc2018/803/
+    title: Designing Fluid Interfaces
+    description: Apple's WWDC18 talk on velocity handoff, momentum projection and rubber banding.
+  - url: https://github.com/nathangitter/fluid-interfaces
+    title: Fluid interfaces sample code
+    description: Nathan Gitter's open-source recreation of the WWDC18 examples, including the projection function.
+  - url: https://emilkowal.ski/ui/building-a-drawer-component
+    title: Building a drawer component
+    description: Emil Kowalski on Vaul's velocity-based dismissal and damped over-drag.
+  - url: https://motion.dev/docs/react-drag
+    title: Drag in Motion
+    description: Drag gestures, release velocity, momentum and elastic constraints.
+---
+
+When you let go of something you're dragging, it's still moving. Whatever
+animation takes over has to start at that speed, or there's a seam: the
+object brakes to a stop the instant you let go, then starts moving again on
+its own.
+
+Throw each knob to the other end, hard.
+
+<VelocityHandoffDemo />
+
+The top knob finishes with a curve. Curves start from zero speed, so a fast
+throw hits a wall at the moment of release. The bottom one finishes with a
+[spring](/springs) that's given the release velocity, so the throw just
+continues and settles.
+
+**Hand the release velocity to the animation that finishes the gesture, and
+aim for where the throw was going, not where it was let go.**
+
+## Aim where it was going
+
+A quick flick toward a corner is usually released closer to where it
+started. Snap to the nearest corner from there and the window goes back.
+Flick both windows.
+
+<ProjectionDemo />
+
+The right one projects the throw forward first. The dot shows where the
+flick would have come to rest if it coasted like a scroll view, and the
+window snaps to the corner nearest that point. Apple's projection uses
+the scroll deceleration rate of 0.998 per millisecond, which works out to
+about half a second of travel at the release speed: a 1000px/s flick
+projects about 500px. Use 0.99 for a precise, less throwy feel, about a
+tenth of a second.
+
+## Velocity or distance
+
+To dismiss a sheet or a toast, accept a short fast flick or a long slow
+drag. Vaul dismisses a drawer at 0.4px/ms, or once it's dragged a quarter of
+its height. Sonner dismisses a toast at 0.11px/ms or 45px. Requiring distance
+alone makes things feel heavy.
+
+## Give at the edges
+
+Past a boundary, don't stop dead. Let the content follow less and less, then
+spring back. The common iOS-style curve moves at 55% of the finger's speed at
+first and never passes the container's own size.
+
+<RubberBandDemo />
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { animate, motion, useMotionValue } from "motion/react";
+
+// Where a flick would come to rest (px/s in, px out).
+const project = (velocity: number, rate = 0.998) =>
+  ((velocity / 1000) * rate) / (1 - rate);
+
+const x = useMotionValue(0);
+
+<motion.div
+  drag="x"
+  dragMomentum={false} // the release is ours
+  style={{ x }}
+  onDragEnd={(_, info) => {
+    const aim = x.get() + project(info.velocity.x);
+    const target = aim > 160 ? 320 : 0;
+    // A physics spring keeps the velocity it's given.
+    animate(x, target, {
+      type: "spring",
+      stiffness: 247,
+      damping: 31.4,
+      velocity: info.velocity.x,
+    });
+  }}
+/>`,
+    },
+    {
+      label: "Rubber band",
+      language: "ts",
+      code: `// How far content moves when pulled \`over\` px past an edge.
+// \`size\` is the container's size; c = 0.55 is the iOS-like feel.
+function rubberBand(over: number, size: number, c = 0.55) {
+  return (1 - 1 / ((Math.abs(over) * c) / size + 1)) * size * Math.sign(over);
+}`,
+    },
+  ]}
+/>
+
+Animate x and y as two springs, each with its own velocity, so a diagonal
+throw curves naturally. Pass `stiffness` and `damping`, not `duration` and
+`bounce`: Motion drops the velocity of springs defined by time. Under
+[reduced motion](/reduced-motion), keep dragging one-to-one with the finger,
+and settle the release with no bounce and no long coast.

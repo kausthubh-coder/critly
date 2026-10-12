@@ -1,0 +1,165 @@
+---
+title: Liquid Glass
+description: A lens for controls, never for content.
+section: Color
+order: 7
+publishedAt: "2026-10-08"
+resources:
+  - url: https://developer.apple.com/videos/play/wwdc2025/219/
+    title: Meet Liquid Glass
+    description: Apple's WWDC25 introduction to lensing, highlights, the regular and clear variants, and avoiding glass on glass.
+  - url: https://developer.apple.com/design/human-interface-guidelines/materials
+    title: Materials in the Human Interface Guidelines
+    description: Apple's rules for where Liquid Glass belongs, including the 35% dimming layer over bright media.
+  - url: https://kube.io/blog/liquid-glass-css-svg/
+    title: Liquid Glass in the browser
+    description: A deep dive into refraction with SVG displacement maps, built from Snell's law.
+  - url: https://www.nngroup.com/articles/liquid-glass/
+    title: Liquid Glass is cracked
+    description: Nielsen Norman Group's critique of Liquid Glass legibility in iOS 26.
+  - url: https://www.joshwcomeau.com/css/backdrop-filter/
+    title: Next-level frosted glass
+    description: Josh Comeau on making backdrop-filter look right at the edges.
+---
+
+Frosted glass scatters light: everything behind it turns to fog. Apple's
+Liquid Glass, introduced in 2025, bends light instead. It acts like a lens:
+the middle stays clear, and content curves as it passes under the edges, so
+the shape reads without hiding what's behind it.
+
+Drag the glass across the text and switch between the two.
+
+<LiquidGlassDemo />
+
+With blur, the panel is a smudge. With refraction, the lines bend at the
+rim and stay straight in the middle, and the edges catch a highlight. Same
+size, same position, much lighter.
+
+**Use glass only for controls that float above content, and make them
+readable over the worst background they can cross.**
+
+## Readable first
+
+Apple spent a year walking Liquid Glass back. Testers called it hard to
+read, iOS 26.1 added a Tinted setting that makes it more opaque, and the
+2026 update added more diffusion, a darkened edge and a slider from clear to
+tinted. Switch the toolbar between Clear and Tinted.
+
+<GlassLegibilityDemo />
+
+Clear glass reads over some backgrounds and disappears over others, and a
+real page has all of them. Tinted glass gives up some transparency and
+reads everywhere. Check text against the busiest content that can scroll
+under it, not the background in your mockup. Apple's own rule for clear
+glass over bright media is a 35% dark dimming layer.
+
+Give the edge two lines: a light inner highlight and a dark outer hairline.
+That's what keeps the shape visible over both white and black.
+
+## One layer
+
+Glass is for the layer that floats above content: tab bars, toolbars,
+floating buttons, media controls. Lists, cards and articles stay solid.
+Never stack glass on glass; things that sit on glass get plain fills.
+
+On the web this is also a rendering rule. A `backdrop-filter` only sees
+what's painted up to the nearest ancestor with `opacity`, `filter`, `mask`
+or `will-change: opacity`. Nest glass inside glass and the inner one only
+sees its parent. Fade a wrapper with `opacity` and the blur vanishes until
+the fade ends.
+
+## Build it in rungs
+
+- **Solid** in every browser, and when people ask for less transparency.
+- **Frosted** with `backdrop-filter: blur() saturate()`, which works in
+  every current browser.
+- **Refraction** with an SVG displacement map used as a `backdrop-filter`.
+  Only Chromium renders it. Safari and Firefox accept the CSS and silently
+  draw nothing, so `@supports` can't detect it: check for Chromium in
+  JavaScript. When you control what's behind the glass, you can instead
+  refract a copy of it with a plain `filter`, which works everywhere. The
+  demo above does that.
+
+`prefers-reduced-transparency` only works in Chromium, so offer a "solid
+surfaces" setting of your own, the web version of Apple's Tinted option.
+
+Glass is expensive. The browser re-renders the backdrop every time anything
+under it changes, including every scroll frame. Keep glass small and use
+three or four glass elements per screen at most. Count elements in the page,
+not designs: glass in a shared button component, repeated on every card in a
+list, can quietly put a thousand blurs on one screen, and hidden ones still
+count. Turn page glass off while a modal covers it, and drop the blur from
+anything over about 90% opaque, where nobody can see it. See
+[Effect Cost](/effect-cost).
+
+Glass also needs something behind it. Over a flat background it reads as a
+plain grey card, so let imagery or content run underneath, or don't use it.
+If an approved mockup used refraction and the build will ship the frosted
+fallback, say so before building. Never animate the blur radius;
+animate the glass element's transform and opacity instead, and build
+displacement maps once per size.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.glass {
+  border-radius: 9999px;
+  background: rgb(246 246 248 / 0.96); /* solid rung */
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.5), /* light inner rim */
+    0 0 0 0.5px rgb(0 0 0 / 0.14),        /* dark outer edge */
+    0 8px 24px rgb(0 0 0 / 0.14);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .glass {
+    background: rgb(255 255 255 / 0.6); /* tinted, not clear */
+    backdrop-filter: blur(12px) saturate(170%);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .glass {
+    background: rgb(246 246 248 / 0.96);
+    backdrop-filter: none;
+  }
+}
+
+:root[data-surfaces="solid"] .glass {
+  background: rgb(246 246 248 / 0.96);
+  backdrop-filter: none;
+}`,
+    },
+    {
+      label: "Refraction",
+      language: "html",
+      code: `<!-- Chromium only. The map is drawn once per size: red shifts x,
+     green shifts y, 128 means no shift. -->
+<svg width="0" height="0" aria-hidden="true">
+  <filter id="lens" x="0" y="0" width="184" height="72"
+          filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feImage href="displacement-map.png" width="184" height="72"
+             preserveAspectRatio="none" result="map" />
+    <feDisplacementMap in="SourceGraphic" in2="map" scale="40"
+                       xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<style>
+  .glass.refract {
+    backdrop-filter: url(#lens) blur(0.5px) saturate(150%);
+  }
+</style>`,
+    },
+  ]}
+/>
+
+The displacement map comes from the glass's shape. For each pixel near the
+edge, take the slope of a rounded surface, bend a ray through it with
+Snell's law (glass is about 1.5), and store how far it moved. The middle is
+flat, so it doesn't move at all. kube.io's deep dive walks through the math.

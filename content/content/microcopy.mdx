@@ -1,0 +1,119 @@
+---
+title: Microcopy
+description: Buttons say what they do.
+section: Content
+order: 1
+publishedAt: "2026-10-03"
+resources:
+  - url: https://design-system.service.gov.uk/components/error-message/
+    title: GOV.UK error messages
+    description: Say what happened and how to fix it, and the words to never use while doing it.
+  - url: https://design-system.service.gov.uk/components/button/
+    title: GOV.UK buttons
+    description: Button text in sentence case that describes the action it performs.
+  - url: https://www.nngroup.com/articles/error-message-guidelines/
+    title: Error-message guidelines
+    description: NN/g's research on visible, constructive errors that don't blame the user.
+  - url: https://developer.apple.com/design/human-interface-guidelines/writing
+    title: Apple HIG - Writing
+    description: Action-oriented labels, consistent terms, and one capitalization style per element.
+  - url: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules
+    title: Intl.PluralRules
+    description: The browser's built-in plural categories for every locale, on MDN.
+---
+
+A button that says "OK" makes you read the whole dialog again to find out what
+OK will do. The words in an interface are controls, just like the buttons they
+sit on.
+
+**Interface words are interface: buttons name the action, labels name the
+thing, and errors say what happened and how to fix it.**
+
+<MicrocopyDemo />
+
+Press Remove in both modes. "Are you sure?" with Yes and No asks you to
+remember what you clicked. "Delete project" says the verb and the object, so
+the button still makes sense if it's the only thing you read. Whether to ask
+at all is a separate question, covered in
+[destructive actions](/destructive-actions).
+
+Labels are nouns, not questions: "Project name", not "What do you want to call
+it?". Pick one word for each thing and use it everywhere. Generic mode calls it
+a project, then a workspace, and the button says Remove while the dialog says
+deleted. Two names for one thing make people wonder whether it's two things.
+
+Write in sentence case. GOV.UK asks for it on buttons. Apple lets you choose
+title or sentence case per element, as long as you stay consistent. I prefer
+sentence case everywhere: it reads like speech, and nobody has to argue about
+which words get a capital.
+
+## Errors
+
+An error has two jobs: say what happened, and say what to do next.
+
+<ErrorMessagesDemo />
+
+"An error occurred" does neither. "Error 402" is for the server log.
+"You entered an invalid username!" blames the person for a rule they couldn't
+see. NN/g and GOV.UK both warn against "invalid", and GOV.UK adds "please", "sorry" and
+"oops" to the list. None of them help fix anything. For when to show an error,
+see [input details](/input-details).
+
+## Counts and ellipses
+
+"1 files" is what happens when a string is built with `${n} files`. Plurals
+differ by language: English has two forms, Polish has four, Arabic has six.
+`Intl.PluralRules` knows them all.
+
+<PluralCountDemo />
+
+Format big numbers with separators and use [tabular numbers](/tabular-numbers)
+for counts that change. Zero is its own case: "No files selected" reads better
+than "0 files selected", and an empty list deserves a real
+[empty state](/empty-states).
+
+Use the real ellipsis "…", one character, not three periods. On a button or
+menu item it means the action needs more input before it runs, like
+"Rename…". On a status it means something is in progress, like "Saving…".
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<label for="name" class="text-sm">Project name</label>
+<input id="name" aria-invalid="true" aria-describedby="name-error" />
+<p id="name-error" class="text-sm text-red-600">Enter a project name</p>
+
+<button class="rounded-full bg-black px-3 py-1.5 text-sm text-white">
+  Save changes
+</button>`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `const plural = new Intl.PluralRules("en-US");
+const number = new Intl.NumberFormat("en-US");
+const forms: Partial<Record<Intl.LDMLPluralRule, string>> = {
+  one: "file",
+  other: "files",
+};
+
+function files(count: number) {
+  if (count === 0) return "No files";
+  const form = forms[plural.select(count)] ?? forms.other;
+  return \`\${number.format(count)} \${form}\`;
+}
+
+<span className="tabular-nums">{files(1284)} selected</span>;
+// 1,284 files selected`,
+    },
+  ]}
+/>
+
+Keep whole sentences in one string with placeholders, never glue fragments
+together like `"Delete " + noun`. Word order changes between languages, and a
+translator can't fix a sentence they only see in pieces.

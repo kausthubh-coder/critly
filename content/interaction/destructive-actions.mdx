@@ -1,0 +1,116 @@
+---
+title: Destructive Actions
+description: Undo instead of asking.
+section: Interaction
+order: 8
+publishedAt: "2026-10-03"
+resources:
+  - url: https://alistapart.com/article/neveruseawarning/
+    title: Never Use a Warning When You Mean Undo
+    description: Aza Raskin's 2007 essay on why people click through warnings out of habit, and why undo works instead.
+  - url: https://www.nngroup.com/articles/confirmation-dialog/
+    title: Confirmation Dialogs Can Prevent User Errors (If Not Overused)
+    description: Jakob Nielsen on saving confirmations for serious consequences and labeling buttons with what they do.
+  - url: https://www.smashingmagazine.com/2024/09/how-manage-dangerous-actions-user-interfaces/
+    title: How To Manage Dangerous Actions In User Interfaces
+    description: Victor Ponamariov's tour of undo, specific dialogs and type-to-confirm, and when each one fits.
+  - url: https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
+    title: Alert and Message Dialogs Pattern
+    description: The ARIA Authoring Practices for the alertdialog role, including where focus should start.
+---
+
+"Are you sure?" on every delete stops protecting anyone by the third time.
+People learn where OK is and click it without reading, and the one time it
+matters, the habit clicks through too.
+
+**If an action can be undone, do it right away and offer Undo. Save
+confirmation for what can't be undone.**
+
+Delete a few files each way.
+
+<DeleteUndoDemo />
+
+With a dialog on every row, three files take six clicks, and every dialog asks
+the same question. With Undo they take three. The file goes as soon as you
+press, and a toast keeps Undo around for 5 seconds. Delete another while it's
+up and Undo brings both back where they were.
+
+Aza Raskin made this case in 2007: never use a warning when you mean undo. A
+warning asks people to predict a mistake. Undo lets them notice it
+afterwards, which is when people actually notice.
+
+Undo needs a soft delete behind it. Hide the row, keep it with a `deletedAt`,
+and purge it later. The toast goes away, so give deleted things a home that
+stays, like a Trash that keeps them for 30 days.
+
+## When you have to ask
+
+Some things can't come back, like a project with all its deployments. Here a
+confirmation earns its place, as long as it says something. Open the dialog
+and press Enter.
+
+<ConfirmDialogDemo />
+
+"Are you sure?" could be about anything, and with focus on OK, Enter deletes
+the project. The specific dialog names the project, says what goes with it,
+and the button repeats the verb: "Delete project", not "OK". Focus starts on
+Cancel, so a stray Enter does nothing. The rest follows the
+[overlays](/overlays) rules: focus goes in, Escape cancels, and focus comes
+back to the button.
+
+For the catastrophic, add friction on purpose. GitHub asks you to type the
+repository's full name before it deletes one. It works because it's rare. Ask
+for it on every delete and typing becomes one more reflex.
+
+## Red where it counts
+
+Red is a warning, and warnings wear out. Keep it for the button that actually
+destroys something. The trash icons in the file list stay grey and turn red
+on hover, one of their [interaction states](/interaction-states) rather than
+a color they wear all the time.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<dialog id="delete" role="alertdialog" aria-labelledby="delete-title"
+  class="max-w-sm rounded-xl p-4 backdrop:bg-black/20">
+  <h2 id="delete-title" class="text-sm font-medium">Delete “Critly website”?</h2>
+  <p class="mt-1.5 text-sm text-neutral-500">
+    This permanently deletes 214 deployments, 3 environments and the craft.dev domain.
+  </p>
+  <form method="dialog" class="mt-4 flex justify-end gap-2">
+    <button value="cancel" autofocus class="rounded-full px-3 py-1.5 text-sm">
+      Cancel
+    </button>
+    <button value="delete" class="rounded-full bg-red-500/10 px-3 py-1.5 text-sm text-red-600">
+      Delete project
+    </button>
+  </form>
+</dialog>`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { toast } from "sonner";
+
+function remove(file: File) {
+  // Soft delete: hidden now, purged later
+  softDelete(file.id);
+
+  toast(\`Deleted “\${file.name}”\`, {
+    duration: 5000,
+    action: { label: "Undo", onClick: () => restore(file.id) },
+  });
+}`,
+    },
+  ]}
+/>
+
+Undo has to reverse everything the delete set off. If removing a file also
+emails its collaborators, bringing the file back doesn't unsend the emails.
+Hold side effects like these until the undo window has closed.

@@ -1,0 +1,108 @@
+---
+title: Shared Layout
+description: One element moving beats two swapping.
+section: Motion
+order: 9
+publishedAt: "2026-07-16"
+resources:
+  - url: https://jakub.kr/work/shared-layout-animations
+    title: How I Use Shared Layout Animations
+    description: Jakub Krehel on layoutId, with interactive examples of where morphs make sense.
+  - url: https://motion.dev/docs/react-layout-animations
+    title: Layout animations in Motion
+    description: The official guide to layout and layoutId, including how to fix scale distortion.
+  - url: https://aerotwist.com/blog/flip-your-animations/
+    title: FLIP Your Animations
+    description: Paul Lewis's original write-up of the First, Last, Invert, Play technique behind shared layout.
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API
+    title: View Transition API
+    description: The native way to morph elements between two states of the page, without a library.
+---
+
+When a tab highlight jumps from one tab to the next, your eye has to find it
+again. When it slides, you never lose it. A **shared layout** animation
+treats two elements in two places as one element that moves.
+
+Click the tabs. Both rows follow the same state.
+
+<SharedLayoutDemo />
+
+On the left the highlight disappears from one tab and appears under another.
+On the right it travels, so it tells you where you are and where you came
+from.
+
+**If two elements are the same thing to the user, move one instead of
+swapping two.**
+
+In Motion you give both elements the same `layoutId`. When one unmounts and
+the other mounts, Motion measures where the old one was and animates the new
+one from there with a transform. This is the FLIP technique.
+
+## From list to detail
+
+The same idea carries further than tabs. Open a project, go back, then switch
+to Shared and do it again.
+
+<SharedLayoutDetailDemo />
+
+With a swap, the whole view is replaced and you have to re-read it to check
+you landed in the right place. With a shared layout, the thumbnail and title
+carry over and only the rest is new.
+
+Keep it quick. Both demos use a spring with no bounce that settles in 300ms.
+
+## Where it goes wrong
+
+Shared layout scales elements to move them, and scale distorts corners and
+shadows. Motion corrects `borderRadius` and `boxShadow`, but only when they
+are set through `style`, not a class. Text inside a box that changes shape
+can stretch, so the title above uses `layout="position"` to move without
+scaling.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+{tabs.map((tab) => (
+  <button key={tab} className="relative" onClick={() => setActive(tab)}>
+    {tab === active && (
+      <motion.span
+        className="absolute inset-0 bg-white"
+        layoutId="tab-indicator"
+        style={{ borderRadius: 6 }}
+        transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+      />
+    )}
+    <span className="relative">{tab}</span>
+  </button>
+))}`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `/* Names must be unique, so name only the clicked thumbnail, in JS:
+   thumb.style.viewTransitionName = "project-thumb";
+   document.startViewTransition(() => openProject(id)); */
+
+.detail-header {
+  view-transition-name: project-thumb;
+}
+
+::view-transition-group(project-thumb) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}`,
+    },
+  ]}
+/>
+
+Without React, the View Transition API does this natively. Same-document view
+transitions work in Chrome, Edge, Safari and Firefox. They are not
+interruptible, though: starting a new one skips the one in progress, so a
+fast second click makes the morph snap to its end instead of turning around.

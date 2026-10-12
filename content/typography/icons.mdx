@@ -1,0 +1,92 @@
+---
+title: Icons
+description: One set, one weight, sized to the text.
+section: Typography
+order: 5
+publishedAt: "2026-07-15"
+resources:
+  - url: https://phosphoricons.com
+    title: Phosphor Icons
+    description: The set used on this site, with six weights per icon drawn on the same grid.
+  - url: https://lucide.dev/contribute/icons/design-principles
+    title: Lucide design principles
+    description: The rules every icon in Lucide follows, from the 24px canvas to the 2px stroke.
+  - url: https://tabler.io/icons
+    title: Tabler Icons
+    description: Another consistent set, drawn on a 24px grid with an adjustable stroke.
+  - url: https://developer.apple.com/design/human-interface-guidelines/sf-symbols
+    title: SF Symbols
+    description: How Apple matches symbol weight and scale to the text beside them.
+---
+
+Icons are part of the type. A set has a voice, like a typeface does: the
+stroke width, the corner radius, the grid it was drawn on. Next to text, that
+voice either agrees with the letters or fights them.
+
+**Pick one set, use one weight, and size icons a little larger than the text
+beside them.**
+
+<IconWeightsDemo />
+
+The labels are medium weight. Thin icons look like they came from a lighter
+product, and bold ones shout over the words. Regular sits well with regular
+and medium text, which is why it is usually the default. This site uses
+regular in the header and duotone, with its faint filled layer, for the
+section icons.
+
+## One set
+
+Mixing icon libraries reads like switching typefaces mid-sentence. The grids,
+strokes and corners stop matching, and you notice even when you can't say why.
+
+<IconMixDemo />
+
+The wrong toolbar mixes two libraries, four stroke weights and three sizes.
+The right one uses one library at one weight and one size.
+
+Before you commit to a set, list the icons your product needs and check that
+it covers them. Running out halfway and borrowing from a second library is how
+the wrong toolbar happens.
+
+## Size
+
+Icons are drawn with padding inside their box. Lucide, for example, keeps at
+least 1px clear on a 24px canvas. So an icon set to the same size as the text
+looks smaller than the capitals next to it.
+
+<IconTextSizeDemo />
+
+Somewhere between `1.1em` and `1.25em` usually balances. Writing the size in
+`em` keeps that ratio when the text size changes. Flexbox centers the icon's
+box, not its shape, so check the vertical position too. A 1px nudge is
+common.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { TrayIcon } from "@phosphor-icons/react";
+
+<a className="flex items-center gap-2 text-sm font-medium">
+  <TrayIcon className="mb-px size-[1.15em]" />
+  Inbox
+</a>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.nav-item svg {
+  width: 1.15em;
+  height: 1.15em;
+  margin-bottom: 1px;
+}`,
+    },
+  ]}
+/>
+
+A quick check for any screen: line up every icon on it in one row. If one of
+them looks like it was drawn by someone else, it probably was.

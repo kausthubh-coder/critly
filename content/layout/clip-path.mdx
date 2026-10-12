@@ -1,0 +1,104 @@
+---
+title: Clip-Path
+description: Reveal by clipping, not resizing.
+section: Layout
+order: 4
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/the-magic-of-clip-path
+    title: The Magic of Clip Path
+    description: Emil Kowalski walks through tabs, hold-to-delete buttons, and comparison sliders built with a single property.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/clip-path
+    title: clip-path
+    description: MDN's reference for every shape clip-path accepts, and how they animate.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/basic-shape/inset
+    title: inset()
+    description: The shape you will use most, including the round keyword for rounded corners.
+  - url: https://web.dev/articles/animations-guide
+    title: How to create high-performance CSS animations
+    description: Why animating width and height is expensive, and which properties are cheaper.
+---
+
+`clip-path` hides part of an element without touching its layout. The box
+keeps its size and the text keeps its wrapping. Only the visible window
+changes.
+
+<ClipPathRevealDemo />
+
+The left card animates its width, so its text gets squeezed into an ellipsis
+on every frame. The right card is clipped, so it wipes away in one piece.
+
+**Animate the window, not the box.** A width change makes the browser
+recalculate layout on every frame. A clip change skips layout, but most
+browsers still repaint the clipped element each frame (Chrome can run basic
+shapes like `inset()` off the main thread). That is cheap for a small,
+one-off wipe. For a large or frequent reveal, slide two layers with
+`transform` instead: an outer one that clips and an inner one that moves the
+opposite way. See [Smooth Animation](/smooth-animation).
+
+## Tabs
+
+A segmented control has a pill that slides between options, and the label
+under it changes color. If you transition each label's `color`, one label
+fades out while the next fades in, and for a moment both are half gray.
+
+Instead, render the tabs twice. The copy on top has inverted colors and is
+clipped down to the pill. Then animate the clip.
+
+<ClipPathTabsDemo />
+
+The text on the right switches color exactly at the pill's edge. The
+segmented controls on this site work the same way.
+
+## Hold to delete
+
+A destructive action can ask for a short hold. Render the red state on top,
+clipped to zero width, and reveal it while the button is held.
+
+<ClipPathHoldDemo />
+
+The reveal runs for `1.5s` with a linear curve, so the progress reads as
+time. Letting go snaps it back in `200ms` with an ease-out. Nobody wants to
+wait for a cancel.
+
+## Comparison slider
+
+Stack two images of the same size and clip the top one. Moving the clip edge
+gives you a before and after slider. Neither image moves or stretches.
+
+<ClipPathCompareDemo />
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div
+  class="transition-[clip-path] duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] [clip-path:inset(0_0_0_0)] data-hidden:[clip-path:inset(0_100%_0_0)]"
+>
+  ...
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.card {
+  /* top right bottom left */
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 500ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card[data-hidden] {
+  clip-path: inset(0 100% 0 0);
+}`,
+    },
+  ]}
+/>
+
+`clip-path` cuts off everything outside the box, including shadows and focus
+rings. Negative values give them room. The card in the first demo goes from
+`inset(-16px)` to `inset(-16px calc(100% + 16px) -16px -16px)`.

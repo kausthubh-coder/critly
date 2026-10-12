@@ -1,0 +1,139 @@
+---
+title: Font Loading
+description: Text first, in a fallback that fits.
+section: Performance
+order: 5
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/font-best-practices
+    title: Best practices for fonts
+    description: Loading, delivery and rendering advice for web fonts, from font-display to subsetting.
+  - url: https://developer.chrome.com/blog/font-fallbacks
+    title: Improved font fallbacks
+    description: How size-adjust and the metric overrides make a fallback take up the same space as the web font.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display
+    title: font-display
+    description: The block, swap, fallback and optional values, and what each does while a font loads.
+  - url: https://github.com/unjs/fontaine
+    title: Fontaine
+    description: A tool that generates metric-matched fallback fonts automatically.
+  - url: https://www.zachleat.com/web/comprehensive-webfonts/
+    title: A comprehensive guide to font loading strategies
+    description: Zach Leatherman's survey of how to load fonts without invisible or jumping text.
+---
+
+A web font is a file the page has to wait for. While it's on its way, the
+browser has two choices: hide the text, or show it in a fallback and swap
+later. Both can go wrong. Hidden text means nothing to read; a swap means
+every line can rewrap under the reader's eyes.
+
+Load the font and watch all three paragraphs.
+
+<FontRaceDemo />
+
+The first paragraph stays invisible until the font arrives (by default,
+browsers hide text for up to three seconds). The second appears at once in
+Arial, but Arial is narrower than the brand font, so when the font lands the
+lines rewrap and the paragraph grows. The third uses a fallback tuned to take
+up the same space, so the letters change and the lines stay where they are.
+
+**Show text immediately in a fallback that takes up the same space as the
+web font, and load as few font files as you can.**
+
+## Fallbacks that fit
+
+A swap moves text because the fallback's letters have different widths and
+heights. Four `@font-face` descriptors fix that on a local font: `size-adjust`
+scales its width to match, and `ascent-override`, `descent-override` and
+`line-gap-override` match its line height. Don't work the values out by
+hand: `next/font` generates them automatically, and Fontaine and Capsize do
+the same for other setups. In one test, Fontaine cut layout shift from 0.24
+to 0.05.
+
+Safari supports `size-adjust` but still ignores the three overrides, so also
+set a unitless `line-height`, which keeps lines the same height whichever
+font is showing.
+
+## Pick the display behaviour on purpose
+
+- **`swap`**: text at once, swapped whenever the font arrives. Safe only
+  with a matched fallback. Half the web uses it anyway.
+- **`fallback`**: swaps only if the font arrives within about 3 seconds,
+  then keeps the fallback. Good for body text.
+- **`optional`**, with a preload: uses the font only if it's ready almost
+  immediately, and never moves anything. First visits on slow connections
+  get the fallback; later visits get the cached font.
+- **`block`**: only for icon fonts, and SVG icons are better.
+
+## Load less
+
+- **Self-host.** Browsers no longer share a font cache between sites, so a
+  font CDN gives no head start, only one more connection.
+- **WOFF2, subset, variable.** One variable file replaces several weights,
+  and `unicode-range` subsets mean a page in English doesn't download
+  Cyrillic. Aim for two families and about 100 KB of fonts on first load.
+- **Preload one or two files,** the ones the first screen uses, with
+  `crossorigin` even on your own domain, or the font downloads twice.
+- **Consider system fonts** for interface text. `system-ui` costs nothing
+  and looks native everywhere.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `@font-face {
+  font-family: "Brand";
+  src: url("/fonts/brand-latin-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F;
+}
+
+/* A local font tuned to occupy the same space as Brand.
+   Generate these numbers with a tool, don't guess them. */
+@font-face {
+  font-family: "Brand Fallback";
+  src: local("Arial"), local("Roboto");
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
+
+body {
+  font-family: "Brand", "Brand Fallback", system-ui, sans-serif;
+  line-height: 1.5;
+}`,
+    },
+    {
+      label: "HTML",
+      language: "html",
+      code: `<!-- Only the file the first screen needs. crossorigin is required. -->
+<link rel="preload" href="/fonts/brand-latin-var.woff2"
+      as="font" type="font/woff2" crossorigin>`,
+    },
+    {
+      label: "Next.js",
+      language: "tsx",
+      code: `import { Inter } from "next/font/google";
+
+// Self-hosted at build time, preloaded, with a matched fallback generated.
+const inter = Inter({ subsets: ["latin"], display: "swap" });
+
+export default function RootLayout({ children }) {
+  return <html className={inter.className}>{children}</html>;
+}`,
+    },
+  ]}
+/>
+
+Include Roboto in sans-serif fallbacks, because Android has no Arial. Never
+load fonts with CSS `@import`, which hides them from the browser until the
+stylesheet arrives. If code measures text, wait for `document.fonts.ready`
+first. To check your page, record a cold, throttled load in DevTools and
+look at the layout-shift entries around the moment the font arrives; see
+[Layout Shift](/layout-shift).

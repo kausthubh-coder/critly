@@ -1,0 +1,134 @@
+---
+title: Responsiveness
+description: Answer every input on the next frame.
+section: Performance
+order: 2
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/inp
+    title: Interaction to Next Paint
+    description: The metric for how quickly a page answers clicks, taps and key presses, with its 200ms and 500ms thresholds.
+  - url: https://web.dev/articles/optimize-long-tasks
+    title: Optimize long tasks
+    description: Why tasks over 50ms block input, and how to break them up by yielding.
+  - url: https://developer.chrome.com/blog/use-scheduler-yield
+    title: Use scheduler.yield()
+    description: The Chrome team on giving feedback first and yielding before the slow part.
+  - url: https://react.dev/reference/react/useDeferredValue
+    title: useDeferredValue
+    description: React's way to keep typing instant while an expensive part of the screen catches up.
+  - url: https://inkandswitch.com/slow-software/
+    title: Slow Software
+    description: Ink & Switch on how little latency people notice when they touch, click and type.
+---
+
+People don't feel how long the work takes. They feel how long the screen
+takes to answer. A tap that changes something within about 50ms feels like
+a physical button; at 150ms it feels like software; past a few hundred it
+feels broken.
+
+Type quickly into the box in both modes. Every row costs a little rendering
+time, like a real row with a few components in it.
+
+<TypingLagDemo />
+
+In Blocking mode, every keystroke waits for the whole list to re-render
+before the letter appears, so the text stutters and lags behind your
+fingers. In Deferred mode, the letter appears at once and the list catches
+up behind it, dimmed for a moment while it's out of date.
+
+**Answer every input on the next frame. Finish the work afterwards.**
+
+The browser can only paint between tasks. Whatever runs in your click or
+keystroke handler, plus the render it triggers, sits between the input and
+the next frame. Chrome measures that gap as Interaction to Next Paint: under
+200ms is "good", over 500ms is "poor". Treat 200ms as the failure line, not
+the goal. Aim for 100ms at most, and well under that for typing.
+
+## Paint first, then work
+
+Both buttons do the same 600ms of work. Press each one.
+
+<PaintFirstDemo />
+
+The left button does the work, then updates, so for over half a second
+nothing seems to happen and the page is frozen. The right button switches
+to "Saving…" first, lets the browser paint that frame, then does the work in
+40ms pieces, yielding in between so the page keeps responding.
+
+1. Change the visible state first: pressed, optimistic, "Saving…".
+2. Yield, so the browser can paint it.
+3. Do the work in pieces under 50ms, or move it to a Web Worker.
+
+## Feedback that matches the wait
+
+- **Under 100ms:** just the state change. A pressed button, a checked box,
+  the typed letter.
+- **Up to about 400ms:** nothing more. A spinner that flashes for 200ms
+  reads as a glitch.
+- **400ms to 1s:** a quiet cue, like dimming the old content or a button
+  label that says "Saving…".
+- **Over 1s:** a real loading state; past 10 seconds, progress and a way
+  out. See [Performance Is Design](/performance-is-design).
+
+To stop double submits, switch the button to a pending state that ignores
+repeat presses, instead of a silent `disabled` that greys it out and drops
+focus.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "JavaScript",
+      language: "ts",
+      code: `function yieldToMain() {
+  if (globalThis.scheduler?.yield) return scheduler.yield();
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+button.addEventListener("click", async () => {
+  button.dataset.state = "saving"; // 1. answer
+  await yieldToMain();             // 2. let it paint
+
+  let last = performance.now();
+  for (const item of items) {      // 3. work in pieces
+    process(item);
+    if (performance.now() - last > 40) {
+      await yieldToMain();
+      last = performance.now();
+    }
+  }
+});`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { memo, useDeferredValue, useState } from "react";
+
+function Search({ items }) {
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const stale = query !== deferredQuery;
+
+  return (
+    <>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <div style={{ opacity: stale ? 0.6 : 1 }}>
+        <Results items={items} query={deferredQuery} />
+      </div>
+    </>
+  );
+}
+
+// Must be memoized (or compiled by React Compiler) to skip urgent renders.
+const Results = memo(function Results({ items, query }) { ... });`,
+    },
+  ]}
+/>
+
+Never put a text input's own value behind a transition, a debounce or an
+`await`: the letter has to echo immediately. Debounce network requests, not
+rendering. `scheduler.yield()` runs in Chrome and Firefox; the `setTimeout`
+fallback covers Safari. Test with DevTools' CPU throttling set to mid-tier
+mobile, because a fast laptop hides almost all of this.

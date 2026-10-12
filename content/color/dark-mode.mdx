@@ -1,0 +1,135 @@
+---
+title: Dark Mode
+description: A second design, not an inverted one.
+section: Color
+order: 6
+publishedAt: "2026-10-03"
+resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/dark-mode
+    title: Dark Mode
+    description: Apple's guidance, including base and elevated backgrounds and why dark colors are not inversions.
+  - url: https://m2.material.io/design/color/dark-theme.html
+    title: Material dark theme
+    description: Google's dark theme guide, with a dark gray base, lighter surfaces as elevation rises, and desaturated colors.
+  - url: https://web.dev/articles/color-scheme
+    title: Improved dark mode default styling with color-scheme
+    description: Thomas Steiner on what the color-scheme property and meta tag change in the browser's own UI.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/color-scheme
+    title: color-scheme
+    description: Syntax, values and browser support on MDN.
+---
+
+The quickest dark mode is an inversion: white backgrounds turn black, black
+text turns white, and everything else stays. It looks wrong in ways that are
+hard to name. Cards vanish into the page, the menu has no edge, and the brand
+blue buzzes against the black.
+
+**Design dark mode as its own theme: lift surfaces with lightness, soften the
+extremes, and recheck every color.**
+
+<DarkModeDemo />
+
+Inverted, the page, the card and the menu are all `#000`, and the light mode
+shadows have nothing left to darken. Text is pure white at 21:1, so bright it
+glows, while the light mode link drops to 3.2:1. The designed version uses
+this site's values: a `0.17` page, a `0.205` card, text at `0.945`, plus a
+`0.24` menu and an accent raised to `0.72` lightness with about half the chroma.
+Text lands at 15.3:1 and the link at 7.1:1.
+
+Apple puts it simply: dark colors "aren't necessarily inversions of their
+light counterparts."
+
+## Lighter means closer
+
+In light mode, shadows show what sits on top. On a dark page there is little
+left to darken, so elevation comes from the surface instead: the higher a
+layer, the lighter it gets. Material's dark theme and Apple's base and
+elevated backgrounds both work this way.
+
+<DarkElevationDemo />
+
+At `+0.000` only shadows separate the layers, and they barely do. At
+`+0.035` per level, the step this site takes from page to card, every layer
+reads at a glance. Push past `+0.05` and the menu starts to look gray rather
+than dark. Keep the shadows anyway: here they carry a faint inset highlight
+along the top edge, as in [shadows, not borders](/shadows-not-borders).
+
+## Recheck the rest
+
+- **Accents:** saturated colors vibrate on dark backgrounds. Raise the
+  lightness, lower the chroma, and measure contrast again, because a color
+  that passed on white can fail on dark gray.
+- **Text weight:** light text on dark renders heavier on macOS. See
+  [font smoothing](/font-smoothing).
+- **The canvas:** paint the root background too, or overscroll shows a white
+  strip. See [HTML background](/html-background).
+- **Browser UI:** `color-scheme: dark` makes scrollbars, form controls and the
+  default canvas dark as well.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "css",
+      icon: "tailwind",
+      code: `@import "tailwindcss";
+
+@theme {
+  --color-page: oklch(0.985 0 0);
+  --color-card: oklch(1 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-ink: oklch(0.205 0 0);
+  --color-accent: oklch(0.52 0.18 265);
+}
+
+:root {
+  color-scheme: light;
+
+  @variant dark {
+    color-scheme: dark;
+    --color-page: oklch(0.17 0 0);     /* not #000 */
+    --color-card: oklch(0.205 0 0);    /* one step up */
+    --color-popover: oklch(0.24 0 0);  /* two steps up */
+    --color-ink: oklch(0.945 0 0);     /* not #fff */
+    --color-accent: oklch(0.72 0.12 265);
+  }
+}
+
+/* <body class="bg-page text-ink antialiased"> */`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  color-scheme: light dark;
+  --page: oklch(0.985 0 0);
+  --card: oklch(1 0 0);
+  --popover: oklch(1 0 0);
+  --ink: oklch(0.205 0 0);
+  --accent: oklch(0.52 0.18 265);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: oklch(0.17 0 0);
+    --card: oklch(0.205 0 0);
+    --popover: oklch(0.24 0 0);
+    --ink: oklch(0.945 0 0);
+    --accent: oklch(0.72 0.12 265);
+  }
+}
+
+html {
+  background: var(--page);
+  color: var(--ink);
+}`,
+    },
+  ]}
+/>
+
+With a manual theme toggle, set `color-scheme` from the same switch that swaps
+your colors, or a dark page ships with light scrollbars. next-themes, which
+this site uses, writes it on the root element for you.

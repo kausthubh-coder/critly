@@ -1,0 +1,99 @@
+---
+title: Reduced Motion
+description: Reduce motion, keep meaning.
+section: Motion
+order: 14
+publishedAt: "2026-10-02"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion
+    title: prefers-reduced-motion
+    description: The media feature that reads the operating system's reduce motion setting, on MDN.
+  - url: https://web.dev/articles/prefers-reduced-motion
+    title: "prefers-reduced-motion: Sometimes less movement is more"
+    description: Why the setting exists and how to design a calmer version instead of a blank one.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html
+    title: Understanding WCAG 2.3.3
+    description: The success criterion on motion triggered by interaction, and what counts as essential.
+  - url: https://motion.dev/docs/react-accessibility
+    title: Motion accessibility
+    description: How MotionConfig and useReducedMotion handle the setting in React.
+  - url: https://www.joshwcomeau.com/react/prefers-reduced-motion/
+    title: Accessible animations in React
+    description: Josh Comeau on building the preference into components from the start.
+---
+
+Movement on screen can make some people dizzy or sick. Sliding panels, zooms
+and parallax are the usual triggers, which is why every major operating system
+has a setting to reduce motion. The browser exposes it as
+`prefers-reduced-motion: reduce`.
+
+The tempting fix is to set every duration to 0. That removes the movement, but
+it also removes whatever the motion was telling you. Press the button and flip
+between the three.
+
+<ReducedMotionDemo />
+
+**Reduced motion means less movement, not no animation.** Swap translates,
+scales and parallax for a short opacity fade, and keep the feedback that shows
+what changed.
+
+## What to keep
+
+Things traveling across the screen are the problem. A fade or a color change
+doesn't move anything, so it can stay. In the reduced version the new row fades
+in over 150ms and its highlight still fades out, so you can see which message
+arrived. At 0ms the row just appears and the highlight is gone before it's ever
+painted.
+
+Zero also breaks code. A transition with no duration never starts, so
+`transitionend` never fires, and anything waiting for it, like unmounting a
+closed sheet, waits forever. If you need to flatten a transition, use 1ms.
+
+## In React
+
+Wrap the app in `<MotionConfig reducedMotion="user">` and every motion
+component drops transform and layout animations when the setting is on, while
+opacity and color keep animating. For anything else, `useReducedMotion()`
+returns the preference so you can choose a different animation yourself.
+
+## On this site
+
+The index thumbnails stop their hover animations and cut transitions to 1ms
+rather than 0. Some demos, like [icon morph](/icon-morph) and
+[stagger](/stagger), keep their fade and drop the scale or the rise. Others
+still drop to 0ms. A demo you press to watch, like the one above, always plays,
+because watching it is the point.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div
+  class="transition-opacity duration-150 data-closed:opacity-0
+    motion-safe:transition-[opacity,translate] motion-safe:duration-300
+    motion-safe:data-closed:translate-y-4"
+></div>`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { MotionConfig, motion } from "motion/react";
+
+<MotionConfig reducedMotion="user">
+  <motion.div
+    initial={{ opacity: 0, y: 16 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+  />
+</MotionConfig>`,
+    },
+  ]}
+/>
+
+`MotionConfig` only reaches motion components. CSS transitions, keyframes and
+autoplaying video in the same app still need the media query, and the fade
+keeps the original duration, so shorten long ones yourself.

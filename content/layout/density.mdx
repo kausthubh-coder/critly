@@ -1,0 +1,128 @@
+---
+title: Density
+description: Fit the space to how often it's used.
+section: Layout
+order: 10
+publishedAt: "2026-10-03"
+resources:
+  - url: https://mattstromawn.com/writing/ui-density/
+    title: UI Density
+    description: Matt Ström-Awn on density as the value a screen delivers for the time and space it takes.
+  - url: https://cloudscape.design/foundation/visual-foundation/content-density/
+    title: Cloudscape content density
+    description: AWS's comfortable and compact modes, with compact meant for data-heavy views and chosen by the user.
+  - url: https://carbondesignsystem.com/components/data-table/style/
+    title: Carbon data table style
+    description: Five table row heights from 24px to 64px, with the header row always matching.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+    title: "Understanding 2.5.8: Target Size (Minimum)"
+    description: The 24 by 24 CSS pixel minimum that still applies when rows get tight.
+---
+
+The same list can show 6 rows or 9 in the same space. Neither is right on its
+own. Someone triaging issues all day wants to see as much as possible, and
+someone picking a plan once wants room to think.
+
+**Choose density from how often and how long people use the screen.**
+
+<DensityDemo />
+
+In the 288px window, comfortable shows 6 of 12 issues and compact shows 9.
+Everything steps down at once: rows from 48 to 32px, padding from 16 to 8,
+gaps from 12 to 8, text from 14 to 13px and icons from 20 to 16px.
+
+## Who earns compact
+
+Tools people keep open all day earn compact: issue trackers, inboxes, admin
+tables, editors. People learn them, scan them, and pay for every extra
+scroll. Compact means more rows, smaller gaps, smaller type and no decorative
+space.
+
+Rare or emotional flows earn comfortable: onboarding, checkout, a failed
+payment. There the space is for reading carefully, and a little air helps
+people slow down. Density is one of the three dials in
+[product feel](/product-feel).
+
+When both kinds of people use the same screen, let them choose. Cloudscape
+ships both modes and defaults to comfortable.
+
+## A system, not less padding
+
+The tempting shortcut is to cut the padding and keep everything else.
+
+<DensityPaddingDemo />
+
+The left list keeps the comfortable 14px text and 20px icons and cuts the
+padding until the rows are 28px. It fits more rows and it is worse: the text
+crowds the icons, and every target shrinks to the size of its icon. The right
+list steps everything down together. Its rows are 32px, and the 16px icons
+sit in 24px buttons, so every target stays at the 24px floor from
+[hit areas](/hit-areas).
+
+Cloudscape describes its compact mode as the spacing scale reduced in 4px
+steps. I'd go one step further and bring the type and icons down a size with
+it, so the proportions survive.
+
+## Usage
+
+Switch the whole set of values with one attribute on the container.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- In your CSS:
+@custom-variant compact (&:where([data-density="compact"] *)); -->
+<ul data-density="compact">
+  <li
+    class="flex h-12 items-center gap-3 px-4 text-sm
+      compact:h-8 compact:gap-2 compact:px-2 compact:text-[13px]"
+  >
+    <svg class="size-5 compact:size-4" />
+    Fix login redirect loop
+    <button class="size-8 compact:size-6">...</button>
+  </li>
+</ul>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.list {
+  --row: 48px;
+  --pad: 16px;
+  --gap: 12px;
+  --text: 14px;
+  --icon: 20px;
+}
+
+.list[data-density="compact"] {
+  --row: 32px;
+  --pad: 8px;
+  --gap: 8px;
+  --text: 13px;
+  --icon: 16px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  height: var(--row);
+  padding-inline: var(--pad);
+  gap: var(--gap);
+  font-size: var(--text);
+}
+
+.row svg {
+  width: var(--icon);
+  height: var(--icon);
+}`,
+    },
+  ]}
+/>
+
+Compact is for a mouse. A 32px row is fine to click and too small to tap, so
+under `@media (pointer: coarse)` go back to the comfortable values. Take both
+sets from your [spacing scale](/spacing-scale), not from new one-off numbers.

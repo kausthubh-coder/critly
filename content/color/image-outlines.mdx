@@ -1,0 +1,97 @@
+---
+title: Image Outlines
+description: A faint inner edge that frames images.
+section: Color
+order: 4
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Jakub Krehel's list of small touches, including the inset image outline this page is about.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/outline-offset
+    title: outline-offset
+    description: The property that pulls an outline inside the box instead of around it.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow
+    title: box-shadow
+    description: The inset form is the other way to draw the same line, with full support for rounded corners.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/color-mix
+    title: color-mix()
+    description: Handy for mixing the outline color into the current text color so it adapts to any theme.
+---
+
+Images do not know what is behind them. A pale sky on a white card has no
+edge at all, and a photo with a bright corner blends into the page.
+
+An **inset outline** fixes that with one line, drawn just inside the image at
+around 10% opacity.
+
+The outline's visibility can vary based on light or dark mode and the image content.
+
+<ImageOutlineDemo />
+
+The line is too faint to read as a border. What you notice instead is that
+every image suddenly has a shape.
+
+I basically learned this trick from
+[Jakub](https://jakub.kr/writing/details-that-make-interfaces-feel-better).
+It is one of those details you cannot unsee once someone points it out.
+
+## Why not a border
+
+A `border` sits between the padding and the margin, so it takes up space.
+Adding one pushes content around and changes the size of the box.
+
+**Paint the line over the image, not around it.** An `outline` with a
+negative `outline-offset`, or an inset `box-shadow`, sits on top of the
+outermost pixels.
+
+## How strong
+
+Ten percent is a good default, but I like to tune it differently for light and dark mode sometimes.
+
+<ImageOutlineStrengthDemo />
+
+Below about 5% the line disappears against the pale sky. Above about 20%
+it starts to look like a frame, and the eye reads it as a design element
+instead of a fix. Stay in between.
+
+## Avatars
+
+Avatars are where this matters most. They are small, round, and often mostly
+white: an initial on a light background, a pale logo, a photo of someone
+against a wall. Without an edge they float on the surface.
+
+<ImageOutlineAvatarDemo />
+
+## Usage
+
+Set the outline color per theme. Black at 10% on light, white at 10% on dark.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<img
+  class="rounded-lg outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
+  src="/cover.jpg"
+  alt="Album cover"
+/>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `img {
+  border-radius: 8px;
+  outline: 1px solid rgb(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+
+.dark img {
+  outline-color: rgb(255 255 255 / 0.1);
+}`,
+},
+]}
+/>

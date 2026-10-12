@@ -1,0 +1,109 @@
+---
+title: Visual Hierarchy
+description: Quiet the rest so one thing leads.
+section: Typography
+order: 7
+publishedAt: "2026-10-02"
+resources:
+  - url: https://www.refactoringui.com/
+    title: Refactoring UI
+    description: Adam Wathan and Steve Schoger's book, with chapters on de-emphasizing to emphasize and why labels are a last resort.
+  - url: https://www.nngroup.com/articles/visual-hierarchy-ux-definition/
+    title: Visual hierarchy in UX
+    description: Nielsen Norman Group on color, scale and grouping, including the blur test.
+  - url: https://www.nngroup.com/articles/principles-visual-design/
+    title: 5 principles of visual design in UX
+    description: Where hierarchy sits next to scale, balance, contrast and Gestalt.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
+    title: Understanding contrast (minimum)
+    description: The 4.5:1 floor that even your quietest text tone has to clear.
+---
+
+Every screen has one thing it wants you to see first. When every line is bold
+and dark, nothing gets to be that thing, and you have to read each word to find
+it.
+
+The instinct is to make the important part louder. That starts an arms race:
+a bigger name, a bolder price, and now the row is loud in two places instead of
+one.
+
+**Quiet the rest instead of making the important thing louder.**
+
+<VisualHierarchyDemo />
+
+Step through the three versions, then press Squint. The quiet one never
+changes a size. Names and prices stay at 14px and 500; the details drop to 400
+and lighter tones. Blurred, the bold list is a grey stripe per row, while the
+quiet one still leads with what matters. It is the same blur test as in
+[optical alignment](/optical-alignment), aimed at emphasis.
+
+## Tone and weight before size
+
+Size is the bluntest tool. It costs space, breaks alignment, and needs its own
+[letter spacing](/letter-spacing). Color and weight do most of the work for
+less. Three text tones are enough: one for the thing, one for its details, one
+for metadata. Two weights, 400 and 500, cover almost everything else.
+
+Keep even the quietest tone at 4.5:1 or more. Here it is `neutral-500` on
+white, which lands at 4.7:1.
+
+## Labels are a last resort
+
+A label is more text to read before you reach the value. Formatted well, most
+values explain themselves. "12 left" says what "Stock: 12" says, in one glance.
+
+<HierarchyLabelsDemo />
+
+## Actions have ranks
+
+Buttons follow the same rule. One solid primary action, a quiet secondary one,
+and a destructive action that is not the main job can be plain text that turns
+red on hover. Save the big red button for the confirmation step.
+
+<HierarchyActionsDemo />
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<li class="flex items-center justify-between text-sm">
+  <div>
+    <p class="font-medium text-neutral-900">Linen Shirt</p>
+    <p class="text-neutral-600">Sand, size M</p>
+  </div>
+  <div class="text-right tabular-nums">
+    <p class="font-medium text-neutral-900">$68</p>
+    <p class="text-neutral-500">12 left</p>
+  </div>
+</li>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --text-primary: #171717;   /* the thing */
+  --text-secondary: #525252; /* its details */
+  --text-tertiary: #737373;  /* metadata, 4.7:1 on white */
+}
+
+.title {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.meta {
+  font-weight: 400;
+  color: var(--text-tertiary);
+}`,
+    },
+  ]}
+/>
+
+These greys are tuned for a white surface. On a colored background, grey text
+looks washed out and can fall under 4.5:1. Pick lighter or darker shades of the
+background's own hue instead.

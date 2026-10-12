@@ -1,0 +1,121 @@
+---
+title: Whitespace
+description: Space is how things group.
+section: Layout
+order: 7
+publishedAt: "2026-10-02"
+resources:
+  - url: https://www.nngroup.com/articles/gestalt-proximity/
+    title: Proximity Principle in Visual Design
+    description: Nielsen Norman Group on why things that sit close together read as one group.
+  - url: https://www.nngroup.com/articles/form-design-white-space/
+    title: Form Design Quick Fix
+    description: How grouping a long form into sections with white space makes it feel shorter.
+  - url: https://lawsofux.com/law-of-proximity/
+    title: Law of Proximity
+    description: A one-page summary of the principle with its origins and takeaways.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/gap
+    title: gap
+    description: The property that puts spacing on the group instead of on each child.
+---
+
+Before borders, cards or dividers, space is how you group things. We read
+elements that sit close together as one unit and elements that sit apart as
+separate ones. When every gap is the same, nothing belongs to anything.
+
+**Gaps inside a group should be about half the gaps between groups, or less.**
+
+<WhitespaceDemo />
+
+With equal spacing, each label is 16px from its own field and 16px from the
+field above it, so it belongs to neither. The grouped version uses three
+gaps: 8px from label to field, 16px between fields and 32px between sections.
+Each level doubles the last, and that is enough for the eye to read the
+structure without a single line.
+
+## Headings belong below
+
+A heading names what comes after it, so it should sit closer to that content.
+Give it about twice as much space above as below. In the demo, Notifications
+has 32px above it and 16px below.
+
+## Space before lines
+
+Dividers and cards are the usual fix for a layout that reads as one long list.
+They work, but often they are doing a job the spacing should have done.
+Remove the lines and see what is left.
+
+<WhitespaceDividersDemo />
+
+On the left, every row is 12px apart and the dividers carry all the grouping.
+Without them it is five equal rows. On the right, the lines are optional. Get
+the spacing right first, then add a line or a [shadow](/shadows-not-borders)
+only where it still helps.
+
+## Squint
+
+Blur a layout, or squint at it, and the text turns into blocks. Good spacing
+leaves a few clear clusters. Equal spacing leaves a ladder of stripes.
+
+<WhitespaceSquintDemo />
+
+It is the same blur test as in [optical alignment](/optical-alignment),
+applied to a whole screen.
+
+## Usage
+
+Put the spacing on the parent with `gap`, one container per group. The
+nesting in the markup then matches the grouping on screen.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<form class="flex flex-col gap-8">
+  <section class="flex flex-col gap-4">
+    <h2>Profile</h2>
+    <label class="flex flex-col gap-2">
+      Name
+      <input />
+    </label>
+    <label class="flex flex-col gap-2">
+      Email
+      <input />
+    </label>
+  </section>
+  <section class="flex flex-col gap-4">...</section>
+</form>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `form,
+section,
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  gap: 32px;
+}
+
+section {
+  gap: 16px;
+}
+
+label {
+  gap: 8px;
+}`,
+    },
+  ]}
+/>
+
+Padding counts as space too. A 32px menu item with a 16px line of text
+already has 8px of padding above and below it, so a 4px gap between groups
+barely shows. Compare
+the space between the text, not between the boxes. The values themselves come
+from a [spacing scale](/spacing-scale).

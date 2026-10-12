@@ -1,0 +1,87 @@
+---
+title: Font Smoothing
+description: Light text on dark renders heavier.
+section: Typography
+order: 6
+publishedAt: "2026-07-16"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-smooth
+    title: font-smooth
+    description: MDN on the non-standard smoothing properties, their values, and the macOS-only support.
+  - url: https://dbushell.com/2024/11/05/webkit-font-smoothing/
+    title: What's the deal with WebKit font smoothing?
+    description: David Bushell tests the property across operating systems and finds it only matters on macOS.
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Jakub Krehel's list of small fixes, including antialiased text.
+  - url: https://www.joshwcomeau.com/css/custom-css-reset/
+    title: A modern CSS reset
+    description: Josh Comeau's reset, which sets antialiased on the body and explains why.
+  - url: https://tailwindcss.com/docs/font-smoothing
+    title: Font smoothing in Tailwind
+    description: The antialiased utility, which sets both properties at once.
+---
+
+On a Mac, browsers draw text a little bolder than the font says. macOS
+thickens every glyph slightly, and on a dark background that extra weight
+blooms. White text ends up looking heavier than the same text in dark ink.
+
+**On macOS, turn the thickening off so text renders at the weight you
+chose.**
+
+<FontSmoothingDemo />
+
+The difference is easy to see on the dark card and hard to see on the light
+one. That is why this usually comes up when a product ships a dark mode, and
+every heading suddenly feels half a weight heavier than in the design file.
+
+## What it does
+
+Macs used to render text with subpixel antialiasing, using the red, green and
+blue parts of each pixel to sharpen edges. To make up for how thin that
+looked, macOS also thickened each glyph. macOS Mojave (10.14) turned subpixel
+antialiasing off in 2018 but kept the thickening, and browsers still apply it
+by default.
+
+`-webkit-font-smoothing: antialiased` switches to plain grayscale
+antialiasing, without the thickening. Firefox's version is
+`-moz-osx-font-smoothing: grayscale`. Windows, Linux, iOS and Android ignore
+both, so if you are not on a Mac, the demos fake the default with a hairline
+stroke.
+
+## Thin weights
+
+The thickening also props up light weights. Without it, 300 and below can
+turn wispy on dark surfaces.
+
+<FontSmoothingWeightsDemo />
+
+Most interfaces use 400 and up, where antialiased is a clear improvement. If
+you set small text in a light weight, check it on a Mac before turning this
+on everywhere.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<body class="antialiased">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}`,
+    },
+  ]}
+/>
+
+Both properties are non-standard, and they only do anything on macOS. That is
+fine, because the extra weight is a macOS problem. Set them once on the
+`body`, like this site does, and every element inherits them.

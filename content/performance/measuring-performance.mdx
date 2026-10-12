@@ -1,0 +1,146 @@
+---
+title: Measuring Performance
+description: Measure the wait people feel, more than once.
+section: Performance
+order: 1
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/vitals
+    title: Web Vitals
+    description: The three field metrics for loading, responsiveness and visual stability, and their thresholds.
+  - url: https://developer.chrome.com/docs/devtools/performance/reference
+    title: Chrome DevTools performance reference
+    description: The Frames, Interactions and Animations tracks, and how to read a trace.
+  - url: https://developer.chrome.com/blog/devtools-grounded-real-world
+    title: Calibrated CPU throttling
+    description: DevTools presets that match low-tier and mid-tier phones, and why they don't slow the GPU.
+  - url: https://github.com/GoogleChrome/web-vitals
+    title: web-vitals
+    description: The library for measuring LCP, INP and CLS in real sessions, with attribution.
+  - url: https://developer.chrome.com/docs/web-platform/long-animation-frames
+    title: Long Animation Frames API
+    description: Finding which scripts and layout work made a frame late.
+---
+
+Most performance work goes wrong before any code changes. It measures the
+wrong moment, on the wrong machine, once, and then a fix that changed
+nothing gets shipped, or a real win gets reverted as noise.
+
+Load the page and watch where each signal lands on the timeline.
+
+<ReadySignalDemo />
+
+The browser's `load` event fires at 260ms, so a test that waits for it
+reports a fast page. The person sees nothing useful until the real content
+arrives at 1,500ms. The number that matters is when the page is ready for
+them, and the browser can't know that unless you tell it.
+
+**Measure the wait a person feels, on the kind of device they use, more than
+once, before and after every change.**
+
+## Name the moment
+
+Write each action down as a start and a finish people can see: "click Play
+→ video playing", "open Home → first row of real titles", "type in search →
+results for that text". Then make the finish explicit in the app, with an
+attribute like `data-ready` set when the real content renders, so a test
+waits for that instead of guessing from images or spinners. Check that the
+attribute exists, not that it's truthy: an empty string is still "ready".
+
+## Measure where it's slow
+
+- **A production build.** Development mode adds checks that can double the
+  time of everything.
+- **Realistic data.** A page that's fast with 10 items can be slow with 800.
+- **A phone profile.** Use DevTools' calibrated mid-tier mobile CPU preset
+  and a slow network, and also check desktop.
+- **The real GPU, for blur, glass and video.** CPU throttling doesn't slow
+  the GPU, and software rendering in a headless browser makes cheap effects
+  look expensive and expensive ones look cheap. Use a real phone or the
+  machine's actual GPU.
+- **Server and browser time apart.** If an action waits on an API, record
+  the request time separately, so you know whether to fix the server or the
+  page.
+
+## Run it more than once
+
+Do it again.
+
+<RepeatRunsDemo />
+
+One run can land anywhere: a cold cache, a background task or garbage
+collection can add half a second. Take the median of at least three cold and
+three warm runs, with nothing else running on the machine. If two versions
+are within the noise, the change did nothing.
+
+## Find the cause, then fix one thing
+
+When something is slow and you don't know why, take things away. Turn off
+one suspect at a time (the blur, the shadows, the transitions, one
+component) and measure again; the biggest drop is the cause. Then change
+one thing, measure it the same way, and write down the result:
+
+| Action | Before | After | Runs | Setup |
+| --- | --- | --- | --- | --- |
+| Open Home (phone) | 8.5s | 2.3s | 5 cold | prod build, mid-tier CPU, slow 4G |
+
+Measure each fix on its own, so you know which one helped. And never say
+tests pass until you've run the same checks CI runs.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Ready signal",
+      language: "tsx",
+      code: `// In the app: mark the moment the real content renders.
+useEffect(() => {
+  if (!items) return;
+  document.body.dataset.ready = "home";
+  performance.mark("home-ready");
+}, [items]);
+
+// In a Playwright test: wait for it, not for "load".
+const start = Date.now();
+await page.goto("/home");
+await page.waitForSelector('body[data-ready="home"]');
+console.log("Home ready in", Date.now() - start, "ms");`,
+    },
+    {
+      label: "Field data",
+      language: "ts",
+      code: `import { onCLS, onINP, onLCP } from "web-vitals/attribution";
+
+// Good: LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1, at the 75th percentile.
+onLCP(send);
+onINP(send);
+onCLS(send);
+
+function send(metric) {
+  navigator.sendBeacon("/vitals", JSON.stringify({
+    name: metric.name,
+    value: metric.value,
+    attribution: metric.attribution,
+  }));
+}`,
+    },
+    {
+      label: "Quick checks",
+      language: "ts",
+      code: `// How many elements is the page rendering?
+document.querySelectorAll("*").length;
+
+// How many elements are paying for a blur?
+[...document.querySelectorAll("*")].filter(
+  (el) => getComputedStyle(el).backdropFilter !== "none"
+).length;`,
+    },
+  ]}
+/>
+
+In the lab, the DevTools Performance panel shows live LCP, INP and CLS as you
+use the page, with each interaction split into input delay, processing and
+presentation. In production, `web-vitals` reports what real visitors get,
+which is the number that counts. A fast laptop hides almost everything, so
+treat a result from one as a best case, not a measurement.

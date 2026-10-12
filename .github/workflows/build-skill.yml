@@ -1,0 +1,46 @@
+# Keeps skills/critly in sync with the published concepts.
+# Runs on every push to main that could change the generated output, commits
+# the result if anything changed, and does nothing otherwise. Vercel builds
+# cannot write back to the repo, which is why this lives here instead.
+name: Build skill
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - content/**
+      - scripts/build-skill.ts
+      - src/lib/markdown.ts
+      - src/lib/concepts.ts
+      - src/lib/sections.ts
+      - src/lib/site.ts
+      - skills/**/SKILL.md
+      - .github/workflows/build-skill.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-skill
+  cancel-in-progress: true
+
+jobs:
+  build-skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run build:skill
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- skills; then
+            echo "Skill already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add skills
+          git commit -m "Regenerate agent skill from content"
+          git push

@@ -1,0 +1,144 @@
+---
+title: Long Lists
+description: Render what's on screen, not everything.
+section: Performance
+order: 8
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/dom-size-and-interactivity
+    title: How large DOM sizes affect interactivity
+    description: Why every extra node makes style, layout and every interaction slower.
+  - url: https://web.dev/articles/content-visibility
+    title: content-visibility
+    description: Letting the browser skip rendering off-screen sections, with measured savings.
+  - url: https://tanstack.com/virtual/latest
+    title: TanStack Virtual
+    description: A headless virtualization library for lists, grids and chats of any length.
+  - url: https://www.nngroup.com/articles/infinite-scrolling-tips/
+    title: Infinite scrolling tips
+    description: Nielsen Norman Group on when infinite scroll helps and when it gets in the way.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-anchor
+    title: overflow-anchor
+    description: Scroll anchoring, which keeps your place when content is added above it.
+---
+
+Feeds, tables, chat logs and search results grow until they're the slowest
+thing in the app. Every row is a handful of elements, and the browser has to
+style and lay out every one of them, even the thousands nobody can see.
+
+Re-sort the list in both modes and watch the time under it.
+
+<LongListDemo />
+
+With all 5,000 rows rendered, every re-sort touches 5,000 rows and takes a
+visible beat; on a phone it takes several. With only the visible rows
+rendered (plus a few above and below), the list looks and scrolls the same,
+but a re-sort only touches about a dozen, and it's instant at any length.
+
+**Render only the rows people can see. Keep the rest as space, not as
+elements.**
+
+## Three ways to keep it light
+
+Count elements, not rows. A "row" can be one line of text or a card with an
+image, buttons, menus and hooks, and a page of horizontal rows multiplies
+rows by cards. Lighthouse warns at about 800 DOM elements and flags 1,400.
+Check with `document.querySelectorAll("*").length`.
+
+- **A few hundred simple rows, well under 1,400 elements:** just render them.
+- **Long, mostly static content** (articles, docs, a long settings page):
+  add `content-visibility: auto` to each section. The browser skips laying
+  out and painting what's off screen, and find-in-page still works. In one
+  test, 10,000 rows went from about 436ms to 247ms.
+- **Thousands of elements, or anything filtered, sorted or updated live:**
+  virtualize. Only the visible rows exist, so the cost stays flat, around 5
+  to 20ms whether there are a thousand rows or a million.
+
+Rows of cards inside a long page (a home screen of carousels) are the same
+problem in two directions. Render rows as they approach the screen, keep
+off-screen rows as reserved space with `content-visibility`, and mount each
+card's heavy parts (menus, previews, video, per-card listeners) only when
+someone interacts with it.
+
+Virtualization has costs to plan for. Find-in-page can't see rows that don't
+exist, so offer your own search. Screen readers need `aria-setsize` and
+`aria-posinset` to know where they are, and the focused row has to stay
+mounted. Search engines and printing only see what's rendered.
+
+## Keep the reader's place
+
+Chats and feeds that load older content above you have a second problem.
+Scroll up a little in both chats, then load older messages.
+
+<ChatAnchorDemo />
+
+On the left, the new messages push everything down and you lose the line you
+were reading. On the right, the scroll position moves by exactly the height
+that was added, so the same message stays under your eyes. Browsers do this
+automatically with scroll anchoring, except at the very top of the list,
+which is exactly where "load older" usually fires. Start loading a little
+before the top, or correct the position yourself.
+
+## Infinite scroll or "Load more"
+
+Infinite scroll suits feeds people browse without a goal. For search
+results, products and anything people compare, use pagination or a "Load
+more" button: people can reach the footer, and Back can return them to the
+same place. Put the page in the URL, and after a few automatic loads switch
+to a button.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `/* Long, mostly static sections: skip rendering what's off screen.
+   The size is a guess the browser replaces once it has rendered it. */
+.feed-item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 120px;
+}`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { useVirtualizer } from "@tanstack/react-virtual";
+
+function Activity({ rows }) {
+  const parentRef = useRef(null);
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 32,
+    overscan: 6,
+  });
+
+  return (
+    <div ref={parentRef} style={{ height: 400, overflowY: "auto" }}>
+      <ul style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
+        {virtualizer.getVirtualItems().map((item) => (
+          <li
+            key={rows[item.index].id}
+            aria-posinset={item.index + 1}
+            aria-setsize={rows.length}
+            style={{ position: "absolute", top: item.start, height: item.size, width: "100%" }}
+          >
+            {rows[item.index].text}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}`,
+    },
+  ]}
+/>
+
+Key rows by their data id, never their index. Prefer fixed row heights for
+tables and logs; when heights vary, overestimate the guess. Typing into a
+filter over a long list still needs [Responsiveness](/responsiveness):
+virtualize so each render is small, and defer it so typing stays instant.
+Use a library for chat lists rather than hand-written scroll math.

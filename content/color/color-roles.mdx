@@ -1,0 +1,116 @@
+---
+title: Color Roles
+description: Gray does the work, color has a job.
+section: Color
+order: 5
+publishedAt: "2026-10-03"
+resources:
+  - url: https://www.radix-ui.com/colors/docs/palette-composition/composing-a-palette
+    title: Composing a palette
+    description: Radix on pairing an accent with plain gray or with a gray tinted toward its hue.
+  - url: https://linear.app/now/how-we-redesigned-the-linear-ui
+    title: How we redesigned the Linear UI
+    description: Linear rebuilt its themes from a base color, an accent and a contrast value, with less blue in the neutrals.
+  - url: https://m3.material.io/styles/color/roles
+    title: Material 3 color roles
+    description: A full system of named roles, from surfaces and outlines to primary and error.
+  - url: https://www.nngroup.com/articles/color-enhance-design/
+    title: Using color to enhance your design
+    description: Nielsen Norman Group on small palettes, the 60-30-10 rule, and keeping one color for calls to action.
+---
+
+Give the brand color to everything that could take it, and it stops meaning
+anything. The title is blue, the tabs are blue, the numbers, links and status
+badges are blue, and the one button you want people to press is just another
+blue thing.
+
+**Let neutrals do almost all the work. Use the accent only for the main
+action and the current selection, and use green, amber and red only when they
+mean something.**
+
+<ColorRolesDemo />
+
+In the first card the accent is on 16 elements. "Ready", "Building" and
+"Failed" wear the same blue pill, so the statuses carry no meaning at all. In
+the second, the accent is on two: the selected tab and Deploy. Each status
+gets a small dot, and the failed build is the first thing you notice after the
+button.
+
+This is [visual hierarchy](/visual-hierarchy) applied to color. Every colored
+element competes for attention, so only color the ones that should win.
+
+## Three roles
+
+- **Neutrals** are backgrounds, surfaces, lines, text and icons. They are
+  nearly everything on screen.
+- **The accent** marks what you can do next and where you are: the primary
+  button, the selected tab, a checked box. One hue.
+- **Status colors** report state: success, warning, danger. They never
+  decorate. If something is red, something went wrong.
+
+## Tinted neutrals
+
+Pure gray is chroma `0` in [OKLCH](/oklch). Next to a saturated accent it can
+look flat and unrelated. Add a trace of the brand hue to every neutral and the
+grays and the accent start to look like one palette.
+
+<ColorTintDemo />
+
+Between `0.005` and `0.015` the grays still read as gray, just cooler, toward
+the indigo accent. By `0.03` the whole card has turned blue.
+
+Not everyone tints. Radix ships plain gray, which works with any accent, next
+to grays pre-tinted toward each hue. Linear's redesign went the other way and
+cut back the blue in its neutrals. I'd tint, and stay under `0.015`.
+This site has no brand hue, so its own grays sit at `0`.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "css",
+      icon: "tailwind",
+      code: `@import "tailwindcss";
+
+@theme {
+  --color-page: oklch(0.965 0.01 265);
+  --color-surface: oklch(0.99 0.005 265);
+  --color-line: oklch(0.92 0.01 265);
+  --color-ink: oklch(0.21 0.01 265);
+  --color-ink-soft: oklch(0.52 0.01 265);
+  --color-accent: oklch(0.52 0.18 265);
+  --color-success: oklch(0.62 0.15 150);
+  --color-warning: oklch(0.75 0.15 75);
+  --color-danger: oklch(0.58 0.2 27);
+}
+
+/* <button class="bg-accent text-white">Deploy</button> */`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --hue: 265;
+  --tint: 0.01;
+
+  --page: oklch(0.965 var(--tint) var(--hue));
+  --surface: oklch(0.99 calc(var(--tint) / 2) var(--hue));
+  --line: oklch(0.92 var(--tint) var(--hue));
+  --ink: oklch(0.21 var(--tint) var(--hue));
+  --ink-soft: oklch(0.52 var(--tint) var(--hue));
+
+  --accent: oklch(0.52 0.18 var(--hue));
+  --success: oklch(0.62 0.15 150);
+  --warning: oklch(0.75 0.15 75);
+  --danger: oklch(0.58 0.2 27);
+}`,
+    },
+  ]}
+/>
+
+If your brand hue is red or green, it will collide with danger or success.
+Keep the brand for the accent, and move the status color far enough along the
+hue wheel, or add an icon, so nobody mistakes your logo color for an error.

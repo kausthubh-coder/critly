@@ -1,0 +1,139 @@
+---
+title: Video and Embeds
+description: Load the player when someone wants it.
+section: Performance
+order: 6
+publishedAt: "2026-10-08"
+resources:
+  - url: https://github.com/paulirish/lite-youtube-embed
+    title: lite-youtube-embed
+    description: Paul Irish's YouTube facade, which loads the real player only when someone clicks.
+  - url: https://web.dev/articles/embed-best-practices
+    title: Best practices for embeds
+    description: Loading videos, maps and social posts without slowing the page, including facades.
+  - url: https://developer.chrome.com/blog/autoplay
+    title: Autoplay policy in Chrome
+    description: When video may play on its own, and why muted autoplay is allowed.
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/requestVideoFrameCallback
+    title: requestVideoFrameCallback
+    description: A callback for the moment a video frame actually reaches the screen.
+  - url: https://web.dev/articles/replace-gifs-with-videos
+    title: Replace animated GIFs with video
+    description: How much smaller a muted looping video is than the same GIF.
+---
+
+A video player is one of the heaviest things you can put on a page, and
+often nobody presses play. A single YouTube embed downloads about a megabyte
+of script and keeps a phone's main thread busy for over a second, before
+anyone clicks. Maps and social embeds are not much lighter.
+
+Look at what each card has loaded before you touch it, then click both.
+
+<EmbedFacadeDemo />
+
+The left card embeds the player with the page, so every visitor pays for it
+up front: about 1.1 MB, 20 requests and 1.4 seconds of script on a phone. The
+right card is a facade: a thumbnail and a play button that cost 27 KB. It
+loads the real player when clicked, warming the connection when the pointer
+arrives, so the wait after the click stays short.
+
+**Don't load a player until someone asks for it, and choose a video format
+that starts fast for anything that plays on its own.**
+
+## Pick the medium first
+
+- **Background loops, previews, product clips:** a short MP4 on your own
+  server, encoded with `-movflags +faststart` so it can start playing from
+  the first bytes, with no audio track if it's silent. One request, no
+  third-party controls, full control of when it appears.
+- **Long videos people choose to watch:** a streaming service with adaptive
+  quality is worth its extra setup.
+- **Videos that live on YouTube or Vimeo:** behind a facade that loads on
+  click. Their players show a title bar for the first few seconds that you're
+  not allowed to hide or cover, so they don't suit autoplaying previews.
+- **Animated GIFs:** replace them with a muted looping video, often a tenth
+  of the size.
+
+## Show it when there's something to show
+
+Fading a video in on a timer is a guess. Switch to a slow network and replay.
+
+<VideoRevealDemo />
+
+The left tile fades at 900ms whether or not the video has arrived, so on a
+slow network it fades into a black box. The right tile keeps the poster
+underneath and fades only when the first frame is on screen, using
+`requestVideoFrameCallback`. On a fast network both look the same; on a
+slow one, only the right one still looks finished.
+
+## Play responsibly
+
+- **Muted and inline.** Muted autoplay with `playsinline` is allowed
+  everywhere, but it can still be refused, for example in Low Power Mode on
+  iPhone. Handle the rejected `play()` and leave the poster as a complete
+  state.
+- **One at a time.** Pause other videos when one starts, pause videos that
+  scroll out of view or sit in a hidden tab, and don't autoplay for people
+  who ask for reduced motion or less data.
+- **Give it a pause button** if it moves for more than five seconds.
+- **Reserve the space and set a poster,** treated like a hero image.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "HTML",
+      language: "html",
+      code: `<video width="960" height="540" poster="/clip-poster.avif"
+       autoplay muted playsinline loop preload="metadata">
+  <source src="/clip.webm" type="video/webm">
+  <source src="/clip.mp4" type="video/mp4">
+</video>
+
+<!-- Encode: index at the front, no audio, web-safe pixels -->
+<!-- ffmpeg -i in.mov -an -c:v libx264 -crf 24 -pix_fmt yuv420p \\
+       -movflags +faststart clip.mp4 -->`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `// A facade: a real button until someone clicks.
+function YouTube({ id, title }) {
+  const [live, setLive] = useState(false);
+  const warm = () => {
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = "https://www.youtube-nocookie.com";
+    document.head.append(link);
+  };
+
+  if (live) {
+    return (
+      <iframe
+        src={\`https://www.youtube-nocookie.com/embed/\${id}?autoplay=1&playsinline=1\`}
+        title={title}
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        style={{ aspectRatio: "16 / 9", width: "100%", border: 0 }}
+      />
+    );
+  }
+  return (
+    <button onPointerEnter={warm} onFocus={warm} onClick={() => setLive(true)}
+            style={{ aspectRatio: "16 / 9", backgroundImage: \`url(https://i.ytimg.com/vi/\${id}/hqdefault.jpg)\` }}>
+      <span className="sr-only">Play video: {title}</span>
+    </button>
+  );
+}`,
+    },
+  ]}
+/>
+
+On iPhone, a click doesn't always carry through to the new iframe, so a
+facade can need a second tap; lite-youtube-embed works around this by loading
+YouTube's player API and calling `playVideo()` itself. For maps, show a
+static image linked to the real map. Preconnect to two to four origins at
+most, because unused connections close after about 10 seconds; for embeds,
+preconnect on hover instead. In React, also set the `muted` attribute in an
+effect, since React only sets the property and some browsers check the
+attribute.

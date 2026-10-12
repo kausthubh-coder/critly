@@ -1,0 +1,110 @@
+---
+title: Hit Areas
+description: Make the target bigger than the icon.
+section: Layout
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html
+    title: "Understanding 2.5.8: Target Size (Minimum)"
+    description: The WCAG 2.2 AA rule of 24 by 24 CSS pixels, and how the spacing exception works.
+  - url: https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html
+    title: "Understanding 2.5.5: Target Size (Enhanced)"
+    description: The stricter AAA level of 44 by 44 CSS pixels.
+  - url: https://developer.apple.com/design/human-interface-guidelines/accessibility#Mobility
+    title: Apple Human Interface Guidelines on control sizes
+    description: Default and minimum control sizes for every Apple platform, from 44 by 44 points on iOS up.
+  - url: https://developer.android.com/guide/topics/ui/accessibility/apps
+    title: Make apps more accessible
+    description: Android's guidance that every touch target should be at least 48 by 48dp.
+  - url: https://rauno.me/craft/interaction-design
+    title: Invisible Details of Interaction Design
+    description: Rauno Freiberg on Fitts's law and why big, close targets are faster to hit.
+---
+
+A **hit area** is the part of an element that responds to a click or tap. It
+does not have to match what you can see. A 16px icon can sit in a 32px
+button, and nobody notices the extra space until it is missing.
+
+<HitAreasToolbarDemo />
+
+The two toolbars look the same. Hover across them, then show the hit areas.
+The left one asks you to land on the icon itself.
+
+**Make the hit area bigger than the thing you can see.**
+
+## How big
+
+The numbers most guidance agrees on:
+
+- **24 × 24px:** the WCAG 2.2 minimum (2.5.8, level AA). A smaller target
+  only passes if it has enough empty space around it.
+- **44 × 44px:** the enhanced level (2.5.5, AAA). Apple uses the same 44 by
+  44 points as the default size for iOS controls.
+- **48 × 48dp:** what Android and Material ask for on touch.
+
+I treat 24px as the floor for anything clickable and 32px as a comfortable
+size for icon buttons on desktop. On touch, aim for 44px.
+
+## Extend the target, not the icon
+
+Sometimes a bigger button would look wrong, like the close button on a chip.
+Keep the visible circle small and stretch an invisible pseudo-element over
+it. Drag the slider and try to hit the close buttons.
+
+<HitAreasExpandDemo />
+
+The button is 14px. An `::after` with `inset: -8px` turns it into a 30px
+target, and the chip looks exactly the same.
+
+## Gaps are dead zones
+
+The space between two targets belongs to neither. Move slowly down the left
+menu and the highlight drops out between items. A click there does nothing.
+
+<HitAreasGapDemo />
+
+On the right the items touch. The breathing room comes from padding inside
+each item, so every pixel of the menu does something.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- A 16px icon in a 32px button -->
+<button class="grid size-8 place-items-center" aria-label="Bold">
+  <svg class="size-4">...</svg>
+</button>
+
+<!-- A 14px button with a 30px target -->
+<button class="relative size-3.5 after:absolute after:-inset-2" aria-label="Remove">
+  <svg class="size-2.5">...</svg>
+</button>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.close {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+
+/* Invisible, but it takes the click */
+.close::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}`,
+    },
+  ]}
+/>
+
+Don't let an extended area spill onto a neighbor. Where two hit areas
+overlap, the one painted on top wins, and a click meant for one lands on the
+other.

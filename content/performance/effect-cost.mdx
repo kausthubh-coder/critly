@@ -1,0 +1,118 @@
+---
+title: Effect Cost
+description: Budget effects by how many, not how they look.
+section: Performance
+order: 10
+publishedAt: "2026-10-08"
+resources:
+  - url: https://web.dev/articles/stick-to-compositor-only-properties-and-manage-layer-count
+    title: Manage layer count
+    description: Why every promoted layer costs GPU memory and upload time.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
+    title: backdrop-filter
+    description: How the browser blurs what's behind an element, and what limits the area it can see.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/will-change
+    title: will-change
+    description: MDN on using will-change as a last resort, and only around an animation.
+  - url: https://web.dev/articles/rendering-performance
+    title: Rendering performance
+    description: The pixel pipeline, and which kinds of change cost layout, paint or only compositing.
+  - url: https://developer.chrome.com/docs/devtools/layers
+    title: Chrome DevTools Layers panel
+    description: Seeing how many layers a page creates and why each one exists.
+---
+
+A blur, a big shadow or a glass surface looks like a styling choice, but each
+one is work the browser repeats. A blur redraws every time anything behind it
+moves. A promoted layer holds GPU memory. And neither stops costing just
+because you can't see it.
+
+Hover the cards, then switch between the two versions. Each card has a
+small row of actions that appears on hover.
+
+<EffectCountDemo />
+
+With glass on every card, you only ever see one blur, but the page is
+paying for all of them: the hidden ones sit at opacity 0 and still blur the
+moving background on every frame. Budgeted, the actions use a plain dark
+backing and the only blur is the toolbar. On a fast laptop the frame time
+may barely move; on a phone, dozens of hidden blurs are the difference
+between smooth scrolling and stutter.
+
+**Budget expensive effects by how many are on the page, not by how one looks.
+Keep blur and heavy shadows to a few small floating surfaces, and remove them
+when they're hidden.**
+
+## Where the count comes from
+
+The usual cause isn't one ambitious design. It's a shared component. Glass
+added to the default button, or a layered shadow on the card component, is
+repeated by every list, grid and menu that uses it. In one real app, a glass
+icon button repeated on every poster put about 1,500 blurred elements on a
+single page.
+
+- **Count instances.** Run the quick check from
+  [Measuring Performance](/measuring-performance) in the console: how many
+  elements have a `backdrop-filter`? More than a handful is a red flag.
+- **Hidden counts.** Opacity 0, `visibility: hidden` and off-screen but
+  mounted elements still create layers. Apply the effect when the thing is
+  shown, not before.
+- **Per-item controls get a scrim.** A dark translucent backing reads just
+  as well over images and costs nothing to keep.
+
+## Other quiet costs
+
+- **Blur behind a modal.** When an overlay covers the page, turn off the
+  page's blurs; nobody can see them, and the modal's own blur now has to
+  sample them.
+- **Blur under an opaque fill.** Above about 90% opacity a blur is
+  invisible, but still paid for.
+- **Things moving inside glass.** Animating `width` or `left` of something
+  inside a blurred surface redraws the blur every frame. Move it with
+  `transform` on its own layer.
+- **Shadow stacks.** A three-layer shadow on one card is nothing; on
+  hundreds of items, or on glass, keep to one or two.
+- **`will-change` left on.** It promotes the element for as long as it's
+  set. Add it just before an animation and remove it after.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `/* Per-item controls: a scrim, not a blur. */
+.card-actions {
+  background: rgb(0 0 0 / 0.55);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
+/* Glass is a variant you opt into, never the default. */
+.button[data-variant="glass"] {
+  backdrop-filter: blur(12px) saturate(170%);
+}
+
+/* No page blurs while a modal covers them. */
+html:has(dialog:modal) .glass:not(dialog *) {
+  backdrop-filter: none;
+}`,
+    },
+    {
+      label: "React",
+      language: "tsx",
+      code: `// Only blur while the element is actually shown.
+<div
+  className="card-actions"
+  style={{ backdropFilter: open ? "blur(12px)" : "none" }}
+/>`,
+    },
+  ]}
+/>
+
+To see layers, open DevTools' Layers panel or turn on Rendering → Layer
+borders. To see the cost, record a trace while scrolling the busiest page on
+a real phone, then remove one effect at a time and record again. GPU cost
+doesn't show up under CPU throttling, so a laptop can't tell you this one.
+See [Liquid Glass](/liquid-glass) for where glass belongs at all.

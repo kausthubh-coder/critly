@@ -1,0 +1,101 @@
+---
+title: Icon Morph
+description: Blur, scale and fade between icons.
+section: Motion
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Jakub Krehel's list of small fixes, including animating icons with opacity, scale and blur.
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 practical animation tips
+    description: Emil Kowalski's short rules for interface motion, ending with using blur when nothing else works.
+  - url: https://motion.dev/docs/react-animate-presence
+    title: AnimatePresence
+    description: The Motion component that keeps an element around long enough to animate it out.
+  - url: https://motion.dev/docs/react-transitions#spring
+    title: Spring transitions
+    description: The duration and bounce options used in the recipe below.
+---
+
+When an icon changes state, like copy to check or play to pause, the default
+is a hard swap. One frame shows the old icon, the next frame shows the new
+one, and the eye registers a jump.
+
+**Don't swap icons. Blur, scale and fade between them.** Click either button.
+
+<IconMorphDemo />
+
+The old icon shrinks and goes out of focus while the new one grows and
+sharpens. Neither shape is crisp while they overlap, so it reads as one icon
+changing rather than two icons trading places. The whole move takes about
+300ms.
+
+## Tuning it
+
+Two numbers matter: how much blur, and how small the icons get. Switch to slow
+motion and drag the sliders.
+
+<IconMorphTuningDemo />
+
+At `0px` blur you see both icons at once, sharp and stacked on top of each
+other. At `4px` the overlap turns into a soft blend. A start scale of `0.25`
+gives the new icon somewhere to come from. At `1` it is a plain crossfade, and
+at `0` the icon grows out of a single point, which looks like an effect.
+
+Drive it with a spring that has no bounce. Icon swaps should snap into place,
+not wobble.
+
+## When the shapes are related
+
+A hamburger and a close icon are both made of lines, so you can move the
+lines instead of crossfading the icons. The top and bottom bars rotate into an
+X while the middle one shrinks away.
+
+<HamburgerMorphDemo />
+
+This only pays off when the shapes really are related. Turning a copy icon
+into a check would mean animating path data, and the blur crossfade gets you
+most of the effect for a fraction of the work.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "tsx",
+      icon: "tailwind",
+      code: `<button data-copied={copied} className="group grid size-10 place-items-center">
+  <CopyIcon className="col-start-1 row-start-1 transition-[opacity,scale,filter] duration-300 ease-out group-data-[copied=true]:scale-25 group-data-[copied=true]:opacity-0 group-data-[copied=true]:blur-xs" />
+  <CheckIcon className="col-start-1 row-start-1 scale-25 opacity-0 blur-xs transition-[opacity,scale,filter] duration-300 ease-out group-data-[copied=true]:scale-100 group-data-[copied=true]:opacity-100 group-data-[copied=true]:blur-none" />
+</button>`,
+    },
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { AnimatePresence, motion } from "motion/react";
+
+<span className="relative inline-flex">
+  <AnimatePresence mode="popLayout" initial={false}>
+    <motion.span
+      key={copied ? "check" : "copy"}
+      initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+      transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+    >
+      {copied ? <CheckIcon /> : <CopyIcon />}
+    </motion.span>
+  </AnimatePresence>
+</span>`,
+    },
+  ]}
+/>
+
+In the Motion version, `mode="popLayout"` takes the leaving icon out of the
+layout so the two overlap instead of stacking, which is why the wrapper is
+`relative`. `initial={false}` skips the animation on first render, when there
+is nothing to morph from. The copy buttons in this site's header use exactly
+this component.

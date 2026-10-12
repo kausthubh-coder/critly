@@ -1,0 +1,89 @@
+---
+title: Button Press
+description: Scale down on press so it feels real.
+section: Motion
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 practical animation tips
+    description: Emil Kowalski's short list of rules for interface motion, starting with a 0.97 scale on press.
+  - url: https://emilkowal.ski/ui/great-animations
+    title: Great animations
+    description: Why speed and purpose matter more than how much something moves.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/:active
+    title: The :active pseudo-class
+    description: When the browser considers an element pressed.
+  - url: https://web.dev/articles/animations-guide
+    title: Animations guide
+    description: Why transform and opacity are the cheapest properties to animate.
+---
+
+A real button moves when you push it. A button on screen can borrow that with
+one rule: **scale it down a little while it is pressed.** It tells you the
+click landed before anything else has happened.
+
+Press and hold both buttons.
+
+<ButtonPressDemo />
+
+The right one shrinks to `0.97` while your finger is down and comes back when
+you let go. On a 120px button that is less than 2px per edge. You feel it more
+than you see it, which is exactly what you want from press feedback. Every
+button on this site does this.
+
+## Finding the amount
+
+Two numbers matter: how far the button shrinks and how quickly it gets there.
+Drag the sliders and keep pressing.
+
+<PressAmountDemo />
+
+Around `0.97` the press feels physical. Below about `0.92` it turns into an
+effect, and you notice the animation instead of the click. Keep the duration
+near `100ms`. A quick click is over in about that long, so at 300ms the
+button is still shrinking when you let go and never seems to land.
+
+Scale runs on the compositor, so the press costs nothing, and the label and
+icon shrink with the button for free.
+
+## Not just buttons
+
+Anything you can press can do the same: cards, tiles, chips. Toggle the
+feedback and press the tiles.
+
+<PressEverywhereDemo />
+
+Larger surfaces want less. At `0.97` a 600px card pulls each edge in by 9px,
+which starts to look like a zoom. Try `0.98` or `0.99` on anything wider than
+a tile.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button class="transition-transform duration-100 ease-out active:scale-[0.97]">
+  Save changes
+</button>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.button {
+  transition: transform 100ms ease-out;
+}
+
+.button:active {
+  transform: scale(0.97);
+}`,
+    },
+  ]}
+/>
+
+Transition `transform` only, not `all`. A button usually changes color on
+hover too, and you don't want the press timing to leak into that.

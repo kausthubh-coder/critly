@@ -1,0 +1,101 @@
+---
+title: Living Charts
+description: Charts that flow instead of jump.
+section: Data
+order: 1
+publishedAt: "2026-07-15"
+resources:
+  - url: https://benji.org/liveline
+    title: Liveline
+    description: A React component for real-time line charts that eases toward every new value instead of jumping.
+  - url: https://motion.dev/docs/react-layout-animations
+    title: Layout animations in Motion
+    description: The layout prop the ranked list uses to slide rows into their new places.
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
+    title: requestAnimationFrame
+    description: The per-frame loop that drives the tween in the first demo.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+    title: prefers-reduced-motion
+    description: The media query for people who would rather the chart stepped than moved.
+---
+
+Live data arrives in steps. A server sends a number every second or so, and
+if the chart draws each one the moment it lands, the whole line jumps.
+
+A **living chart** never teleports. Each new value eases in over a few
+hundred milliseconds, so the chart moves the way the data feels like it
+should.
+
+<LivingChartsDemo />
+
+Both cards get the same value every 1.5 seconds. The left one redraws on
+the spot: every point hops one slot to the left and the counter flips to a
+new number. The right one spends `900ms` on the same change with an
+ease-out curve. The line slides left, the new point comes in from the
+right edge, and the dot and the counter ride up or down the new segment
+with it.
+
+**Animate the change, not the data.** The tween finishes well before the
+next value arrives, so at every update both cards agree.
+
+## The number is part of the chart
+
+A counter that flips from 620 to 790 reads as two separate facts. One that
+counts up reads as a change, which is what it is. Use `tabular-nums` so the
+digits don't shift sideways while they count.
+
+## Ranked lists
+
+When live values change order, the reorder is the interesting part. A
+snapped list swaps rows between frames, and you have to read the labels
+again to work out what moved.
+
+<LivingBarsDemo />
+
+With animation on, each row slides to its new place over `600ms` while its
+bar and number ease to the new value. You can follow a single source as it
+climbs or falls without reading anything.
+
+## Usage
+
+The hook eases a progress value from 0 to 1 every time a new point arrives.
+Everything else is derived from it.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { useEffect, useState } from "react";
+
+// Eases from 0 to 1 over \`duration\` ms every time \`key\` changes.
+export function useProgress(key: number, duration = 900) {
+  const [state, setState] = useState({ key, t: 1 });
+
+  useEffect(() => {
+    const start = performance.now();
+    let frame = 0;
+    const step = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      setState({ key, t: 1 - (1 - p) ** 3 }); // ease-out
+      if (p < 1) frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [key, duration]);
+
+  // A new key starts at 0 before the first frame runs.
+  return state.key === key ? state.t : 0;
+}
+
+// values keeps one extra point past the left edge, clipped away.
+const t = useProgress(tick);
+const x = (i: number) => (i - t) * slot;
+const head = previous + (latest - previous) * t;`,
+    },
+  ]}
+/>
+
+Keep the y axis fixed to a known range while data streams in, or the chart
+rescales on every update and undoes the calm. When `prefers-reduced-motion`
+is set, return 1 from the hook and the chart steps like the left card.

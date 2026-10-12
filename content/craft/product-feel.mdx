@@ -1,0 +1,95 @@
+---
+title: Product Feel
+description: Decide the feel before the numbers.
+section: Craft
+order: 6
+publishedAt: "2026-10-03"
+resources:
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: Emil Kowalski on letting purpose and frequency decide whether something animates at all.
+  - url: https://linear.app/now/how-we-redesigned-the-linear-ui
+    title: How we redesigned the Linear UI
+    description: Linear's team on testing everything from very condensed to spacious, and details you only feel after a few minutes.
+  - url: https://www.nngroup.com/articles/tone-of-voice-dimensions/
+    title: The Four Dimensions of Tone of Voice
+    description: NN/g's dials for writing tone, a useful model for naming the feel of the rest of the interface.
+  - url: https://benji.org/family-values
+    title: Family Values
+    description: Benji Taylor on simplicity, fluidity and delight as the principles behind Family, an intentionally expressive product.
+---
+
+Ask for a task app, a banking app and a habit tracker, and you often get the
+same app three times: 16px padding, 8px corners, a 200ms fade on everything.
+Each value is defensible. Together they don't feel like anything, because
+nobody decided what the product should feel like before picking them.
+
+AI agents make this worse. They usually know what the product does, but not
+how it should feel, so they reach for the average.
+
+**Decide how it should feel, then let that pick the numbers.**
+
+Same tasks, three feels. Tick a task, add one, then switch.
+
+<ProductFeelDemo />
+
+None of the three is wrong. What makes each one work is that every value in
+it came from the same decision, so they agree with each other.
+
+## Three dials
+
+Most of a feel comes down to three dials. Set them first and the values
+mostly follow.
+
+**Density: compact or comfortable.** The tool uses 32px rows and 8px of
+padding, the calm version 48px rows and 16px. Both come from the same
+[spacing scale](/spacing-scale). Density only decides which end of it you
+live at. Radius tends to follow: 6px reads precise, 16px reads soft.
+
+**Pace: instant or animated.** Frequency sets this one, as with
+[hover restraint](/hover-restraint). The tool answers in 150ms with a strong
+ease-out, calm takes 300ms on a gentler [easing](/easings), and playful uses
+a spring that overshoots.
+
+**Tone: quiet or expressive.** Weight, color and sound. Quiet means 400 and
+500, a neutral palette and silence. Expressive means 600, a saturated accent,
+pill shapes and a sound when you finish something. Even then, keep the
+loudest moments for the rare actions. That is the
+[novelty budget](/novelty-budget).
+
+## Archetypes
+
+**A tool people keep open all day**, like an issue tracker or a launcher:
+compact, instant, quiet. Emil Kowalski
+[uses Raycast](https://emilkowal.ski/ui/you-dont-need-animations) hundreds of
+times a day, and points out that it opens with no animation at all.
+
+**A calm app you visit a few times a day**, like a bank, a journal or a
+reader: comfortable, unhurried, quiet. Trust matters more than speed.
+
+**A playful app you choose to open**, like a habit tracker or a language
+course: comfortable, springy, expressive. Delight is part of the job.
+
+## Mismatch
+
+A bland app is forgettable. A mismatched one feels broken. Here is a dense
+table, the kind you scan fifty times a day, wearing the playful feel. Sort
+it, pick a few rows, then match it.
+
+<FeelMismatchDemo />
+
+Every animation in the mismatched version would be fine in a habit tracker.
+Here, each sort makes you wait about a second for numbers you wanted to read
+now.
+
+## Before you design
+
+Answer these first, and put them in the prompt if an agent is building it:
+
+- Who uses it, and are they experts or first-timers?
+- How often: all day, daily, or a few times a year?
+- In what state of mind: focused, rushed, relaxed, anxious?
+- What should it feel like, in three words?
+
+"A pro tool used all day: compact, instant, quiet" changes more values than
+any list of values would.
