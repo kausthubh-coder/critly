@@ -1,6 +1,6 @@
 ---
 name: critly
-description: 'Design engineering concepts from Critly (critly.vercel.app) for the details that make interfaces feel right and fast - typography, color, spacing and layout, interaction states, focus, forms, motion, sound, data, and web performance. Use when building, polishing or reviewing UI: buttons, hover/press/focus/disabled states, inputs and forms, menus, modals and drawers, empty and loading states, cards, borders, shadows, glass and blur, border radius, icons, numbers, tables, lists and feeds, charts, images, video, animations, springs, easings, transitions. Also use for performance work: slow pages, load times, laggy typing, janky or stuttering animation, slow navigation, heavy images or video, big lists, bundle size. Triggers include "make it feel better", "polish this", "something feels off", "review my UI", "make it faster", "why is this slow", "smooth this out", or questions about taste, whitespace, hierarchy, or design details.'
+description: 'Design engineering concepts from Critly (critly.vercel.app) for the details that make interfaces feel right and fast - typography, color, spacing and layout, interaction states, focus, forms, motion, sound, data, web performance, and native mobile apps (iOS and Android, React Native and Expo, SwiftUI, Jetpack Compose, Flutter). Use when building, polishing or reviewing UI: buttons, hover/press/focus/disabled states, inputs and forms, menus, modals and drawers, empty and loading states, cards, borders, shadows, glass and blur, border radius, icons, numbers, tables, lists and feeds, charts, images, video, animations, springs, easings, transitions. Also use for performance work: slow pages, load times, laggy typing, janky or stuttering animation, slow navigation, heavy images or video, big lists, bundle size. Also use when building or reviewing a native mobile app or screen: gestures (tap, double tap, long press, swipe, drag, pinch), swipe actions, context menus, bottom sheets, back navigation and tab bars, haptics, safe areas and notches, the soft keyboard, text size and Dynamic Type, app launch and splash screens, lists and pull to refresh, 120Hz smoothness, and what differs between iPhone and Android. Triggers include "make it feel better", "polish this", "something feels off", "review my UI", "make it faster", "why is this slow", "smooth this out", or questions about taste, whitespace, hierarchy, or design details.'
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
@@ -90,6 +90,12 @@ it runs a full top-down pass with these concepts.
 | Menus, modals, drawers, popovers | Overlays, Scale Entrances, Exit Animations, Focus Rings |
 | Forms and inputs | Input Details, Focus Rings, Microcopy |
 | Empty, loading and error states | Empty States, Performance Is Design, Real Content |
+| Any mobile app or screen (native, React Native, Flutter) | Native Feel, Thumb Reach, Touch Feedback, Safe Areas, Text Size, Hit Areas |
+| Mobile gestures: swipes, double tap, long press, drag | Gestures, Swipe Actions, Long Press, Momentum, UI Thread |
+| Mobile navigation, tabs, sheets, menus | Back Navigation, Bottom Sheets, Long Press, Thumb Reach |
+| Mobile forms, chat composers, search fields | Soft Keyboard, Input Details, Safe Areas |
+| Haptics, or anything that snaps, toggles or commits | Haptics, Touch Feedback |
+| Mobile app startup, splash, jank, scrolling smoothness | App Launch, UI Thread, Native Lists |
 
 ### Review mode: "review", "polish" or "what feels off" on a component or page
 
@@ -122,8 +128,10 @@ it runs a full top-down pass with these concepts.
 
 The code samples in the references use Tailwind v4 (`outline-hidden`,
 `shadow-(--var)`, `@theme`). Check the project's Tailwind version, and
-translate to plain CSS or v3 syntax when it differs. Only cite a concept that
-is in the index.
+translate to plain CSS or v3 syntax when it differs. Mobile concepts carry
+SwiftUI, Compose and React Native (Expo) tabs; use the one for the project's
+stack, and check its versions (Expo SDK, Reanimated, Gesture Handler, Material3)
+before copying an API. Only cite a concept that is in the index.
 
 ## Principles
 
@@ -244,6 +252,24 @@ is in the index.
 
 - **Living Charts**: Charts that flow instead of jump. ([reference](references/data.md#living-charts), [demo](https://critly.vercel.app/living-charts))
 - **Curve Smoothing**: Smooth lines that don't invent data. ([reference](references/data.md#curve-smoothing), [demo](https://critly.vercel.app/curve-smoothing))
+
+### Mobile
+
+- **Native Feel**: Follow the platform people already know. ([reference](references/mobile/native-feel.md), [demo](https://critly.vercel.app/native-feel))
+- **Thumb Reach**: Put frequent actions where the thumb rests. ([reference](references/mobile/thumb-reach.md), [demo](https://critly.vercel.app/thumb-reach))
+- **Touch Feedback**: Answer the finger on touch-down. ([reference](references/mobile/touch-feedback.md), [demo](https://critly.vercel.app/touch-feedback))
+- **Gestures**: Every gesture needs a visible twin. ([reference](references/mobile/gestures.md), [demo](https://critly.vercel.app/gestures))
+- **Swipe Actions**: Reveal on a short swipe, commit on a long one. ([reference](references/mobile/swipe-actions.md), [demo](https://critly.vercel.app/swipe-actions))
+- **Long Press**: Show the hold, then open the menu. ([reference](references/mobile/long-press.md), [demo](https://critly.vercel.app/long-press))
+- **Bottom Sheets**: Detents, a grabber, and a swipe down. ([reference](references/mobile/bottom-sheets.md), [demo](https://critly.vercel.app/bottom-sheets))
+- **Back Navigation**: Back follows the finger and can change its mind. ([reference](references/mobile/back-navigation.md), [demo](https://critly.vercel.app/back-navigation))
+- **Haptics**: Feel the moments the eye confirms. ([reference](references/mobile/haptics.md), [demo](https://critly.vercel.app/haptics))
+- **Safe Areas**: Paint to the edges, keep content inside. ([reference](references/mobile/safe-areas.md), [demo](https://critly.vercel.app/safe-areas))
+- **Soft Keyboard**: Keep the field and its button above the keys. ([reference](references/mobile/soft-keyboard.md), [demo](https://critly.vercel.app/soft-keyboard))
+- **Text Size**: Let text grow and layouts reflow. ([reference](references/mobile/text-size.md), [demo](https://critly.vercel.app/text-size))
+- **UI Thread**: Run gestures where the frames are drawn. ([reference](references/mobile/ui-thread.md), [demo](https://critly.vercel.app/ui-thread))
+- **App Launch**: Open on the content, not a logo. ([reference](references/mobile/app-launch.md), [demo](https://critly.vercel.app/app-launch))
+- **Native Lists**: Recycle rows, keep the scroll at full rate. ([reference](references/mobile/native-lists.md), [demo](https://critly.vercel.app/native-lists))
 <!-- concepts:end -->
 
 ## Keeping this skill current

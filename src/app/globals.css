@@ -352,6 +352,12 @@
   color: var(--shiki-dark);
 }
 
+/* Long API names (`presentationBackgroundInteraction(...)`) would push a
+   390px page sideways; let inline code break anywhere instead. */
+.shiki-inline {
+  overflow-wrap: anywhere;
+}
+
 .shiki {
   background: transparent !important;
 }

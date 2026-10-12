@@ -118,6 +118,7 @@ const concepts = defineCollection({
       "Performance",
       "Sound",
       "Data",
+      "Mobile",
       "Craft",
     ]),
     order: z.number().default(0),

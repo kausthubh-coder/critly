@@ -71,6 +71,21 @@ const LAUNCH_CONCEPT_SLUGS = new Set([
   "javascript-cost",
   "font-loading",
   "video-and-embeds",
+  "native-feel",
+  "thumb-reach",
+  "touch-feedback",
+  "gestures",
+  "swipe-actions",
+  "long-press",
+  "bottom-sheets",
+  "back-navigation",
+  "haptics",
+  "safe-areas",
+  "soft-keyboard",
+  "text-size",
+  "ui-thread",
+  "app-launch",
+  "native-lists",
 ]);
 
 /** True only for concepts that are live in production. */

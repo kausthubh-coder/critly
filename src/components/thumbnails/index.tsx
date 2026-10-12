@@ -7,6 +7,21 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 
 import { SectionIcon } from "@/components/app/section-icon";
+import { NativeListsThumbnail } from "@/components/thumbnails/mobile/native-lists";
+import { NativeFeelThumbnail } from "@/components/thumbnails/mobile/native-feel";
+import { ThumbReachThumbnail } from "@/components/thumbnails/mobile/thumb-reach";
+import { SafeAreasThumbnail } from "@/components/thumbnails/mobile/safe-areas";
+import { TouchFeedbackThumbnail } from "@/components/thumbnails/mobile/touch-feedback";
+import { GesturesThumbnail } from "@/components/thumbnails/mobile/gestures";
+import { LongPressThumbnail } from "@/components/thumbnails/mobile/long-press";
+import { SwipeActionsThumbnail } from "@/components/thumbnails/mobile/swipe-actions";
+import { BottomSheetsThumbnail } from "@/components/thumbnails/mobile/bottom-sheets";
+import { BackNavigationThumbnail } from "@/components/thumbnails/mobile/back-navigation";
+import { HapticsThumbnail } from "@/components/thumbnails/mobile/haptics";
+import { SoftKeyboardThumbnail } from "@/components/thumbnails/mobile/soft-keyboard";
+import { TextSizeThumbnail } from "@/components/thumbnails/mobile/text-size";
+import { UiThreadThumbnail } from "@/components/thumbnails/mobile/ui-thread";
+import { AppLaunchThumbnail } from "@/components/thumbnails/mobile/app-launch";
 import type { Section } from "@/lib/sections";
 
 // Static-by-default thumbnails; each plays its idea on card hover (the index
@@ -1754,6 +1769,21 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "javascript-cost": JavascriptCostThumbnail,
   "font-loading": FontLoadingThumbnail,
   "video-and-embeds": VideoAndEmbedsThumbnail,
+  "native-feel": NativeFeelThumbnail,
+  "thumb-reach": ThumbReachThumbnail,
+  "safe-areas": SafeAreasThumbnail,
+  "touch-feedback": TouchFeedbackThumbnail,
+  "gestures": GesturesThumbnail,
+  "long-press": LongPressThumbnail,
+  "swipe-actions": SwipeActionsThumbnail,
+  "bottom-sheets": BottomSheetsThumbnail,
+  "back-navigation": BackNavigationThumbnail,
+  "haptics": HapticsThumbnail,
+  "soft-keyboard": SoftKeyboardThumbnail,
+  "text-size": TextSizeThumbnail,
+  "ui-thread": UiThreadThumbnail,
+  "app-launch": AppLaunchThumbnail,
+  "native-lists": NativeListsThumbnail,
 };
 
 export function ConceptThumbnail({

@@ -1,0 +1,228 @@
+# Mobile
+
+## Back Navigation
+
+> Back follows the finger and can change its mind.
+
+- Section: Mobile
+- URL: https://critly.vercel.app/back-navigation
+- Published: 2026-10-12
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/mobile/back-navigation.mdx
+
+People use back constantly, often without looking. On both platforms it's interactive: the screen moves with the finger, shows
+where you're going, and lets you change your mind halfway. A swipe that
+fires a fixed animation once you pass a threshold can't do that.
+
+> **Interactive demo: Edge Swipe Back.** Open https://critly.vercel.app/back-navigation to try it.
+
+**Let back follow the finger the whole way, show the screen underneath, and
+decide on release, so people can change their mind.**
+
+### iPhone
+
+The pushed screen tracks the finger 1:1 while the screen below slides in
+more slowly from the left, under a dim that lifts as it arrives. The demo
+uses 30%. On release, project the swipe ([Momentum](https://critly.vercel.app/momentum)): a short
+fast flick pops, a slow drag that stops short springs back, and both
+continue at the finger's speed ([Springs](https://critly.vercel.app/springs)).
+
+Since iOS 7 the swipe starts at the leading edge
+(`interactivePopGestureRecognizer`). Since iOS 26 a second recognizer,
+`interactiveContentPopGestureRecognizer`, pops on a left-to-right pan
+anywhere in a pushed screen's content (switch the demo to Anywhere). Now every horizontal gesture in a pushed screen competes
+with back: carousels, chart scrubbers, sliders, leading
+[swipe actions](https://critly.vercel.app/swipe-actions). In UIKit, make the content pop wait for
+your recognizer with `require(toFail:)`. SwiftUI's `NavigationStack` gets the
+same behaviour, and I found no SwiftUI modifier to control it.
+
+Keep the Back button. Apple calls the edge swipe a shortcut for it, not a
+replacement.
+
+### Android: predictive back
+
+Android's back comes from either edge. Since Android 16, apps that target API
+36 get predictive back by default: `onBackPressed()` isn't called and
+`KEYCODE_BACK` isn't dispatched. Google Play has required API 36 for new apps
+and updates since 2026-08-31, so this is now every app.
+
+> **Interactive demo: Predictive Back.** Open https://critly.vercel.app/back-navigation to try it.
+
+The in-app preview, from Google's spec:
+
+- The screen shrinks from 100% to 90% and keeps 8dp from the screen edge.
+- It shifts with the finger by at most width ÷ 20 − 8dp sideways, and the
+  same fraction of the height vertically.
+- Progress runs through the `STANDARD_DECELERATE` curve, so most of the
+  motion happens early in the swipe.
+- In a full-screen transition, the outgoing screen has faded out by 35%
+  progress and the incoming one fades in from there.
+
+Navigation Compose 2.8 and later scrubs your `popEnterTransition` and
+`popExitTransition` with the gesture. `ModalBottomSheet`, the modal drawer
+and `SearchBar` have it built in. Use `PredictiveBackHandler` for custom
+surfaces. Enable a `BackHandler` only while there's something to dismiss,
+like unsaved edits or selection mode. An always-on handler traps people and
+breaks the preview of going home.
+
+### React Native and Flutter
+
+Use the native stack: `@react-navigation/native-stack` or Expo Router's
+`Stack`. They run on `UINavigationController` and Android fragments, so the
+real gesture comes free. `@react-navigation/stack` and
+`expo-router/js-stack` reimplement it in JavaScript and don't feel the same.
+On iOS, `fullScreenGestureEnabled` lets the swipe start anywhere on the
+screen.
+
+Flutter's default page transitions already do both: the predictive back
+builder on Android, the Cupertino edge swipe on iOS. A hand-rolled
+`PageRouteBuilder` slide loses both. Intercept back with `PopScope`, not the
+deprecated `WillPopScope`.
+
+### Tabs keep their place
+
+Back moves through a stack, and each tab has its own. Scroll the library,
+open an album, switch tabs and come back.
+
+> **Interactive demo: Tab State.** Open https://critly.vercel.app/back-navigation to try it.
+
+When the tab resets, you have to scroll and tap your way back. Keep each tab's stack and scroll position alive while it's hidden.
+Tapping the tab you're already on does something useful:
+
+- **iPhone**: UIKit returns to the tab's root on any tap, "even if the tab
+  was already selected". Scrolling to the top on a tap at the root is the
+  usual follow-up, though Apple doesn't document it. SwiftUI's `TabView`
+  doesn't promise either, so wire both yourself.
+- **Android**: Material says re-selecting the active destination should reset
+  its scroll to the top. Navigation Compose keeps each tab's stack with
+  `saveState` and `restoreState`.
+- **Expo Router native tabs** pop to the root and scroll to the top unless
+  you pass `disablePopToTop` or `disableScrollToTop`.
+
+The common bug is one `NavigationStack` wrapped around the whole `TabView`,
+which loses every tab's history on switch.
+
+### Usage
+
+**SwiftUI**
+
+```swift
+struct RootView: View {
+    @State private var tab: AppTab = .library
+    @State private var libraryPath = NavigationPath()
+
+    var body: some View {
+        TabView(selection: Binding(
+            get: { tab },
+            set: { tapped in
+                // Re-tap the current tab: back to its root.
+                if tapped == tab { libraryPath = NavigationPath() }
+                tab = tapped
+            })) {
+            Tab("Library", systemImage: "music.note.house.fill", value: .library) {
+                NavigationStack(path: $libraryPath) { LibraryView() } // one stack per tab
+            }
+            Tab(value: .search, role: .search) {
+                NavigationStack { SearchView() }
+            }
+        }
+    }
+}
+
+// UIKit, iOS 26+: let a horizontal scrubber win over the content back swipe.
+navigationController?.interactiveContentPopGestureRecognizer?
+    .require(toFail: scrubGesture)
+```
+
+**Compose**
+
+```kotlin
+// A custom pane that previews back like the M3 spec.
+var progress by remember { mutableFloatStateOf(0f) }
+var edge by remember { mutableIntStateOf(BackEventCompat.EDGE_LEFT) }
+
+PredictiveBackHandler(enabled = paneOpen) { events ->
+    try {
+        events.collect { e -> progress = e.progress; edge = e.swipeEdge }
+        paneOpen = false                       // released: commit
+    } catch (e: CancellationException) {
+        progress = 0f                          // slid back: cancel (animate it)
+        throw e
+    }
+}
+
+DetailPane(Modifier.graphicsLayer {
+    val s = lerp(1f, 0.9f, progress)           // 100% → 90%
+    scaleX = s; scaleY = s
+    val shift = size.width / 20f - 8.dp.toPx()
+    translationX = shift * progress * if (edge == BackEventCompat.EDGE_LEFT) 1f else -1f
+})
+
+// Only while there's something to lose.
+BackHandler(enabled = hasUnsavedChanges) { showDiscardDialog = true }
+```
+
+**React Native**
+
+```tsx
+// app/_layout.tsx: Expo Router's Stack is the native stack.
+import { Stack } from "expo-router";
+
+export default function Layout() {
+  return (
+    <Stack
+      screenOptions={{
+        fullScreenGestureEnabled: true, // iOS: swipe back from anywhere
+      }}
+    />
+  );
+}
+
+// app/editor.tsx: no swipe-back while there are unsaved edits.
+export default function Editor() {
+  const [dirty, setDirty] = useState(false);
+  return (
+    <>
+      <Stack.Screen options={{ gestureEnabled: !dirty }} />
+      <EditorForm onChange={() => setDirty(true)} />
+    </>
+  );
+}
+```
+
+**Flutter**
+
+```dart
+// The defaults, spelled out: predictive back on Android, edge swipe on iOS.
+MaterialApp(
+  theme: ThemeData(
+    pageTransitionsTheme: const PageTransitionsTheme(builders: {
+      TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    }),
+  ),
+  home: const LibraryPage(),
+);
+
+// Block back only while there's something to lose.
+PopScope(
+  canPop: !hasUnsavedChanges,
+  onPopInvokedWithResult: (didPop, result) {
+    if (!didPop) showDiscardDialog(context);
+  },
+  child: const EditorPage(),
+);
+```
+
+Never take back away except to protect unsaved work, and even then ask, don't
+block silently. Reduced motion doesn't remove the gesture: the screen still
+tracks the finger, because that motion is the person's own. Shorten the
+settle and drop any bounce, and replace the push animation for button taps
+with a quick fade.
+
+### Resources
+
+- [interactiveContentPopGestureRecognizer](https://developer.apple.com/documentation/uikit/uinavigationcontroller/interactivecontentpopgesturerecognizer): The iOS 26 recognizer that pops a pushed screen on a left-to-right pan anywhere in its content.
+- [Predictive back design guide](https://developer.android.com/design/ui/mobile/guides/patterns/predictive-back): Google's motion numbers for back previews, from the 90% scale and 8dp margin to the 35% cross-fade.
+- [Add support for the predictive back gesture](https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture): The Android timeline, PredictiveBackHandler in Compose, and why back callbacks shouldn't always be on.
+- [Native Stack Navigator](https://reactnavigation.org/docs/native-stack-navigator): The React Native stack built on UINavigationController and Fragment, with its gesture options.
+- [Predictive back in Flutter](https://docs.flutter.dev/platform-integration/android/predictive-back): Turning on predictive back in a Flutter app, and PopScope in place of the deprecated WillPopScope.

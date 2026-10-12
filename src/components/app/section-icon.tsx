@@ -5,6 +5,7 @@ import {
   ChartBarHorizontalIcon,
   CirclesThreeIcon,
   CursorClickIcon,
+  DeviceMobileIcon,
   LayoutIcon,
   LightningIcon,
   PenNibIcon,
@@ -24,6 +25,7 @@ const icons = {
   Performance: LightningIcon,
   Sound: SpeakerHighIcon,
   Data: ChartBarHorizontalIcon,
+  Mobile: DeviceMobileIcon,
   Craft: PenNibIcon,
 } as const;
 
@@ -39,6 +41,7 @@ export const sectionTextColor: Record<Section, string> = {
   Performance: "text-fuchsia-600 dark:text-fuchsia-400",
   Sound: "text-emerald-600 dark:text-emerald-400",
   Data: "text-cyan-600 dark:text-cyan-400",
+  Mobile: "text-indigo-600 dark:text-indigo-400",
   Craft: "text-orange-600 dark:text-orange-400",
 };
 
@@ -67,6 +70,8 @@ export const dotColorFrom: Record<DotColor, string> = {
   Sound:
     "[--dot-from:var(--color-emerald-500)] dark:[--dot-from:var(--color-emerald-400)]",
   Data: "[--dot-from:var(--color-cyan-500)] dark:[--dot-from:var(--color-cyan-400)]",
+  Mobile:
+    "[--dot-from:var(--color-indigo-500)] dark:[--dot-from:var(--color-indigo-400)]",
   Craft:
     "[--dot-from:var(--color-orange-500)] dark:[--dot-from:var(--color-orange-400)]",
 };
@@ -90,6 +95,8 @@ export const dotColorTo: Record<DotColor, string> = {
   Sound:
     "[--dot-to:var(--color-emerald-500)] dark:[--dot-to:var(--color-emerald-400)]",
   Data: "[--dot-to:var(--color-cyan-500)] dark:[--dot-to:var(--color-cyan-400)]",
+  Mobile:
+    "[--dot-to:var(--color-indigo-500)] dark:[--dot-to:var(--color-indigo-400)]",
   Craft:
     "[--dot-to:var(--color-orange-500)] dark:[--dot-to:var(--color-orange-400)]",
 };

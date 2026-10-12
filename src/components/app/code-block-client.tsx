@@ -43,6 +43,10 @@ const FILE_BY_LANGUAGE: Record<
   json: { name: "config.json", kind: "file" },
   markdown: { name: "README.md", kind: "file" },
   yaml: { name: "config.yml", kind: "file" },
+  swift: { name: "ContentView.swift", kind: "file" },
+  kotlin: { name: "MainScreen.kt", kind: "file" },
+  dart: { name: "main.dart", kind: "file" },
+  xml: { name: "AndroidManifest.xml", kind: "file" },
 };
 
 function getFile(tab: HighlightedCodeTab) {

@@ -538,3 +538,95 @@ export const WhitespaceDividersDemo = dynamic(() =>
 export const WhitespaceSquintDemo = dynamic(() =>
   import("@/components/demos/whitespace").then((m) => m.WhitespaceSquintDemo)
 );
+
+// Mobile
+export const NativeFeelDemo = dynamic(() =>
+  import("@/components/demos/native-feel").then((m) => m.NativeFeelDemo)
+);
+export const PlatformDialogDemo = dynamic(() =>
+  import("@/components/demos/native-feel").then((m) => m.PlatformDialogDemo)
+);
+export const ThumbReachDemo = dynamic(() =>
+  import("@/components/demos/thumb-reach").then((m) => m.ThumbReachDemo)
+);
+export const SafeAreaDemo = dynamic(() =>
+  import("@/components/demos/safe-areas").then((m) => m.SafeAreaDemo)
+);
+export const EdgeToEdgeDemo = dynamic(() =>
+  import("@/components/demos/safe-areas").then((m) => m.EdgeToEdgeDemo)
+);
+export const TouchDownDemo = dynamic(() =>
+  import("@/components/demos/touch-feedback").then((m) => m.TouchDownDemo)
+);
+export const ScrollCancelDemo = dynamic(() =>
+  import("@/components/demos/touch-feedback").then((m) => m.ScrollCancelDemo)
+);
+export const DoubleTapDelayDemo = dynamic(() =>
+  import("@/components/demos/gestures").then((m) => m.DoubleTapDelayDemo)
+);
+export const GestureTwinDemo = dynamic(() =>
+  import("@/components/demos/gestures").then((m) => m.GestureTwinDemo)
+);
+export const LongPressDemo = dynamic(() =>
+  import("@/components/demos/long-press").then((m) => m.LongPressDemo)
+);
+export const ContextMenuDemo = dynamic(() =>
+  import("@/components/demos/long-press").then((m) => m.ContextMenuDemo)
+);
+export const SwipeActionsDemo = dynamic(() =>
+  import("@/components/demos/swipe-actions").then((m) => m.SwipeActionsDemo)
+);
+export const SwipeThresholdDemo = dynamic(() =>
+  import("@/components/demos/swipe-actions").then((m) => m.SwipeThresholdDemo)
+);
+export const SheetDetentsDemo = dynamic(() =>
+  import("@/components/demos/bottom-sheets").then((m) => m.SheetDetentsDemo)
+);
+export const SheetScrollDemo = dynamic(() =>
+  import("@/components/demos/bottom-sheets").then((m) => m.SheetScrollDemo)
+);
+export const EdgeSwipeBackDemo = dynamic(() =>
+  import("@/components/demos/back-navigation").then((m) => m.EdgeSwipeBackDemo)
+);
+export const PredictiveBackDemo = dynamic(() =>
+  import("@/components/demos/back-navigation").then((m) => m.PredictiveBackDemo)
+);
+export const TabStateDemo = dynamic(() =>
+  import("@/components/demos/back-navigation").then((m) => m.TabStateDemo)
+);
+export const HapticPickerDemo = dynamic(() =>
+  import("@/components/demos/haptics").then((m) => m.HapticPickerDemo)
+);
+export const HapticVocabularyDemo = dynamic(() =>
+  import("@/components/demos/haptics").then((m) => m.HapticVocabularyDemo)
+);
+export const KeyboardAvoidDemo = dynamic(() =>
+  import("@/components/demos/soft-keyboard").then((m) => m.KeyboardAvoidDemo)
+);
+export const KeyboardDismissDemo = dynamic(() =>
+  import("@/components/demos/soft-keyboard").then((m) => m.KeyboardDismissDemo)
+);
+export const TextSizeDemo = dynamic(() =>
+  import("@/components/demos/text-size").then((m) => m.TextSizeDemo)
+);
+export const TextReflowDemo = dynamic(() =>
+  import("@/components/demos/text-size").then((m) => m.TextReflowDemo)
+);
+export const ThreadJankDemo = dynamic(() =>
+  import("@/components/demos/ui-thread").then((m) => m.ThreadJankDemo)
+);
+export const FrameBudgetDemo = dynamic(() =>
+  import("@/components/demos/ui-thread").then((m) => m.FrameBudgetDemo)
+);
+export const LaunchDemo = dynamic(() =>
+  import("@/components/demos/app-launch").then((m) => m.LaunchDemo)
+);
+export const LaunchScreenDemo = dynamic(() =>
+  import("@/components/demos/app-launch").then((m) => m.LaunchScreenDemo)
+);
+export const RecyclingDemo = dynamic(() =>
+  import("@/components/demos/native-lists").then((m) => m.RecyclingDemo)
+);
+export const PullToRefreshDemo = dynamic(() =>
+  import("@/components/demos/native-lists").then((m) => m.PullToRefreshDemo)
+);

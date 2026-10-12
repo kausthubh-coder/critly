@@ -1,0 +1,149 @@
+---
+title: Touch Feedback
+description: Answer the finger on touch-down.
+section: Mobile
+order: 3
+publishedAt: "2026-10-12"
+resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/buttons
+    title: "Apple HIG: Buttons"
+    description: Why every custom button needs a press state, and the 44 by 44pt hit region.
+  - url: https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/core/java/android/view/ViewConfiguration.java
+    title: ViewConfiguration.java (AOSP)
+    description: Android's tap timeout, touch slop and every other touch constant, in the source.
+  - url: https://developer.android.com/develop/ui/compose/touch-input/user-interactions/handling-interactions
+    title: Handling user interactions
+    description: How Compose reports a press, a release and a press cancelled by dragging off.
+  - url: https://developer.android.com/develop/ui/compose/touch-input/user-interactions/migrate-indication-ripple
+    title: Migrate to Indication and Ripple APIs
+    description: The current ripple(), RippleConfiguration and IndicationNodeFactory APIs.
+  - url: https://reactnative.dev/docs/pressable
+    title: Pressable
+    description: React Native's press handling, with android_ripple, pressRetentionOffset and press delay.
+---
+
+A finger covers the thing it touches, so the screen has to show that the touch
+landed. If a button changes only when the finger lifts, a quick tap gets its
+answer late and a slow press gets nothing at all. People press again, harder.
+
+Press and hold both buttons for a moment before you let go.
+
+<TouchDownDemo />
+
+The left button answers on release, so the longer you hold, the later the dot
+lands on its timeline. The right one lights up the moment you touch it and
+fires when you lift. Slide off it while holding and it lets go, so lifting
+there fires nothing.
+
+**Show the pressed state the moment the finger lands, and drop it the moment
+the touch turns into a scroll, a drag or a slide off.**
+
+## Inside a scroll view
+
+Every row in a list is a button, and every scroll starts with a finger landing
+on a row. If rows light up on touch-down, scrolling the list flashes whatever
+you started on, and naive code even opens it when you lift. Both platforms wait
+a moment first.
+
+- **Android** waits `TAP_TIMEOUT`, **100 ms**, before showing the pressed state
+  inside a scrolling parent. Compose's `clickable` does this for you when it
+  sits in a scrollable container. Once the finger moves past the touch slop,
+  **8dp**, the touch becomes a scroll and the press is cancelled.
+- **iOS** has `UIScrollView.delaysContentTouches` on by default. The scroll
+  view holds the touch-down on a short timer and passes it to the row only if
+  the finger hasn't moved. When the touch turns into a scroll, the scroll view
+  cancels the row's touch.
+- **React Native** `Pressable` has no documented press delay. Set
+  `unstable_pressDelay` on rows inside a list; when the `ScrollView` or
+  `FlashList` takes over the touch, the press ends without `onPress`.
+
+A quick tap still shows the press, briefly, when the finger lifts. Drag the
+list starting on a row, in both modes.
+
+<ScrollCancelDemo />
+
+In the instant version, rows light up as soon as you touch them and stay lit
+while you scroll, and the log fills with rows you never meant to open. The
+delayed version waits 100 ms and drops the press the moment you move.
+
+## What pressed looks like
+
+| | iPhone | Android |
+|---|---|---|
+| Pressed | The control dims or highlights. Liquid Glass controls flex and light up on their own. | A ripple spreads from the touch point over a state layer at **10%** of the content color. |
+| Hover | None on iPhone | None by touch. The **8%** hover layer is for a mouse or stylus. |
+| Cancel | Drag off, or the touch becomes a scroll | Same. Compose reports it as `PressInteraction.Cancel`. |
+
+Apple publishes no exact dim or scale amount for its buttons. The pressed
+state is the signal; a scale makes it feel physical, and
+[Button Press](/button-press) covers how much. Phones have no hover, so
+don't port hover styles from a web design; the pressed state does that job.
+Keep the target itself at least 44pt or 48dp, as
+[Hit Areas](/hit-areas) explains.
+
+## Usage
+
+Use the platform's button and its press state rather than a bare tap
+handler. A tap gesture on a plain view gets no press state, no cancel on
+scroll and no button role for screen readers. In Expo, that means `Pressable`
+(or Gesture Handler's drop-in `Pressable`), with `android_ripple` on Android
+and a pressed style on iOS.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "SwiftUI",
+      language: "swift",
+      code: `struct PressableStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .contentShape(.rect)
+            // isPressed turns on at touch-down, off on lift, drag-off or scroll
+            .opacity(configuration.isPressed ? 0.7 : 1)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .animation(.snappy(duration: 0.2), value: configuration.isPressed)
+    }
+}
+
+Button("Follow", action: follow)
+    .frame(minHeight: 44)
+    .buttonStyle(PressableStyle())`,
+    },
+    {
+      label: "Compose",
+      language: "kotlin",
+      code: `// MaterialTheme provides ripple() as the default indication.
+// clickable delays the press by TAP_TIMEOUT inside a scrolling list.
+Row(
+    Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(12.dp)) // clip first so the ripple follows the shape
+        .clickable(onClickLabel = "Open chat") { open(chat) }
+        .padding(16.dp)
+) { ChatRowContent(chat) }`,
+    },
+    {
+      label: "React Native",
+      language: "tsx",
+      code: `<Pressable
+  onPress={() => open(chat)}
+  android_ripple={{ color: "rgba(0,0,0,0.1)" }}
+  // Inside a list: wait about as long as Android does before showing the press
+  unstable_pressDelay={100}
+  // How far the finger may drift before the press lets go (this is the default)
+  pressRetentionOffset={{ top: 20, left: 20, right: 20, bottom: 30 }}
+  style={({ pressed }) => [
+    styles.row,
+    Platform.OS === "ios" && pressed && { backgroundColor: "rgba(0,0,0,0.06)" },
+  ]}
+>
+  <ChatRowContent chat={chat} />
+</Pressable>`,
+    },
+  ]}
+/>
+
+The pressed state is information, so keep it when Reduce Motion is on. Drop the
+scale and keep the color or opacity change, which doesn't move anything. Keep
+the press animation short, about 200 ms or less, and never make the action wait
+for it to finish.

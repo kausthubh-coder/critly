@@ -9,6 +9,7 @@ export const SECTIONS = [
   "Performance",
   "Sound",
   "Data",
+  "Mobile",
 ] as const;
 
 export type Section = (typeof SECTIONS)[number];
