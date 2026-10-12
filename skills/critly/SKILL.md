@@ -1,6 +1,6 @@
 ---
 name: critly
-description: 'Design engineering concepts from Critly (critly.vercel.app) for the details that make interfaces feel right and fast - typography, color, spacing and layout, interaction states, focus, forms, motion, sound, data, web performance, and native mobile apps (iOS and Android, React Native and Expo, SwiftUI, Jetpack Compose, Flutter). Use when building, polishing or reviewing UI: buttons, hover/press/focus/disabled states, inputs and forms, menus, modals and drawers, empty and loading states, cards, borders, shadows, glass and blur, border radius, icons, numbers, tables, lists and feeds, charts, images, video, animations, springs, easings, transitions. Also use for performance work: slow pages, load times, laggy typing, janky or stuttering animation, slow navigation, heavy images or video, big lists, bundle size. Also use when building or reviewing a native mobile app or screen: gestures (tap, double tap, long press, swipe, drag, pinch), swipe actions, context menus, bottom sheets, back navigation and tab bars, haptics, safe areas and notches, the soft keyboard, text size and Dynamic Type, app launch and splash screens, lists and pull to refresh, 120Hz smoothness, and what differs between iPhone and Android. Triggers include "make it feel better", "polish this", "something feels off", "review my UI", "make it faster", "why is this slow", "smooth this out", or questions about taste, whitespace, hierarchy, or design details.'
+description: 'Design engineering concepts from Critly (critly.vercel.app) for the details that make interfaces feel right and fast - typography, color, spacing and layout, interaction states, focus, forms, motion, sound, data, web performance, and native mobile apps (iOS and Android, React Native and Expo, SwiftUI, Jetpack Compose, Flutter). Use when building, polishing or reviewing UI: buttons, hover/press/focus/disabled states, inputs and forms, menus, modals and drawers, empty and loading states, cards, borders, shadows, glass and blur, border radius, icons, numbers, tables, lists and feeds, charts, images, video, animations, springs, easings, transitions. Also use for performance work: slow pages, load times, laggy typing, janky or stuttering animation, slow navigation, heavy images or video, big lists, bundle size. Also use when building or reviewing a native mobile app or screen: gestures (tap, double tap, long press, swipe, drag, pinch), swipe actions, context menus, bottom sheets, back navigation and tab bars, haptics, safe areas and notches, the soft keyboard, text size and Dynamic Type, app launch and splash screens, lists and pull to refresh, 120Hz smoothness, and what differs between iPhone and Android. Triggers include "make it feel better", "polish this", "something feels off", "review my UI", "make it faster", "why is this slow", "smooth this out", or questions about taste, whitespace, hierarchy, or design details. Also use for a taste pass: the squint test, counting boxes and edges, and checking a screen has one focal point.'
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
@@ -16,7 +16,10 @@ to do it. The live site pairs every concept with an interactive demo.
 Critly also has a check: `critly check <url>` loads the running app, measures
 what it renders, and fails when the interface breaks a concept, naming the
 value to use (https://critly.vercel.app/check). This skill tells you what good
-looks like; the check proves you did it.
+looks like; the check proves you did it. For what can't be measured as wrong,
+`critly taste <url>` runs a taste pass: it squints at each screen, counts its
+boxes and edges, finds what it leads with, and writes the images to look at
+(https://critly.vercel.app/taste-pass).
 
 `references/rules.md` lists every concept's rule in one line. It is short on
 purpose: read it whenever you start a new piece of work. Open the full
@@ -59,16 +62,23 @@ it runs a full top-down pass with these concepts.
      running app. Fix every error and every `review` finding until it exits 0.
      Exit 2 means it couldn't run: say so in one line; it is not a pass. Fix
      the interface, not the policy.
-   - Then screenshot each changed screen at 390 and 1440 wide, in light and
-     dark, and look at them. The check only rules out what it can measure;
-     states, hierarchy and spacing that reads wrong are yours to catch. Check
-     the states, not just the resting one.
+   - Then run the taste pass on every changed page: `npm run taste:ui` when
+     the project has it, otherwise `npx @kausthubh/critly taste <url>`. It
+     screenshots each page at 390 and 1440 and writes a squint image and an
+     overlay (boxes, edges, the lead) per screen. Open every image and answer
+     the three questions in **Taste pass** below. Its looks are not failures,
+     but fix each one or say in one line why the screen needs it.
+   - Screenshot what the taste pass doesn't open: dark mode, and the states
+     (hover, focus, open menus, errors, empty, loading). The check only rules
+     out what it can measure; hierarchy and spacing that read wrong are yours
+     to catch.
    - For anything that affects speed or smoothness, measure it as
      **Measuring Performance** describes and report before and after numbers.
    - If what you built differs from an approved mockup or design, say what
      changed and why before the user finds it.
-8. **End with evidence**, not a list of concepts: quote the check's last line,
-   say which screens you looked at, and name anything you couldn't check.
+8. **End with evidence**, not a list of concepts: quote the check's last line
+   and the taste pass's, say which screens you looked at and what leads on
+   each, and name anything you couldn't check.
    Never say tests or checks pass unless you ran them. If the project has no
    check yet, offer once to set it up (the `critly-audit` skill does it).
 
@@ -86,6 +96,7 @@ it runs a full top-down pass with these concepts.
 | Fonts or text rendering | Font Loading, Layout Shift, Type Scale |
 | A click, keystroke or route that waits on work or the network | Responsiveness, Instant Navigation, Performance Is Design |
 | "Slow", "laggy", "janky", load times, bundle size | Measuring Performance first, then JavaScript Cost and the matching rows |
+| A new screen, page or layout, or "something feels off" | Taste Pass, Visual Hierarchy, Whitespace, Alignment |
 | Hover effects and previews | Hover Restraint, Interaction States |
 | Menus, modals, drawers, popovers | Overlays, Scale Entrances, Exit Animations, Focus Rings |
 | Forms and inputs | Input Details, Focus Rings, Microcopy |
@@ -99,8 +110,10 @@ it runs a full top-down pass with these concepts.
 
 ### Review mode: "review", "polish" or "what feels off" on a component or page
 
-1. Read the code (and screenshots, if you can take them) with
-   `references/rules.md` and the index open.
+1. Start with the taste pass when the page runs (`npx @kausthubh/critly
+   taste <url>`, or paste `taste.js` into your browser tool, see below). Its
+   looks are the composition rows of the review. Then read the code (and
+   screenshots) with `references/rules.md` and the index open.
    Check every state, not just the resting one: hover, pressed, focus,
    disabled, loading, empty, error, light and dark, narrow and wide. Read
    only the reference sections for concepts the code actually touches.
@@ -126,6 +139,32 @@ it runs a full top-down pass with these concepts.
 5. End with one line offering to apply the fixes. Don't apply them unless
    asked.
 
+### Taste pass
+
+Three looks for what no rule can fail. Do them on every screen you build or
+review, in this order, before the details:
+
+1. **Squint.** Blur the screen until body text is unreadable (6px). Do the
+   groups still read as groups? Is the darkest or most colorful shape the
+   thing that matters?
+2. **Count the boxes and edges.** Every border, ring, shadow and tinted
+   background is an edge. A box in a box in a box, two edges a few px apart,
+   or a bordered box inside a bordered box: group with space and one
+   background tone instead (Whitespace, Shadows, Not Borders). Count where
+   things start; line up near misses (Alignment).
+3. **Find the one thing.** Say in a few words what the screen is for, then
+   check that it leads. If two things weigh the same, quiet one; one solid
+   button per area (Visual Hierarchy).
+
+`critly taste <url>` measures all three on the first screen at 390 and 1440
+and writes `.critly/taste/<page>-<width>.squint.png` and `.taste.png`. Its
+last line is the one to quote. In a browser tool, paste
+`../critly-audit/scripts/taste.js`, then `await window.__critlyTaste()` for the
+report, `window.__critlyTaste.overlay(report)` to mark the page, and
+`window.__critlyTaste.squint(true)` before your own screenshot. It can find the
+heaviest shape, not whether it's the right one: that call is yours, against the
+feel you wrote down in step 2. Read **Taste Pass** for the reasoning.
+
 The code samples in the references use Tailwind v4 (`outline-hidden`,
 `shadow-(--var)`, `@theme`). Check the project's Tailwind version, and
 translate to plain CSS or v3 syntax when it differs. Mobile concepts carry
@@ -141,6 +180,8 @@ before copying an API. Only cite a concept that is in the index.
   scale, the same radius ratios, and one shadow recipe across the product.
 - Space and tone before decoration. Group with whitespace before borders, and
   quiet secondary content before making the primary thing louder.
+- Squint before you ship. If the blurred screen doesn't lead with the thing it
+  is for, no detail will save it.
 - Motion has to earn its place. Frequent, intentional interactions should be
   instant; rare or spatial ones can animate. Reduce motion, don't remove meaning.
 - Every control has more than one face. Design hover, pressed, focus,
@@ -157,6 +198,7 @@ before copying an API. Only cite a concept that is in the index.
 - **How to Get References**: Great work starts with great inputs. ([reference](references/craft.md#how-to-get-references), [demo](https://critly.vercel.app/how-to-get-references))
 - **Novelty Budget**: Save delight for the rare moments. ([reference](references/craft.md#novelty-budget), [demo](https://critly.vercel.app/novelty-budget))
 - **Taste Is Trained**: Taste is a skill, and it takes reps. ([reference](references/craft.md#taste-is-trained), [demo](https://critly.vercel.app/taste-is-trained))
+- **Taste Pass**: Squint, count the boxes, find the one thing. ([reference](references/craft.md#taste-pass), [demo](https://critly.vercel.app/taste-pass))
 - **Timelessness**: Surface ages fast. Structure doesn't. ([reference](references/craft.md#timelessness), [demo](https://critly.vercel.app/timelessness))
 - **Product Feel**: Decide the feel before the numbers. ([reference](references/craft.md#product-feel), [demo](https://critly.vercel.app/product-feel))
 - **Design Tokens**: Name the role, not the value. ([reference](references/craft.md#design-tokens), [demo](https://critly.vercel.app/design-tokens))

@@ -1,6 +1,6 @@
 ---
 name: critly-audit
-description: 'Audit the design of an existing app or website and optionally fix it, using the Critly design engineering concepts. Works from a running URL (localhost or deployed), the codebase, or both. Use when the user runs /audit, says "audit my app", "audit the design", "what is wrong with this UI", "fix the design", "make this app look and feel better", or hands over a localhost link and asks to improve the design. Checks the system (type scale, spacing, color roles, tokens, dark mode), composition (alignment, whitespace, hierarchy, density, responsive, layout shift), and details (states, focus, hit areas, inputs, overlays, motion, copy, feedback), and times the main actions for performance (load, navigation, typing, scrolling). Also use when the user asks to audit speed, "why is my app slow", or "make the whole app faster", and to set up the Critly check (critly check, lint:ui, .critly/policy.json) in a project.'
+description: 'Audit the design of an existing app or website and optionally fix it, using the Critly design engineering concepts. Works from a running URL (localhost or deployed), the codebase, or both. Use when the user runs /audit, says "audit my app", "audit the design", "what is wrong with this UI", "fix the design", "make this app look and feel better", or hands over a localhost link and asks to improve the design. Checks the system (type scale, spacing, color roles, tokens, dark mode), composition (a taste pass: the squint test, boxes and edges, one focal point; alignment, whitespace, hierarchy, density, responsive, layout shift), and details (states, focus, hit areas, inputs, overlays, motion, copy, feedback), and times the main actions for performance (load, navigation, typing, scrolling). Also use when the user asks to audit speed, "why is my app slow", or "make the whole app faster", and to set up the Critly check (critly check, lint:ui, .critly/policy.json) in a project.'
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
@@ -80,11 +80,28 @@ Then compare the inventory against the concepts:
 
 ## 4. Composition pass
 
-For each screen, at 1280px and 390px, in light and dark:
+Start with the taste pass on every screen you named: squint, count the boxes
+and edges, find the one thing (read **Taste Pass** in the references).
 
-- **Alignment**: count the distinct left edges. Is text aligned to text?
-- **Whitespace and hierarchy**: do groups read without the borders? Is there
-  one clear focal point, or is everything bold?
+- `npx @kausthubh/critly taste <url>` reads `pages` and `viewports` from the
+  policy. It writes a squint image and an overlay per screen to
+  `.critly/taste/` and lists its looks: nothing leads, solid buttons
+  competing, everything bold, boxes nested three deep, doubled or nested
+  borders, near-miss edges. Open every image. In a browser tool, paste
+  `scripts/taste.js`, run `await window.__critlyTaste()`, then
+  `window.__critlyTaste.overlay(report)` and take a screenshot.
+- Write down what each screen leads with, and whether that's what the intent
+  from step 2 says it should lead with. That line goes in the report.
+- Each look becomes a Composition finding unless the screen has a reason for
+  it; if so, give the reason. Put the counts (boxes, depth, left edges, lead
+  ratio) in **Before**, so the fix can show them going down.
+
+Then, for each screen, at 1280px and 390px, in light and dark:
+
+- **Alignment**: is text aligned to text, beyond the near misses the taste
+  pass found?
+- **Whitespace and hierarchy**: do groups read without the borders? Does the
+  lead hold in dark mode and at 390?
 - **Density**: does it match the intent from step 2?
 - **Line length** of any running text.
 - **Responsive**: does the layout change at narrow widths, or just shrink?
@@ -145,6 +162,7 @@ Write the report in this order and keep it scannable.
    | Area | Grade | Why |
    | --- | --- | --- |
    | System | Needs work | 11 font sizes, 23 spacing values, 3 radii on cards |
+   | Composition | Needs work | Settings: nothing leads (1.1×), boxes 3 deep, 9 left edges |
 
    Use the areas System, Composition, Interaction, Motion, Performance and
    Content, with
@@ -194,7 +212,8 @@ When applying:
 - Finish with a short before and after table: what changed, where, and the
   concept. If you ran the inventory before, run it again and show the change
   in distinct values (for example, font sizes 11 to 6). Quote the check's
-  last line before and after.
+  last line before and after, and run the taste pass again: show boxes, depth,
+  left edges and the lead ratio before and after for each screen you changed.
 
 ## 9. Set up the check
 
@@ -206,14 +225,16 @@ https://critly.vercel.app/setup.md step by step. In short:
 2. Write `.critly/policy.json` from the app's tokens and the inventory: fonts,
    type scale, how dark mode switches, the pages to check. Show it to the user
    and get their OK before going on.
-3. Add `"lint:ui": "critly check <dev server URL>"` to `package.json`.
+3. Add `"lint:ui": "critly check <dev server URL>"` and
+   `"taste:ui": "critly taste <dev server URL>"` to `package.json`, and add
+   `.critly/taste/` to `.gitignore` (every run rewrites the images).
 4. Add these two lines to AGENTS.md (and `@AGENTS.md` to a CLAUDE.md that
    doesn't import it). AGENTS.md is in context for every task and survives
    compaction; this skill isn't and doesn't.
 
    ```markdown
    - UI work: use the `critly` skill. Read `.critly/policy.json` before choosing spacing, type or color, use only its values, and never edit it to pass.
-   - After any UI change, run `npm run lint:ui` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then screenshot each changed screen at 390 and 1440 and look at it before saying it's done.
+   - After any UI change, run `npm run lint:ui` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then run `npm run taste:ui`, open the squint and overlay images for each changed screen, and fix each look or say why the screen needs it before saying it's done.
    ```
 5. Run it once. With many findings, ask whether to fix them now or record a
    baseline (`--update-baseline`, then `--baseline` in the script).

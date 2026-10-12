@@ -31,7 +31,7 @@ const SKILLS = [
   {
     name: "critly",
     detail:
-      "Build and review. Picks the concepts that match the work, applies their exact values, and reviews with a table: what it was, what it should be, and the concept behind each change.",
+      "Build and review. Picks the concepts that match the work, applies their exact values, runs a taste pass on every screen it touches, and reviews with a table: what it was, what it should be, and the concept behind each change.",
     ask: "Review the settings page with critly.",
   },
   {
@@ -43,7 +43,7 @@ const SKILLS = [
 ];
 
 const AGENTS_LINES = `- UI work: use the \`critly\` skill. Read \`.critly/policy.json\` before choosing spacing, type or color, use only its values, and never edit it to pass.
-- After any UI change, run \`npm run lint:ui\` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then screenshot each changed screen at 390 and 1440 and look at it before saying it's done.`;
+- After any UI change, run \`npm run lint:ui\` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then run \`npm run taste:ui\`, open the squint and overlay images for each changed screen, and fix each look or say why the screen needs it before saying it's done.`;
 
 export default function SkillsPage() {
   return (

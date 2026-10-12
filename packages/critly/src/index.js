@@ -1,17 +1,20 @@
 // critly check, as a library: load each page at each viewport and color scheme in a
-// deterministic browser, run check.js in it, and return one report.
+// deterministic browser, run check.js in it, and return one report. critly taste shares the
+// browser setup and runs taste.js on the first screen of each page instead.
 
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, join, relative, sep } from 'node:path';
 import { launchBrowser } from './browser.js';
 import { CritlyError, RULES, loadPolicy, validatePolicy, policySelectors } from './policy.js';
 
 export { CritlyError, RULES, RULE_IDS, loadPolicy, validatePolicy, DEFAULT_POLICY_PATH } from './policy.js';
-export { formatText, summaryLine } from './format.js';
+export { formatText, summaryLine, formatTaste, tasteSummaryLine } from './format.js';
 export { launchBrowser } from './browser.js';
 
 export const CHECK_SOURCE = await readFile(new URL('./check.js', import.meta.url), 'utf8');
+export const TASTE_SOURCE = await readFile(new URL('./taste.js', import.meta.url), 'utf8');
+export const DEFAULT_TASTE_DIR = '.critly/taste';
 export const VERSION = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
 export const DEFAULT_BASELINE_PATH = '.critly/baseline.json';
 const TIMEOUT = 30_000;
@@ -85,31 +88,43 @@ async function focusPass(page, policy, context) {
   return out;
 }
 
-async function checkOne(browser, policy, viewport, schemeName, urls, options) {
-  const scheme = policy.schemes[schemeName];
-  const vp = `${viewport.width}x${viewport.height}`;
+// A deterministic browser: scale factor 1, en-US, UTC, reduced motion on.
+async function newContext(browser, viewport, schemeName, scheme) {
   const context = await browser.newContext({
     viewport, deviceScaleFactor: 1, locale: 'en-US', timezoneId: 'UTC', reducedMotion: 'reduce',
     colorScheme: schemeName === 'dark' ? 'dark' : 'light',
   });
+  if (scheme.storage) await context.addInitScript(([k, v]) => { try { localStorage.setItem(k, v); } catch { /* storage blocked */ } }, scheme.storage);
+  return context;
+}
+
+// Loads one page in the scheme, waits for the ready selector, and explains anything that stops it.
+async function openPage(context, url, policy, schemeName, options) {
+  const page = await context.newPage();
+  page.setDefaultTimeout(TIMEOUT);
+  let response;
+  try { response = await page.goto(url, { waitUntil: 'load', timeout: TIMEOUT }); }
+  catch (error) { throw new CritlyError(navigationError(error, url)); }
+  const status = response?.status() ?? 200;
+  if (status === 404) throw new CritlyError(`Page not found (HTTP 404): ${url}. Check the URL${policy.pages ? ' and "pages" in the policy' : ''}.`);
+  if (status >= 400) throw new CritlyError(`${url} returned HTTP ${status}. Fix the server error, then run it again.`);
+  await applyScheme(page, schemeName, policy.schemes);
+  const ready = options.ready ?? policy.ready;
+  if (ready) {
+    try { await page.locator(ready).first().waitFor({ state: 'visible', timeout: TIMEOUT }); }
+    catch { throw new CritlyError(`Waited ${TIMEOUT / 1000}s for the ready selector ${JSON.stringify(ready)} on ${url}, and it never showed up.`); }
+  }
+  return page;
+}
+
+async function checkOne(browser, policy, viewport, schemeName, urls, options) {
+  const scheme = policy.schemes[schemeName];
+  const vp = `${viewport.width}x${viewport.height}`;
+  const context = await newContext(browser, viewport, schemeName, scheme);
   const results = [];
   try {
-    if (scheme.storage) await context.addInitScript(([k, v]) => { try { localStorage.setItem(k, v); } catch { /* storage blocked */ } }, scheme.storage);
     for (const url of urls) {
-      const page = await context.newPage();
-      page.setDefaultTimeout(TIMEOUT);
-      let response;
-      try { response = await page.goto(url, { waitUntil: 'load', timeout: TIMEOUT }); }
-      catch (error) { throw new CritlyError(navigationError(error, url)); }
-      const status = response?.status() ?? 200;
-      if (status === 404) throw new CritlyError(`Page not found (HTTP 404): ${url}. Check the URL${policy.pages ? ' and "pages" in the policy' : ''}.`);
-      if (status >= 400) throw new CritlyError(`${url} returned HTTP ${status}. Fix the server error, then run the check again.`);
-      await applyScheme(page, schemeName, policy.schemes);
-      const ready = options.ready ?? policy.ready;
-      if (ready) {
-        try { await page.locator(ready).first().waitFor({ state: 'visible', timeout: TIMEOUT }); }
-        catch { throw new CritlyError(`Waited ${TIMEOUT / 1000}s for the ready selector ${JSON.stringify(ready)} on ${url}, and it never showed up.`); }
-      }
+      const page = await openPage(context, url, policy, schemeName, options);
       const context_ = { viewport: vp, scheme: schemeName };
       const result = await runOnPage(page, policy, context_);
       if (policy.rules['focus-ring'] === 'error') {
@@ -219,6 +234,79 @@ export async function writeBaseline(report, path = DEFAULT_BASELINE_PATH, { cwd 
   report.baseline = { path, written: true, counts };
   report.exitCode = 0;
   return file;
+}
+
+// ---------- taste ----------
+
+// "/settings/billing" -> "settings-billing", "/" -> "home". The host joins in when the pages come
+// from more than one origin.
+function fileStem(url, many) {
+  const u = new URL(url);
+  const path = (u.pathname.replace(/\.html?$/, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'home').toLowerCase();
+  return many ? `${u.hostname}-${u.port}-${path}`.replace(/[^a-z0-9]+/gi, '-').replace(/-+/g, '-') : path;
+}
+const fromDataUrl = url => Buffer.from(url.slice(url.indexOf(',') + 1), 'base64');
+
+/**
+ * The taste pass: for each page at each viewport, squint at the first screen, count its boxes
+ * and edges, and find what it leads with. Writes a squint image and an overlay image per screen
+ * and returns what to look at. It never fails a page; exitCode is 0 unless it can't run.
+ * options: { policy (object) | policyPath, ready, cwd, out, blur, scheme, browser }
+ */
+export async function taste(urls, options = {}) {
+  const cwd = options.cwd ?? process.cwd();
+  let policy, policyPath = null;
+  if (options.policy) policy = validatePolicy(options.policy);
+  else ({ policy, path: policyPath } = await loadPolicy(options.policyPath, { cwd }));
+  const pages = resolvePages(urls, policy.pages);
+  const schemeName = options.scheme ?? Object.keys(policy.schemes)[0];
+  if (!policy.schemes[schemeName]) throw new CritlyError(`No scheme named "${schemeName}". The policy has ${Object.keys(policy.schemes).join(', ')}.`);
+  const blur = options.blur ?? 6;
+  if (!(blur >= 1 && blur <= 40)) throw new CritlyError('--blur takes a radius in px from 1 to 40.');
+  const outDir = resolve(cwd, options.out ?? DEFAULT_TASTE_DIR);
+  const rel = file => relative(cwd, file).split(sep).join('/') || '.';
+  const many = new Set(pages.map(p => new URL(p).origin)).size > 1;
+  const browser = options.browser ?? await launchBrowser({ cwd });
+  const started = Date.now();
+  try {
+    await mkdir(outDir, { recursive: true });
+    const run = async viewport => {
+      const context = await newContext(browser, viewport, schemeName, policy.schemes[schemeName]);
+      const out = [];
+      try {
+        for (const url of pages) {
+          const page = await openPage(context, url, policy, schemeName, options);
+          try {
+            await page.evaluate(() => document.fonts?.ready);
+            await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+            const shot = `data:image/png;base64,${(await page.screenshot({ type: 'png' })).toString('base64')}`;
+            await page.evaluate(TASTE_SOURCE);
+            const r = await page.evaluate(o => window.__critlyTaste(o), { screenshot: shot, blur, ignore: policy.ignore });
+            const stem = `${fileStem(url, many)}-${viewport.width}`;
+            const squintFile = join(outDir, `${stem}.squint.png`), overlayFile = join(outDir, `${stem}.taste.png`);
+            await writeFile(squintFile, fromDataUrl(r.squint.image));
+            await page.evaluate(report => { window.__critlyTaste.overlay(report); }, r);
+            await writeFile(overlayFile, await page.screenshot({ type: 'png' }));
+            const { _draw, ...rest } = r;
+            delete rest.squint.image;
+            out.push({ page: url, viewport: `${viewport.width}x${viewport.height}`, files: { squint: rel(squintFile), overlay: rel(overlayFile) }, ...rest });
+          } catch (error) { throw error instanceof CritlyError ? error : browserError(error); }
+          finally { await page.close(); }
+        }
+      } finally { await context.close(); }
+      return out;
+    };
+    const order = new Map(pages.map((p, i) => [p, i]));
+    const results = (await Promise.all(policy.viewports.map(run))).flat().sort((a, b) => order.get(a.page) - order.get(b.page));
+    return {
+      tool: '@kausthubh/critly', version: VERSION, kind: 'taste', policy: policyPath, pages,
+      viewports: policy.viewports.map(v => `${v.width}x${v.height}`), scheme: schemeName, blur, out: rel(outDir),
+      results, totals: { looks: results.reduce((n, r) => n + r.looks.length, 0) },
+      ms: Date.now() - started, exitCode: 0,
+    };
+  } finally {
+    if (!options.browser) await browser.close().catch(() => {});
+  }
 }
 
 export { RULES as rules };

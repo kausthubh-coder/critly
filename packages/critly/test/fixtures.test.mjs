@@ -18,7 +18,8 @@ export const POLICY = {
 };
 const ALL_RUNS = ['390x844 light', '390x844 dark', '1440x900 light', '1440x900 dark'];
 
-const dirs = (await readdir(FIXTURES, { withFileTypes: true })).filter(d => d.isDirectory()).map(d => d.name).sort();
+// Folders starting with _ hold pages for other tests (taste), not rule fixtures.
+const dirs = (await readdir(FIXTURES, { withFileTypes: true })).filter(d => d.isDirectory() && !d.name.startsWith('_')).map(d => d.name).sort();
 const files = [];
 for (const rule of dirs) {
   for (const name of (await readdir(join(FIXTURES, rule))).filter(n => n.endsWith('.html')).sort()) {

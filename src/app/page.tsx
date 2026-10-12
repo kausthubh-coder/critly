@@ -5,7 +5,7 @@ import { CodeBlock } from "@/components/app/code-block";
 import { ConceptCard } from "@/components/app/concept-card";
 import { RepoCard } from "@/components/app/repo-card";
 import { SectionIcon } from "@/components/app/section-icon";
-import { CHECK_RUN, DEFAULT_RULES, SKILLS_INSTALL } from "@/lib/check";
+import { CHECK_RUN, DEFAULT_RULES, SKILLS_INSTALL, TASTE_RUN } from "@/lib/check";
 import { isConceptAvailable } from "@/lib/concepts";
 import { groupBySection } from "@/lib/sections";
 
@@ -37,7 +37,7 @@ export default function IndexPage() {
     {
       href: "/check",
       name: "Check",
-      detail: `Lints the running app against ${DEFAULT_RULES.length} rules. Every finding names the fix and the concept behind it.`,
+      detail: `Lints the running app against ${DEFAULT_RULES.length} rules, and runs a taste pass for what no rule can fail. Every finding names the fix and the concept behind it.`,
     },
   ];
 
@@ -84,6 +84,7 @@ export default function IndexPage() {
         tabs={[
           { label: "Skills", language: "bash", code: SKILLS_INSTALL },
           { label: "Check", language: "bash", code: CHECK_RUN },
+          { label: "Taste", language: "bash", code: TASTE_RUN },
         ]}
       />
       <p className="mt-3 text-base text-muted-foreground">

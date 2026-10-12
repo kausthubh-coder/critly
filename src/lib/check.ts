@@ -36,6 +36,7 @@ export const SKILLS_INSTALL = "npx skills add kausthubh-coder/critly -g";
 // the command it installs is still `critly`.
 export const CHECK_PACKAGE = "@kausthubh/critly";
 export const CHECK_RUN = `npx ${CHECK_PACKAGE} check http://localhost:3000`;
+export const TASTE_RUN = `npx ${CHECK_PACKAGE} taste http://localhost:3000`;
 export const CHECK_INSTALL = `npm i -D ${CHECK_PACKAGE}`;
 export const SETUP_URL = `${SITE_URL}/setup.md`;
 export const SETUP_PROMPT = `Read ${SETUP_URL} and set up the Critly check in this project.`;

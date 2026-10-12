@@ -43,3 +43,6 @@ next-env.d.ts
 # content-collections
 .content-collections
 video/out
+
+# critly taste images (rewritten every run)
+.critly/taste/

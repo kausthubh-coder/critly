@@ -490,6 +490,9 @@ export const PairJudgementDemo = dynamic(() =>
 export const SpotTheDifferenceDemo = dynamic(() =>
   import("@/components/demos/taste").then((m) => m.SpotTheDifferenceDemo)
 );
+export const TastePassDemo = dynamic(() =>
+  import("@/components/demos/taste-pass").then((m) => m.TastePassDemo)
+);
 export const TextBalanceDemo = dynamic(() =>
   import("@/components/demos/text-wrapping").then((m) => m.TextBalanceDemo)
 );

@@ -8,6 +8,7 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 - **How to Get References**: Collect references from outside your field, and borrow how they work, not how they look. ([full](craft.md#how-to-get-references))
 - **Novelty Budget**: The rarer the moment, the more expressive it can be. ([full](craft.md#novelty-budget))
 - **Taste Is Trained**: Taste is a skill, and it takes reps. ([full](craft.md#taste-is-trained))
+- **Taste Pass**: Before you call a screen done, squint at it, count its boxes and edges, and find the one thing it leads with. ([full](craft.md#taste-pass))
 - **Timelessness**: Surface ages fast. Structure ages slowly. ([full](craft.md#timelessness))
 - **Product Feel**: Decide how it should feel, then let that pick the numbers. ([full](craft.md#product-feel))
 - **Design Tokens**: Name the role, not the value, and let components use only the names. ([full](craft.md#design-tokens))

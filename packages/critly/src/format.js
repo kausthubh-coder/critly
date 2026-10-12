@@ -1,6 +1,6 @@
 // Plain-text output. Agents quote the last line, so the last line is the summary.
 
-const plural = (n, word) => `${n.toLocaleString('en-US')} ${word}${n === 1 ? '' : 's'}`;
+const plural = (n, word, many = `${word}s`) => `${n.toLocaleString('en-US')} ${n === 1 ? word : many}`;
 
 function runsLabel(runs, report) {
   const vps = [...new Set(runs.map(r => r.split(' ')[0]))], schemes = [...new Set(runs.map(r => r.split(' ')[1]))];
@@ -54,5 +54,41 @@ export function formatText(report, { notices = [] } = {}) {
   out.push(`checked ${scopeLine(report)} · ${report.totals.elements.toLocaleString('en-US')} elements · ${plural(report.rules.ran.length, 'rule')}${skippedText ? ` · skipped: ${skippedText}` : ''}`);
   for (const n of notices) out.push(n);
   out.push(summaryLine(report));
+  return out.join('\n');
+}
+
+// ---------- taste ----------
+
+const kinds = byKind => Object.entries(byKind).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${n} ${k}`).join(', ');
+const LEAD = { clear: 'leads clearly', weak: 'leads, only just', tie: 'nothing leads', nothing: 'nothing stands out' };
+
+/** The one line worth quoting after a taste pass. */
+export function tasteSummaryLine(report, error) {
+  if (error) {
+    const reason = String(error.message || error).split(/(?<=\.)\s/)[0].slice(0, 140);
+    return `critly taste: could not run (${reason.replace(/\.$/, '')}) · exit 2`;
+  }
+  const screens = report.results.length;
+  return `critly taste: ${plural(report.totals.looks, 'thing')} to look at · ${plural(screens, 'screen')} · images in ${report.out} · exit ${report.exitCode}`;
+}
+
+export function formatTaste(report) {
+  const out = [];
+  for (const r of report.results) {
+    const f = r.focus, b = r.boxes, e = r.edges;
+    out.push(`${r.page} · ${r.viewport}`, '');
+    out.push(`  squint  ${r.files.squint}`);
+    const runner = f.ranked[1];
+    if (f.verdict === 'tie') out.push(`  lead    nothing leads: ${f.lead.where} is only ${f.ratio}× over ${runner.where}`);
+    else if (f.lead) out.push(`  lead    ${f.lead.where} ${LEAD[f.verdict]}${runner ? `, ${f.ratio}× over ${runner.where}` : ''}`);
+    else out.push(`  lead    ${LEAD.nothing}`);
+    out.push(`  boxes   ${b.count}${b.count ? ` (${kinds(b.byKind)})` : ''}, ${plural(b.lines, 'divider line')}, nested ${b.maxDepth} deep`);
+    out.push(`  edges   ${plural(e.count, 'left edge')} (${e.text} for text)${e.nearMisses.length ? `, ${plural(e.nearMisses.length, 'near miss', 'near misses')}` : ''}`);
+    out.push(`  overlay ${r.files.overlay}`);
+    for (const l of r.looks) out.push(`  look    ${l.look}`, `          ${l.concept}`);
+    out.push('');
+  }
+  out.push('Open each squint and overlay image and look at it. These are things to look at, not failures; a screen can have a reason for any of them.');
+  out.push(tasteSummaryLine(report));
   return out.join('\n');
 }

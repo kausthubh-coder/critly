@@ -28,7 +28,10 @@ Show the policy to the user and ask them to approve it before you continue. Don'
 
 ## 4. Add the script
 
-Add \`"lint:ui": "critly check <dev server URL>"\` to \`package.json\`. The dev server has to be running when it runs.
+Add two scripts to \`package.json\`. The dev server has to be running when they run.
+
+- \`"lint:ui": "critly check <dev server URL>"\`: fails when the interface breaks a concept.
+- \`"taste:ui": "critly taste <dev server URL>"\`: the taste pass (${SITE_URL}/taste-pass). It squints at the first screen of each page, counts its boxes and edges, finds what it leads with, and writes the images to \`.critly/taste/\`. It never fails a page. Add \`.critly/taste/\` to \`.gitignore\`.
 
 ## 5. Add two lines to AGENTS.md
 
@@ -36,14 +39,14 @@ Add these to the project's AGENTS.md (create it if needed). If the project has a
 
 \`\`\`markdown
 - UI work: use the \`critly\` skill. Read \`.critly/policy.json\` before choosing spacing, type or color, use only its values, and never edit it to pass.
-- After any UI change, run \`npm run lint:ui\` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then screenshot each changed screen at 390 and 1440 and look at it before saying it's done.
+- After any UI change, run \`npm run lint:ui\` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then run \`npm run taste:ui\`, open the squint and overlay images for each changed screen, and fix each look or say why the screen needs it before saying it's done.
 \`\`\`
 
 Use the project's package manager in the command.
 
 ## 6. Run it once
 
-Start the dev server and run \`npm run lint:ui\`. Exit 0 passes, 1 means findings, 2 means it couldn't run.
+Start the dev server and run \`npm run lint:ui\`. Exit 0 passes, 1 means findings, 2 means it couldn't run. Then run \`npm run taste:ui\` once and open one squint image, so you know the images are written.
 
 If there are many findings, ask the user whether to fix them now or record a baseline: \`critly check <url> --update-baseline\` writes \`.critly/baseline.json\`, and \`--baseline\` in the script then fails only when a rule's count goes up.
 
@@ -63,7 +66,7 @@ The check measures the rendered page. For the source side (arbitrary values, raw
 
 ## 9. Hand off
 
-Tell the user what you changed, how to run the check, and where the policy lives, and quote the check's last line.
+Tell the user what you changed, how to run the check and the taste pass, and where the policy lives, and quote the last line of each.
 
 ## Rules
 

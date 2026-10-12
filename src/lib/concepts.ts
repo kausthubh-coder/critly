@@ -3,6 +3,7 @@ const LAUNCH_CONCEPT_SLUGS = new Set([
   "novelty-budget",
   "performance-is-design",
   "taste-is-trained",
+  "taste-pass",
   "timelessness",
   "product-feel",
   "design-tokens",

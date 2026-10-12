@@ -7,6 +7,7 @@ import {
   CHECK_RULES,
   CHECK_RUN,
   SETUP_PROMPT,
+  TASTE_RUN,
   type CheckStage,
 } from "@/lib/check";
 
@@ -186,17 +187,35 @@ export default function CheckPage() {
         tabs={[{ label: "Playwright", language: "ts", code: PLAYWRIGHT, filename: "billing.spec.ts" }]}
       />
 
+      <h2 id="taste" className="mt-10 scroll-mt-28 text-lg font-medium">
+        The taste pass
+      </h2>
+      <p className="mt-2 text-base text-muted-foreground text-pretty">
+        Some of what makes a screen feel off can&apos;t fail a rule: every group
+        in its own box, text starting at five slightly different edges, two
+        buttons competing.{" "}
+        <code className="font-mono text-[13px] text-foreground">critly taste</code>{" "}
+        squints at the first screen of each page, counts its boxes and edges,
+        and finds what it leads with. It writes a squint image and an overlay
+        for each screen and lists what to look at. It never fails a page; see{" "}
+        <Link href="/taste-pass" className={linkClass}>
+          Taste Pass
+        </Link>{" "}
+        for how it measures.
+      </p>
+      <CodeBlock tabs={[{ label: "Taste", language: "bash", code: TASTE_RUN }]} hideHeader />
+
       <h2 className="mt-10 text-lg font-medium">What it can&apos;t tell you</h2>
       <p className="mt-2 text-base text-muted-foreground text-pretty">
-        The check rules out the mistakes you can measure. It can&apos;t judge
-        hierarchy, whitespace, copy or whether a screen feels right; that&apos;s
-        what the{" "}
+        The check rules out the mistakes you can measure. The taste pass points
+        your eyes at the rest, but it can&apos;t judge copy or whether the thing
+        a screen leads with is the right thing. That&apos;s what the{" "}
         <Link href="/skills" className={linkClass}>
           review and audit skills
         </Link>{" "}
-        are for, along with looking at the screen. When it can&apos;t decide,
-        like text over an image, it reports the finding for review instead of
-        passing it.
+        are for, along with looking at the screen. When the check can&apos;t
+        decide, like text over an image, it reports the finding for review
+        instead of passing it.
       </p>
       <p className="mt-3 text-base text-muted-foreground text-pretty">
         The method comes from{" "}

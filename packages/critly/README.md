@@ -108,6 +108,74 @@ suppressed findings with their reasons, and coverage per page, viewport and sche
 A `?` finding is a **review**: the check couldn't measure it (text over an image or gradient, a blend mode, a text
 shadow) and says why. A review fails the run like an error. Look at it, then fix it or ask for an exception.
 
+## The taste pass
+
+Some of what makes a screen feel off can't fail a rule. `critly taste` runs a
+[taste pass](https://critly.vercel.app/taste-pass) on the first screen of each page, at each viewport:
+
+- **Squint.** It blurs a screenshot (6px, `--blur` to change it) and measures what still stands out from the
+  background, in OKLab.
+- **Boxes and edges.** It counts every box drawn with a border, ring, shadow or tinted background, how deep they
+  nest, the divider lines, and the distinct left edges where things start, with near misses 2 to 8px apart.
+- **One focal point.** It ranks what reads first and compares the lead with the runner-up, counts solid buttons
+  per area, and the share of text set in bold.
+
+```bash
+npx @kausthubh/critly taste http://localhost:3000
+```
+
+```
+http://localhost:3000/settings/billing · 1440x900
+
+  squint  .critly/taste/settings-billing-1440.squint.png  (darkest: button.solid "Add seats")
+  lead    button.solid "Add seats" leads, only just, 1.42× over button.solid "Upgrade plan"
+  boxes   4 (4 border), 0 divider lines, nested 3 deep
+  edges   6 left edges (3 for text), 1 near miss
+  overlay .critly/taste/settings-billing-1440.taste.png
+  look    2 solid buttons in one group (button.solid "Add seats", button.solid "Upgrade plan"). Keep the one that does the main job solid, and make the others secondary or plain.
+          https://critly.vercel.app/visual-hierarchy
+  look    A box in a box in a box (3 deep): section.panel > div.card > div.row, and 1 more like it. Let the inner group sit on its parent's surface and separate it with space.
+          https://critly.vercel.app/whitespace
+
+critly taste: 10 things to look at · 2 screens · images in .critly/taste · exit 0
+```
+
+It writes two images per screen to `.critly/taste/` (`--out` to change it): `<page>-<width>.squint.png`, the
+blurred screen, and `<page>-<width>.taste.png`, the screen with the boxes, edges and the top two weights marked.
+Open them; they're the point. Add `.critly/taste/` to `.gitignore`.
+
+It never fails a page. It exits 0 when it ran and 2 when it couldn't. Its looks are things to look at, and a
+screen can have a reason for any of them. It reads `pages`, `viewports`, `schemes`, `ready` and `ignore` from the
+policy and uses the first scheme (`--scheme dark` for another).
+
+| Look | Concept | Shown when |
+|---|---|---|
+| `no-lead` | [visual-hierarchy](https://critly.vercel.app/visual-hierarchy) | The two heaviest things are within 1.2× of each other |
+| `weak-lead` | [visual-hierarchy](https://critly.vercel.app/visual-hierarchy) | The lead is under 1.5× the runner-up |
+| `solid-actions` | [visual-hierarchy](https://critly.vercel.app/visual-hierarchy) | Two solid buttons share an area (Atlassian), or more than two are on screen (Apple) |
+| `all-bold` | [visual-hierarchy](https://critly.vercel.app/visual-hierarchy) | Over 30% of the text is 600 or heavier |
+| `deep-boxes` | [whitespace](https://critly.vercel.app/whitespace) | Boxes nest three deep |
+| `nested-borders` | [shadows-not-borders](https://critly.vercel.app/shadows-not-borders) | A bordered box sits inside a bordered box |
+| `double-edge` | [shadows-not-borders](https://critly.vercel.app/shadows-not-borders) | A box sits 4px or less inside another and both draw an edge |
+| `near-miss-edge` | [alignment](https://critly.vercel.app/alignment) | Two content edges are 2 to 8px apart |
+| `drawn-groups` | [whitespace](https://critly.vercel.app/whitespace) | Six or more boxes, mostly bordered, with as many divider lines |
+
+The 1.2× and 1.5× lead thresholds and the 2 to 8px near-miss range are Critly's own starting points, not
+published numbers. The button limits come from Atlassian and Apple, and the 6px blur from Nielsen Norman Group's
+blur test. `--json` prints every count, the ranked leads with their boxes, and each look's selectors.
+
+In a browser tool, paste `@kausthubh/critly/taste.js` (also `scripts/taste.js` in the `critly-audit` skill):
+
+```js
+const report = await window.__critlyTaste();      // or { root: "dialog" } for one part of the page
+window.__critlyTaste.overlay(report);              // mark the boxes, edges and lead on the page
+window.__critlyTaste.squint(true);                 // blur the page for your own screenshot
+window.__critlyTaste.clear();
+```
+
+Without a screenshot it estimates the squint from styles instead of pixels. On Critly's site and the fixtures,
+the two methods agree on the lead to within about 15%.
+
 ## Exit codes
 
 | Code | Meaning |
@@ -209,8 +277,8 @@ GitHub's Ubuntu runners have Chrome.
 
 ## Limits
 
-The check measures one render per page, viewport and scheme. It can't judge hierarchy, whitespace, copy or
-whether the design is good; that stays with a review.
+The check measures one render per page, viewport and scheme. It can't judge copy or whether the design is
+good; the taste pass points at hierarchy and whitespace, and the call stays with a review.
 
 - **Contrast** measures text against the backgrounds the browser paints behind it, including translucent layers,
   opacity and boxes positioned underneath. Text over an image, a gradient, a clip-path shape or a translucent

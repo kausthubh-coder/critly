@@ -291,6 +291,133 @@ right."
 - [Invisible Details of Interaction Design](https://rauno.me/craft/interaction-design): A long, patient look at the small decisions that make interfaces feel right.
 
 
+## Taste Pass
+
+> Squint, count the boxes, find the one thing.
+
+- Section: Craft
+- URL: https://critly.vercel.app/taste-pass
+- Published: 2026-10-12
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/taste-pass.mdx
+
+A screen can pass every rule and still feel off. Every group sits in its own
+box, the text starts in five slightly different places, and two buttons shout
+at once. No lint fails it. A designer spots it in a few seconds, with three
+habits.
+
+**Before you call a screen done, squint at it, count its boxes and edges, and find the one thing it leads with.**
+
+> **Interactive demo: Taste Pass.** Open https://critly.vercel.app/taste-pass to try it.
+
+Both versions show the same plan, the same numbers and the same two actions.
+Turn on each lens, then switch versions. The counts and the outlines come from
+`critly taste`, measured live on the screen above.
+
+### Squint
+
+Painters squint to lose the detail and see the big shapes. On a screen,
+blurring does the same. Blur a screenshot until you can't read the body text:
+6px is enough at desktop size, and Nielsen Norman Group blurs at 5 and 10.
+What's left is roughly what people take in first, since we see the coarse
+layout before the details.
+
+Ask two questions of the blurred screen. Do the groups still read as groups?
+And is the darkest or most colorful shape the thing that matters? In the
+draft, the boxes turn into stacked outlines and the two buttons are the same
+dark weight. After the pass, one shape is left.
+
+### Count the boxes
+
+Every border, ring, shadow and tinted background draws one more edge. Count
+them, and count how deep they nest. A box in a box in a box is the usual
+mistake: each component brought its own frame, and nobody took any away.
+
+Group with space first, then with one background tone, and keep lines for
+where space can't do it. That is what [whitespace](https://critly.vercel.app/whitespace) and
+[shadows, not borders](https://critly.vercel.app/shadows-not-borders) are about. There's no right
+number of boxes. Compare before and after: fewer is calmer. In a study of 450
+sites seen for half a second, the number of regions was the best predictor of
+how busy a page looked, and busy pages were liked less.
+
+### Count the edges
+
+Then count where things start. Each distinct left edge is a line the eye has
+to find. Near misses come first: two edges 2 to 8px apart look like a mistake,
+because they usually are. The draft insets its buttons 4px past the text above
+them. See [alignment](https://critly.vercel.app/alignment) for lining things up.
+
+### Find the one thing
+
+Say in a few words what the screen is for. Then check that it's the heaviest
+shape when you squint. If two things weigh about the same, nothing leads, and
+the fix is to quiet one, not to make the other louder (see
+[visual hierarchy](https://critly.vercel.app/visual-hierarchy)). Buttons follow the same rule: one solid
+button per area, as Atlassian puts it, and at most one or two per view, as
+Apple does.
+
+### Run it on the real screen
+
+`critly taste` opens each page at phone and desktop width and runs the pass on
+the first screen. For each screen it writes a squint image and an overlay with
+the boxes, edges and lead marked, then lists what to look at. Each finding links
+the concept behind it.
+
+**Terminal**
+
+```bash
+npx @kausthubh/critly taste http://localhost:3000
+```
+
+**Browser tool**
+
+```js
+// Paste taste.js from @kausthubh/critly (or the critly-audit skill), then:
+const report = await window.__critlyTaste();
+window.__critlyTaste.overlay(report); // boxes, edges and lead on the page
+window.__critlyTaste.squint(true);    // blur the page for your own screenshot
+```
+
+```text
+http://localhost:3000/settings/billing · 1440x900
+
+  squint  .critly/taste/settings-billing-1440.squint.png
+  lead    button "Add seats" leads, only just, 1.44× over button "Upgrade plan"
+  boxes   4 (4 border), 0 divider lines, nested 3 deep
+  edges   6 left edges (3 for text), 1 near miss
+  overlay .critly/taste/settings-billing-1440.taste.png
+  look    2 solid buttons in one group (button "Add seats", button "Upgrade plan"). Keep the one that does the main job solid, and make the others secondary or plain.
+          https://critly.vercel.app/visual-hierarchy
+  look    A box in a box in a box (3 deep): section.panel > div.card > div.row. Let the inner group sit on its parent's surface and separate it with space.
+          https://critly.vercel.app/whitespace
+
+critly taste: 5 things to look at · 2 screens · images in .critly/taste · exit 0
+```
+
+It never fails a page. The [check](https://critly.vercel.app/check) fails what can be measured as
+wrong; the taste pass points your eyes at what needs judging. Its numbers are
+starting points. One solid button per area and the 6px blur come from the
+sources below. The rest are ours: a lead under 1.2× its runner-up counts as a
+tie, under 1.5× as weak, and edges 2 to 8px apart as a near miss.
+
+### What it can't tell you
+
+It can find the heaviest shape, but not whether that's the right one. That
+depends on what the screen is for, which only you and the people using it
+know. It also sees one screen in one state, so open the menu, fill the form and
+run it again. Then look at the images yourself. Taste gets better with
+[reps](https://critly.vercel.app/taste-is-trained), and this is one.
+
+### Resources
+
+- [Visual hierarchy in UX](https://www.nngroup.com/articles/visual-hierarchy-ux-definition/): Nielsen Norman Group on the blur test, with one screen blurred at 5, 10 and 20px, and why when everything is contrasted nothing stands out.
+- [The squint test](https://www.nngroup.com/videos/squint-test/): A two-minute video from Nielsen Norman Group on squinting to find what catches attention first.
+- [Refactoring UI](https://www.refactoringui.com/): Adam Wathan and Steve Schoger on using fewer borders, and grouping with space, background color and shadow instead.
+- [Avoiding clutter](https://docs.appian.com/suite/help/25.1/sail/ux-avoiding-clutter.html): Appian's design system on why a card inside a card adds clutter instead of structure.
+- [Predicting users' first impressions of website aesthetics](https://kgajos.seas.harvard.edu/papers/reinecke13aesthetics.pdf): Reinecke and colleagues on 450 sites seen for half a second each. The number of regions on a page predicted how complex it looked, and complex pages were liked less.
+- [Button usage](https://atlassian.design/components/button/usage): Atlassian's rule of one primary button per page or area.
+- [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons): Apple's guidelines, which keep prominent buttons to one or two per view.
+
+
 ## Timelessness
 
 > Surface ages fast. Structure doesn't.

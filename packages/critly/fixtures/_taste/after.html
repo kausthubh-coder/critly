@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing</title>
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* One surface, one inset, space instead of lines, one solid action. */
+  main { max-width: 40rem; }
+  .panel { border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  h2 { font-size: 20px; font-weight: 500; margin: 0; }
+  p { color: var(--muted-foreground); }
+  dl { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; margin: 0 0 16px; }
+  dt { color: var(--muted-foreground); }
+  dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .solid { background: var(--primary); color: var(--primary-foreground); border: 0; font-weight: 500; }
+  .actions { display: flex; gap: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Billing</h1>
+  <section class="panel">
+    <h2>Team plan</h2>
+    <p>Renews on March 3 for 8 seats.</p>
+    <dl>
+      <dt>Seats used</dt><dd>6 of 8</dd>
+      <dt>Next invoice</dt><dd>$96.00</dd>
+    </dl>
+    <div class="actions">
+      <button class="solid">Upgrade plan</button>
+      <button>Add seats</button>
+    </div>
+  </section>
+</main>
+</body>
+</html>

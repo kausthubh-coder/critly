@@ -1,8 +1,8 @@
 {
   "name": "@kausthubh/critly",
-  "version": "0.1.0",
-  "description": "Check your running app against Critly's design concepts. Loads the page, measures what it renders, and fails with the fix named.",
-  "keywords": ["design", "ui", "lint", "accessibility", "contrast", "agents", "claude", "codex", "cursor", "playwright"],
+  "version": "0.2.0",
+  "description": "Check your running app against Critly's design concepts, and run a taste pass on it. Loads the page, measures what it renders, and fails with the fix named.",
+  "keywords": ["design", "ui", "lint", "taste", "squint test", "visual hierarchy", "accessibility", "contrast", "agents", "claude", "codex", "cursor", "playwright"],
   "homepage": "https://critly.vercel.app/check",
   "repository": {
     "type": "git",
@@ -18,6 +18,7 @@
     ".": "./src/index.js",
     "./playwright": "./src/playwright.js",
     "./check.js": "./src/check.js",
+    "./taste.js": "./src/taste.js",
     "./rules.json": "./src/rules.json",
     "./policy.schema.json": "./policy.schema.json",
     "./package.json": "./package.json"

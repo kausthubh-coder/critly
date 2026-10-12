@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billing</title>
+<link rel="stylesheet" href="../_base.css">
+<style>
+  /* Every group drawn with its own box, every component with its own inset, everything bold. */
+  main { max-width: 40rem; }
+  .panel { border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .card { border: 1px solid var(--border); border-radius: 10px; padding: 8px; margin-top: 12px; }
+  .row { border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .solid { background: #2563eb; color: #fff; border: 0; font-weight: 700; }
+  .solid.dark { background: #111; }
+  h1, h2, p, .row span { font-weight: 700; }
+  h2 { font-size: 20px; margin: 0; }
+  .actions { display: flex; gap: 8px; margin-top: 12px; padding-left: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Billing</h1>
+  <section class="panel">
+    <h2>Team plan</h2>
+    <p>Renews on March 3 for 8 seats.</p>
+    <div class="card">
+      <div class="row"><span>Seats used</span><span>6 of 8</span></div>
+      <div class="row"><span>Next invoice</span><span>$96.00</span></div>
+    </div>
+    <div class="actions">
+      <button class="solid">Upgrade plan</button>
+      <button class="solid dark">Add seats</button>
+    </div>
+  </section>
+</main>
+</body>
+</html>

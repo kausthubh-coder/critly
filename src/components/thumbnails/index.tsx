@@ -1378,6 +1378,30 @@ function TasteThumbnail() {
   );
 }
 
+function TastePassThumbnail() {
+  // Rest: a box in a box in a box, and two buttons of the same weight. Hover:
+  // the inner boxes drop away, everything starts on one edge (the guide) and
+  // one button leads.
+  const frame =
+    "outline-1 outline-border transition-[padding,outline-color] duration-500 ease-snappy group-hover:p-0 group-hover:outline-transparent";
+  return (
+    <div className="relative w-28 rounded-xl bg-card p-2.5 shadow-xs ring-1 ring-border">
+      <div className={`absolute inset-y-1.5 left-2.5 border-l ${GUIDE}`} />
+      <div className="h-1.5 w-12 rounded-full bg-muted-foreground/40" />
+      <div className={`mt-2 rounded-lg p-1 outline ${frame}`}>
+        <div className={`rounded-md p-1 outline ${frame}`}>
+          <div className="h-1 w-14 rounded-full bg-muted-foreground/25" />
+          <div className="mt-1 h-1 w-10 rounded-full bg-muted-foreground/25" />
+        </div>
+      </div>
+      <div className="mt-2.5 flex gap-1">
+        <div className="h-3 w-8 rounded-full bg-foreground/80" />
+        <div className="h-3 w-8 rounded-full bg-foreground/80 transition-colors duration-500 group-hover:bg-muted-foreground/20" />
+      </div>
+    </div>
+  );
+}
+
 function TimelessnessThumbnail() {
   // The dated surface burns off and leaves the structure it was painted on.
   return (
@@ -1752,6 +1776,7 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "type-scale": TypeScaleThumbnail,
   "curve-smoothing": CurveSmoothingThumbnail,
   "taste-is-trained": TasteThumbnail,
+  "taste-pass": TastePassThumbnail,
   timelessness: TimelessnessThumbnail,
   "product-feel": ProductFeelThumbnail,
   "design-tokens": DesignTokensThumbnail,
