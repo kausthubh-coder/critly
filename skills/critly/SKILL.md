@@ -4,7 +4,7 @@ description: 'Design engineering concepts from Critly (critly.vercel.app) for th
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
-  version: "2026-10-09"
+  version: "2026-10-12"
   forked-from: https://github.com/gustavo-fior/craft
 ---
 
