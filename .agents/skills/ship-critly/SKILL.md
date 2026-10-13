@@ -19,7 +19,7 @@ The repo is public, so changes land through a PR. `<main>` below is `C:\Users\ka
 
 1. `git fetch origin`, then `git status --short` prints nothing. If `git rev-list --count HEAD..origin/main` isn't 0, `git merge origin/main` and resolve.
 2. Regenerate what CI would otherwise regenerate after the merge: `bun run build:skill` and `node packages/critly/scripts/sync-skill.mjs`. Commit anything they change.
-3. `bun run check` exits 0. It builds the site, runs the package tests, and fails if `skills/critly-audit/scripts` drifted from the package.
+3. `bun run check` exits 0 (about 8 minutes here, most of it type-checking). It builds the site, runs the package tests, and fails if `skills/critly-audit/scripts` drifted from the package.
 4. For UI changes, with `bun run dev` running: `bun run lint:ui` exits 0, and you looked at the `bun run taste:ui` images for each changed screen. There is no `verify-critly` skill yet, so this output and screenshots of the changed pages are the evidence.
 5. If `packages/critly` changed, its `version` must be newer than `npm view @kausthubh/critly version`, or the package doesn't ship.
 6. List what's going out: `git log --oneline origin/main..HEAD`.
@@ -75,7 +75,7 @@ This is what makes the skills live.
 ## 6. Clean up
 
 - `git push origin --delete <branch>` if the remote branch is still there.
-- If no thread needs this worktree anymore (check `t3_thread_list`): `git -C <main> worktree remove <path>`, then `git -C <main> branch -D <branch>`. If it's the worktree this thread runs in, leave it and tell me it can go.
+- If no thread needs this worktree anymore (check `t3_thread_list`), remove it as `worktree-critly` says. If it's the worktree this thread runs in, leave it and tell me it can go.
 
 ## 7. Report
 

@@ -49,3 +49,4 @@ Give the helper the path and its port from the doctor line.
 
 - Stop only the processes you started, by PID. Other worktrees' dev servers are someone else's.
 - Remove a worktree only when its work is merged or I say so, and never one another live thread is using (check `t3_thread_list` for its path). Remove with `git -C <main> worktree remove <path>`, then `git -C <main> branch -D <branch>` once its PR is merged.
+- On Windows, git leaves the folder behind with two junctions in it (`.claude/skills` and Turbopack's `.next/dev/node_modules/*`). `cmd /c rmdir /s /q <path>` deletes them without following them into their targets.
