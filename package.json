@@ -4,12 +4,15 @@
   "private": true,
   "packageManager": "bun@1.2.19",
   "scripts": {
-    "dev": "next dev",
+    "setup": "node scripts/setup.mjs",
+    "doctor": "node scripts/setup.mjs --doctor",
+    "dev": "node scripts/port.mjs next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/port.mjs next start",
+    "check": "next build && cd packages/critly && node --test && node scripts/sync-skill.mjs --check",
     "build:skill": "bun scripts/build-skill.ts",
-    "lint:ui": "node packages/critly/bin/critly.js check http://localhost:3000",
-    "taste:ui": "node packages/critly/bin/critly.js taste http://localhost:3000"
+    "lint:ui": "node scripts/port.mjs node packages/critly/bin/critly.js check http://localhost:{port}",
+    "taste:ui": "node scripts/port.mjs node packages/critly/bin/critly.js taste http://localhost:{port}"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
