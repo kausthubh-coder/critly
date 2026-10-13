@@ -23,7 +23,8 @@ const ALIGNMENT_OPTIONS = [
 ] as const;
 
 // Nudges are a fraction of the icon's own size so they hold up at any
-// scale: 2px right and 1px up on a 24px icon, 4px and 2px on a 48px one.
+// scale. Phosphor already draws its play triangle right of center (its box
+// spans 64 to 240 of 256), a little too far, so play moves back left.
 const ICONS = [
   {
     label: "Play",

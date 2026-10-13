@@ -72,6 +72,105 @@ function demoteHeadings(markdown: string) {
     .join("\n");
 }
 
+// The site's code samples carry the brand choices of its demos: an indigo
+// accent (hue 265, 262.9 or 250) and Inter. Agents copied those as a house
+// style, so in the skill they become placeholders the project fills in:
+// `var(--brand-hue)` for the hue and "Brand" for the typeface. Lightness,
+// chroma, status hues and every mechanical value stay as written. Only code
+// is rewritten; prose about Inter or the indigo demo is left alone.
+const BRAND_HUES = "265|262\\.9|250";
+const EXAMPLE_SWAPS: [RegExp, string][] = [
+  // oklch(0.52 0.18 265), and Tailwind's oklch(0.48_0.13_250)
+  [
+    new RegExp(`(oklch\\([\\d.]+%?([ _])[\\d.]+\\2)(?:${BRAND_HUES})(?=[ _]*[/)])`, "g"),
+    "$1var(--brand-hue)",
+  ],
+  [new RegExp(`(--hue:\\s*)(?:${BRAND_HUES});`, "g"), "$1var(--brand-hue);"],
+  [/\bbg-(?:indigo|violet)-\d{2,3}\b/g, "bg-accent"],
+  [/([\s[(,])\.indigo\b/g, "$1.accentColor"],
+  // next/font/google needs a real family name, so the sample loads a local file.
+  [/import \{ Inter \} from "next\/font\/google";/g, 'import localFont from "next/font/local";'],
+  [/\bInter\(\{ subsets: \["latin"\], display: "swap" \}\)/g, 'localFont({ src: "./fonts/brand-latin-var.woff2", display: "swap" })'],
+  [/\binter\b(?=\s*=\s*localFont|\.className)/g, "brand"],
+  // The metric overrides under it were measured for Inter.
+  [
+    /font-family: "Inter Fallback";/g,
+    'font-family: "Brand Fallback"; /* these overrides fit Inter: generate your font\'s */',
+  ],
+  [/"Inter( Fallback)?"/g, '"Brand$1"'],
+  [/(\bfont(?:-family)?:[^;\n]*?)\bInter,/g, '$1"Brand",'],
+];
+// Brand choices the swaps above don't cover. A new sample that uses one is
+// reported, so it gets a swap or a deliberate pass.
+const BRAND_LEFTOVERS = /\bInter\b|\bindigo\b|\bviolet\b/;
+
+// A placeholder the sample uses but doesn't define would leave the copied
+// color transparent, so the sample says where it comes from.
+function placeholderNote(code: string, language: string) {
+  const notes: string[] = [];
+  if (code.includes("var(--brand-hue)") && !code.includes("--brand-hue:")) {
+    notes.push("--brand-hue is your accent's OKLCH hue (0-360): set it once in :root.");
+  }
+  if (/\bbg-accent\b/.test(code) && !code.includes("--color-accent")) {
+    notes.push("bg-accent is your theme's accent color (--color-accent).");
+  }
+  if (notes.length === 0) return null;
+  if (language === "css") return `/* ${notes.join(" ")} */`;
+  if (language === "html") return `<!-- ${notes.join(" ")} -->`;
+  return null;
+}
+
+// Runs `edit` on the body of every fenced code block.
+function mapFences(
+  markdown: string,
+  edit: (code: string, language: string) => string,
+) {
+  const out: string[] = [];
+  let fence: string | null = null;
+  let language = "";
+  let body: string[] = [];
+  for (const line of markdown.split("\n")) {
+    if (fence === null) {
+      out.push(line);
+      const open = /^\s*(`{3,}|~{3,})\s*(\S*)/.exec(line);
+      fence = open?.[1] ?? null;
+      language = open?.[2] ?? "";
+      continue;
+    }
+    if (line.trim().startsWith(fence) && line.trim().replace(/[`~]/g, "") === "") {
+      out.push(edit(body.join("\n"), language), line);
+      fence = null;
+      body = [];
+      continue;
+    }
+    body.push(line);
+  }
+  if (fence !== null) out.push(...body);
+  return out.join("\n");
+}
+
+const swapped = new Map<string, number>();
+const leftovers: string[] = [];
+
+function neutralizeExamples(markdown: string, slug: string) {
+  return mapFences(markdown, (code, language) => {
+    let next = code;
+    for (const [pattern, replacement] of EXAMPLE_SWAPS) {
+      const count = next.match(pattern)?.length ?? 0;
+      if (count === 0) continue;
+      swapped.set(slug, (swapped.get(slug) ?? 0) + count);
+      next = next.replace(pattern, replacement);
+    }
+    for (const line of next.split("\n")) {
+      const uncommented = line.replace(/\/\*.*?\*\/|<!--.*?-->/g, "");
+      if (BRAND_LEFTOVERS.test(uncommented)) leftovers.push(`${slug}: ${line.trim()}`);
+    }
+    if (next === code) return code;
+    const note = placeholderNote(next, language);
+    return note ? `${note}\n${next}` : next;
+  });
+}
+
 // GitHub-style heading anchor, so the index can deep-link into a reference file.
 function anchor(title: string) {
   return title
@@ -118,7 +217,9 @@ async function main() {
   const link = new Map<string, string>();
 
   for (const { section, concepts } of bySection) {
-    const parts = concepts.map((c) => demoteHeadings(conceptMarkdown(c)));
+    const parts = concepts.map((c) =>
+      neutralizeExamples(demoteHeadings(conceptMarkdown(c)), c.slug),
+    );
     const body = `# ${section}\n\n${parts.join("\n\n")}`;
     if (Buffer.byteLength(body) <= SPLIT_BYTES) {
       await writeFile(path.join(REFERENCES_DIR, sectionFile(section)), body);
@@ -192,6 +293,15 @@ async function main() {
   console.log(
     `Wrote ${concepts.length} concepts across ${bySection.length} reference files.`,
   );
+  const total = [...swapped.values()].reduce((sum, n) => sum + n, 0);
+  console.log(
+    `Swapped ${total} brand values in code samples for placeholders (${[...swapped.keys()].join(", ")}).`,
+  );
+  if (leftovers.length > 0) {
+    console.warn(
+      `Code samples still name a brand font or color. Add a swap in build-skill.ts or leave it on purpose:\n${leftovers.map((l) => `  ${l}`).join("\n")}`,
+    );
+  }
 }
 
 main();

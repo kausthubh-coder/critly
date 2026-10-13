@@ -1,6 +1,6 @@
 ---
-title: Shadows, Not Borders
-description: Layered shadows give edge and depth.
+title: Edges and Elevation
+description: Lines, shadows or space, from one token.
 section: Color
 order: 3
 publishedAt: "2026-07-15"
@@ -19,12 +19,19 @@ resources:
     description: The syntax on MDN, including the inset and spread values the recipe relies on.
 ---
 
-A 1px border is the default way to give a card an edge. It works, but every
-border is a line, and a screen full of lines starts to look like a
-spreadsheet. A **layered shadow** draws the same edge with a faint ring, then
-adds a hint of depth below it.
+A 1px border is the default way to give a card an edge. It works, and a line
+says the card is drawn on the page, at the same level. Nest a card in a panel
+in a page and the lines pile up. A **layered shadow** draws the same edge with
+a faint ring, then adds a hint of depth below it, so the card reads as
+sitting above.
 
-**Give surfaces their edge with a faint shadow, not a border.**
+**Choose how surfaces separate (a line, a shadow, a fill or plain space) by
+what the layering should say, and derive every level from one token.**
+
+Borders still have a place. Inputs, table rows and dividers want a plain
+line, because they are not surfaces and should not look raised, and a flat,
+line-drawn look can be a brand of its own. This article is the shadow route:
+save it for things that hold other things.
 
 <ShadowsNotBordersDemo />
 
@@ -118,7 +125,3 @@ These are the `--custom-shadow` values from this site's `globals.css`.
     },
   ]}
 />
-
-Borders still have a place. Inputs, table rows and dividers want a plain
-line, because they are not surfaces and should not look raised. Save the
-shadow for things that hold other things.

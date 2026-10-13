@@ -1,6 +1,6 @@
 ---
 title: Button Press
-description: Scale down on press so it feels real.
+description: Show the press the moment it lands.
 section: Motion
 order: 2
 publishedAt: "2026-07-15"
@@ -19,9 +19,10 @@ resources:
     description: Why transform and opacity are the cheapest properties to animate.
 ---
 
-A real button moves when you push it. A button on screen can borrow that with
-one rule: **scale it down a little while it is pressed.** It tells you the
-click landed before anything else has happened.
+A real button moves when you push it. A button on screen can borrow that.
+**Make a press visible the moment it lands, so people know the click
+registered before anything else has happened. How far it moves is a brand
+decision; for controls people hit all day, keep it small and quick.**
 
 Press and hold both buttons.
 
@@ -40,8 +41,9 @@ Drag the sliders and keep pressing.
 <PressAmountDemo />
 
 Around `0.97` the press feels physical. Below about `0.92` it turns into an
-effect, and you notice the animation instead of the click. Keep the duration
-near `100ms`. A quick click is over in about that long, so at 300ms the
+effect, and you notice the animation instead of the click. That can suit a
+playful brand or a one-off button, but on controls people use all day it gets
+old fast. Whatever the amount, keep the duration near `100ms`. A quick click is over in about that long, so at 300ms the
 button is still shrinking when you let go and never seems to land.
 
 Scale runs on the compositor, so the press costs nothing, and the label and

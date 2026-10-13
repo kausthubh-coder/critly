@@ -33,23 +33,25 @@ small row of actions that appears on hover.
 <EffectCountDemo />
 
 With glass on every card, you only ever see one blur, but the page is
-paying for all of them: the hidden ones sit at opacity 0 and still blur the
-moving background on every frame. Budgeted, the actions use a plain dark
+paying for more than one: the hidden ones sit at opacity 0 with the effect
+still applied, so each keeps its own layer and can still cost blur work.
+Budgeted, the actions use a plain dark
 backing and the only blur is the toolbar. On a fast laptop the frame time
 may barely move; on a phone, dozens of hidden blurs are the difference
 between smooth scrolling and stutter.
 
-**Budget expensive effects by how many are on the page, not by how one looks.
-Keep blur and heavy shadows to a few small floating surfaces, and remove them
-when they're hidden.**
+**Blur and glass cost GPU work for every instance and every pixel they cover,
+so budget them by count and area, not by how one looks. If the look is the
+brand, make it cheap: keep it off repeated items, remove it when hidden, and
+measure on a phone.**
 
 ## Where the count comes from
 
 The usual cause isn't one ambitious design. It's a shared component. Glass
 added to the default button, or a layered shadow on the card component, is
-repeated by every list, grid and menu that uses it. In one real app, a glass
-icon button repeated on every poster put about 1,500 blurred elements on a
-single page.
+repeated by every list, grid and menu that uses it. A glass icon button on
+every poster in a long grid can put hundreds, even thousands, of blurred
+elements on a single page.
 
 - **Count instances.** Run the quick check from
   [Measuring Performance](/measuring-performance) in the console: how many
@@ -89,7 +91,8 @@ single page.
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
 }
 
-/* Glass is a variant you opt into, never the default. */
+/* On a shared component, make glass an opt-in variant,
+   so every list and grid doesn't pay for it by default. */
 .button[data-variant="glass"] {
   backdrop-filter: blur(12px) saturate(170%);
 }
@@ -115,4 +118,4 @@ To see layers, open DevTools' Layers panel or turn on Rendering → Layer
 borders. To see the cost, record a trace while scrolling the busiest page on
 a real phone, then remove one effect at a time and record again. GPU cost
 doesn't show up under CPU throttling, so a laptop can't tell you this one.
-See [Liquid Glass](/liquid-glass) for where glass belongs at all.
+See [Liquid Glass](/liquid-glass) for keeping glass readable.

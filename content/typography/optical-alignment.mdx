@@ -26,9 +26,12 @@ the nudge.
 
 <OpticalAlignmentDemo />
 
-The play icon moves left, because a triangle pointing right has most of its area on the
-left. The star and the download icon move up a bit. The amounts are tiny and
-specific to each icon, so this is a per icon decision, not a global rule.
+A triangle pointing right has most of its area on the left, so centered by its
+box it looks too far left and needs a nudge right. Some icon sets already draw
+it shifted: Phosphor's play triangle sits right of center inside its box, a
+little too far, so in this demo it moves back left. The star and the download
+icon move up a bit. The amounts are tiny and specific to each icon, so this is
+a per icon decision, not a global rule. Check the icon before you nudge it.
 
 ### How to align the icon
 
@@ -59,15 +62,14 @@ Different shapes have varying visual weight. For example, when a circle or trian
 
 ## Optical sizes
 
-Type has the same problem across sizes. Strokes that are sturdy at 14px look
-clumsy at 40px. Some typefaces ship an **optical size** axis that redraws the
-letters for the size they are set at.
+Type has the same problem across sizes, and some typefaces solve it with an
+optical size axis that redraws the letters for each size, as
+[Letter Spacing](/letter-spacing) explains.
 
 <OpticalSizingDemo />
 
-Browsers turn this on automatically through `font-optical-sizing: auto`, so
-you usually get the right design for free. The demo forces the text design
-onto a display size so you can see what you would be missing.
+The demo forces the text design onto a display size so you can see what you
+would be missing.
 
 ## Hanging punctuation
 
@@ -89,7 +91,11 @@ Safari supports `hanging-punctuation: first`. Elsewhere a small negative
       language: "html",
       icon: "tailwind",
       code: `<button class="grid size-12 place-items-center rounded-full">
-    <PlayIcon class="size-5 translate-x-px" weight="fill" />
+    <!-- Centered by its box, so it looks left: nudge it right. Check your
+         icon set first; some, like Phosphor, already offset the triangle. -->
+    <svg class="size-5 translate-x-px" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M5 4v16l14-8z" />
+    </svg>
 </button>
 
 <blockquote class="indent-[-0.42em]">
@@ -101,6 +107,7 @@ Safari supports `hanging-punctuation: first`. Elsewhere a small negative
       language: "css",
       icon: "css",
       code: `.play-icon {
+  /* A triangle centered by its box goes right; some icon sets already offset it. */
   transform: translateX(1px);
 }
 

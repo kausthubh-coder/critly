@@ -48,8 +48,9 @@ Check with `document.querySelectorAll("*").length`.
 - **A few hundred simple rows, well under 1,400 elements:** just render them.
 - **Long, mostly static content** (articles, docs, a long settings page):
   add `content-visibility: auto` to each section. The browser skips laying
-  out and painting what's off screen, and find-in-page still works. In one
-  test, 10,000 rows went from about 436ms to 247ms.
+  out and painting what's off screen, and find-in-page still works. In
+  web.dev's test on a long travel blog, rendering on first load went from
+  232ms to 30ms.
 - **Thousands of elements, or anything filtered, sorted or updated live:**
   virtualize. Only the visible rows exist, so the cost stays flat, around 5
   to 20ms whether there are a thousand rows or a million.

@@ -1,6 +1,6 @@
 ---
 title: Liquid Glass
-description: A lens for controls, never for content.
+description: A lens over content, readable first.
 section: Color
 order: 7
 publishedAt: "2026-10-08"
@@ -35,8 +35,8 @@ With blur, the panel is a smudge. With refraction, the lines bend at the
 rim and stay straight in the middle, and the edges catch a highlight. Same
 size, same position, much lighter.
 
-**Use glass only for controls that float above content, and make them
-readable over the worst background they can cross.**
+**If you use glass, keep what sits on it readable over the worst content that
+can pass beneath, and give it something to refract.**
 
 ## Readable first
 
@@ -58,9 +58,12 @@ That's what keeps the shape visible over both white and black.
 
 ## One layer
 
-Glass is for the layer that floats above content: tab bars, toolbars,
-floating buttons, media controls. Lists, cards and articles stay solid.
-Never stack glass on glass; things that sit on glass get plain fills.
+Apple keeps glass to the layer that floats above content: tab bars, toolbars,
+floating buttons, media controls. Lists, cards and articles stay solid,
+because text people read for a while needs a steady background. That's a
+good default for an app; a page that wants glass as its look can use it more
+widely if it stays readable and cheap. Never stack glass on glass; things
+that sit on glass get plain fills.
 
 On the web this is also a rendering rule. A `backdrop-filter` only sees
 what's painted up to the nearest ancestor with `opacity`, `filter`, `mask`
@@ -84,8 +87,8 @@ the fade ends.
 surfaces" setting of your own, the web version of Apple's Tinted option.
 
 Glass is expensive. The browser re-renders the backdrop every time anything
-under it changes, including every scroll frame. Keep glass small and use
-three or four glass elements per screen at most. Count elements in the page,
+under it changes, including every scroll frame. Keep glass small and keep it
+to a handful of elements per screen. Count elements in the page,
 not designs: glass in a shared button component, repeated on every card in a
 list, can quietly put a thousand blurs on one screen, and hidden ones still
 count. Turn page glass off while a modal covers it, and drop the blur from

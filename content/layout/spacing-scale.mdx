@@ -23,7 +23,7 @@ Spacing drifts. One card gets 14px of padding, the next one 16px, a third
 18px because it looked tight that day. Nobody sees the 2px, but people feel
 that the page is slightly off, and every new screen adds another value.
 
-**Pick every space from a small scale, and let the steps grow as the gaps do.**
+**Pick every space from a small scale whose steps grow as the gaps do, and extend it, or make it fluid, for page-level rhythm.**
 
 <SpacingScaleDemo />
 
@@ -35,8 +35,9 @@ of seven guesses.
 
 ## Steps that grow
 
-Start from 4px: 4, 8, 12, 16, 24, 32, 48, 64. The steps are 4px apart at the
-bottom, then 8, then 16.
+Start from 4px: 4, 8, 12, 16, 24, 32, 48, 64, then 96 and 128 for the space
+between page sections. The steps are 4px apart at the bottom, then 8, 16 and
+32.
 
 <SpacingStepsDemo />
 
@@ -53,8 +54,11 @@ reason. A 4px base covers them and still lands on every multiple of 8.
 
 Tailwind v4 derives every spacing utility from one variable,
 `--spacing: 0.25rem`, so `gap-3` is 12px and `p-6` is 24px. That is a 4px
-base, but not a scale: `gap-5`, `p-13` and `mt-4.5` all work too. Reset the
-namespace and name only the steps you allow.
+base, but not a scale: `gap-5`, `p-13` and `mt-4.5` all work too. Don't reset
+the namespace to fix that. Sizing utilities like `w-64` and `size-10` read the
+same variable, so a reset removes them too. Keep the defaults, use only 1, 2,
+3, 4, 6, 8, 12, 16, 24 and 32 for gaps and padding, and add a named step for what a multiple of 4px
+can't say, like spacing that grows with the screen.
 
 ## Usage
 
@@ -66,16 +70,12 @@ namespace and name only the steps you allow.
       icon: "tailwind",
       code: `@import "tailwindcss";
 
+/* Keep the default --spacing: 0.25rem. The steps are
+   1, 2, 3, 4, 6, 8, 12, 16, 24 and 32: 4px to 128px. */
+
 @theme {
-  --spacing-*: initial;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
+  /* py-section: 64px on a phone, 128px on a wide screen */
+  --spacing-section: clamp(64px, 40px + 6vw, 128px);
 }`,
     },
     {
@@ -91,18 +91,25 @@ namespace and name only the steps you allow.
   --space-8: 32px;
   --space-12: 48px;
   --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  /* 64px on a phone, 128px on a wide screen */
+  --space-section: clamp(64px, 40px + 6vw, 128px);
 }
 
 .card {
   padding: var(--space-6);
   gap: var(--space-2);
+}
+
+.hero {
+  padding-block: var(--space-section);
 }`,
     },
   ]}
 />
 
-Sizing utilities like `w-64` and `size-10` read the same namespace, so the
-reset removes them too, and arbitrary values like `gap-[13px]` still compile.
-If that is too strict for your codebase, keep the defaults and treat 1, 2, 3,
-4, 6, 8, 12 and 16 as the only numbers you type. The scale decides which
+An app screen rarely needs more than 64px. A marketing page wants far more
+between sections, and a fixed 128px is too much on a phone. A fluid step like
+`section` covers both without a breakpoint per section. The scale decides which
 values exist. [Whitespace](/whitespace) decides where the big ones go.

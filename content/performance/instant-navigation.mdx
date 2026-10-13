@@ -43,7 +43,7 @@ you wait.**
 
 People hover on a link for a while before they click it. instant.page's
 measurements found that after 65ms of hover, half of users go on to click,
-with over 300ms still to go. Pressing the button gives about 80ms more
+and on desktop that still leaves over 300ms, on average, before the click. Pressing the button gives about 80ms more
 before the click fires, and on touch screens `touchstart` gives about 90ms.
 That's why the right app also loads on press: it's free and wastes nothing.
 
@@ -58,13 +58,13 @@ such as the first items in a list.
 
 ## What to show while it loads
 
-- **Under 100ms:** nothing. Keep the old screen, show the pressed link, then
-  swap.
-- **Longer, and you know the next layout:** show the destination's skeleton
-  straight away, filled with what you already know, like the title from the
-  link.
-- **Longer, and you don't:** keep the old screen and dim it after about
-  100ms.
+How long to wait before showing anything is the same as for any input, in
+[Responsiveness](/responsiveness). A fast load keeps the old screen, shows the
+pressed link, then swaps. When it takes longer:
+
+- **You know the next layout:** show the destination's skeleton straight
+  away, filled with what you already know, like the title from the link.
+- **You don't:** keep the old screen and dim it.
 
 Spinners need the same care. Load each panel a few times.
 
@@ -73,7 +73,9 @@ Spinners need the same care. Load each panel a few times.
 Most loads take about 100ms. The left spinner appears for every one of them,
 so the panel blinks. The right one only appears if the load is still going
 after 150ms, and then stays for at least 300ms, so fast loads look instant
-and slow ones look steady.
+and slow ones look steady. The delay is a setting: a full-screen spinner can
+wait longer, as [Responsiveness](/responsiveness) suggests, while a small one
+inside the panel people are watching can show sooner.
 
 ## Usage
 

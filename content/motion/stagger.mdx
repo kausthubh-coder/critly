@@ -28,8 +28,10 @@ them changes.
 
 <StaggerDemo />
 
-**Keep the gap between 30ms and 60ms.** That is enough for your eye to pick up
-a direction, top to bottom. Past 100ms the last row is still arriving after
+**A stagger gives the eye a direction but delays the last item, so cap the
+total delay. In interface lists keep the gap short; longer gaps are
+choreography for showcase moments.** A gap of 30ms to 60ms is enough for your
+eye to pick up a direction, top to bottom. Past 100ms the last row is still arriving after
 you have started reading the first, and the detail turns into a wait.
 
 ## Block vs sequence
@@ -39,9 +41,8 @@ identical.
 
 <StaggerCompareDemo />
 
-The staggered list is not faster. It is easier to follow, because your eye
-gets a starting point and a direction. The block gives you five things at
-once.
+The staggered list is not faster. It gives your eye a starting point and a
+direction, where the block gives you five things at once.
 
 ## Long lists
 
@@ -53,7 +54,9 @@ total instead of fixing the step.
 
 A good cap is about 300ms from the first row to the last. Divide that by the
 number of gaps and you have your step: 33ms for ten rows. For very long lists,
-stagger only the rows on screen and show the rest at once.
+stagger only the rows on screen and show the rest at once. Skip it on lists
+that re-render often, like results that update as you type: the sequence
+replays on every change, and people wait for rows they were already reading.
 
 The rows are content, not decoration. Animate only `opacity` and `transform`
 so every row holds its space from the first frame, and keep rows clickable

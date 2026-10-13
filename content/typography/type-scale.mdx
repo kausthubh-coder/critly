@@ -24,8 +24,9 @@ looked small, a value gets 17px so it stands out from the 16px next to it, and
 soon one card holds nine sizes. Some of them are a pixel apart, and two sizes
 a pixel apart don't read as a choice. They read as a mistake.
 
-**Pick about five sizes from a scale, give each one a job, and use nothing
-else.**
+**Pick a small set of sizes far enough apart to read as deliberate, and give
+each one a job. Dense UI wants small steps; editorial and marketing pages can
+take far larger jumps.**
 
 <TypeScaleDemo />
 
@@ -44,8 +45,9 @@ A scale is a base size multiplied by the same ratio, step after step. Start at
 
 For app interfaces I'd stay between 1.2 and 1.25. Dense screens need small
 steps, but each step still has to be visible. At 1.1 and below, neighbouring
-steps round to the same size and the scale stops being one. Marketing pages,
-with a few big words per screen, can go to 1.333 or 1.5.
+steps round to the same size and the scale stops being one. Marketing and
+editorial pages, with a few big words per screen, can go to 1.333 or 1.5, and
+their display size often lands at 48px or more, well past this scale's 24.
 
 Name the steps by their job: caption, body, subhead, title, display. The name
 tells the next person which one to reach for. A button or form label doesn't
@@ -72,7 +74,6 @@ body line height.
       code: `@import "tailwindcss";
 
 @theme {
-  --text-*: initial;
   --text-caption: 0.75rem;
   --text-caption--line-height: 1rem;
   --text-body: 0.875rem;
@@ -111,5 +112,7 @@ body line height.
 
 Keep sizes and line heights in `rem`. Someone who raises their browser's
 default font size then gets the whole scale bigger, still in proportion. The
-`--text-*: initial` line removes Tailwind's default sizes, so `text-sm` stops
-existing and only the five roles are left to choose from.
+roles sit next to Tailwind's default sizes, so `text-5xl` is still there for a
+marketing hero. If you want the roles to be the only choice in an app, add
+`--text-*: initial;` at the top of the block. It removes every default size,
+`text-sm` included.

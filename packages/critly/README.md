@@ -155,8 +155,8 @@ policy and uses the first scheme (`--scheme dark` for another).
 | `solid-actions` | [visual-hierarchy](https://critly.vercel.app/visual-hierarchy) | Two solid buttons share an area (Atlassian), or more than two are on screen (Apple) |
 | `all-bold` | [visual-hierarchy](https://critly.vercel.app/visual-hierarchy) | Over 30% of the text is 600 or heavier |
 | `deep-boxes` | [whitespace](https://critly.vercel.app/whitespace) | Boxes nest three deep |
-| `nested-borders` | [shadows-not-borders](https://critly.vercel.app/shadows-not-borders) | A bordered box sits inside a bordered box |
-| `double-edge` | [shadows-not-borders](https://critly.vercel.app/shadows-not-borders) | A box sits 4px or less inside another and both draw an edge |
+| `nested-borders` | [edges-and-elevation](https://critly.vercel.app/edges-and-elevation) | A bordered box sits inside a bordered box |
+| `double-edge` | [edges-and-elevation](https://critly.vercel.app/edges-and-elevation) | A box sits 4px or less inside another and both draw an edge |
 | `near-miss-edge` | [alignment](https://critly.vercel.app/alignment) | Two content edges are 2 to 8px apart |
 | `drawn-groups` | [whitespace](https://critly.vercel.app/whitespace) | Six or more boxes, mostly bordered, with as many divider lines |
 

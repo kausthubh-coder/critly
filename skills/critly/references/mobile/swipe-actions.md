@@ -30,7 +30,7 @@ destructive role and it turns red.
 |  | iPhone | Android |
 |---|---|---|
 | Built in | `swipeActions` on `List` rows since iOS 15, on any row in iOS 27 with `swipeActionsContainer()` | `SwipeToDismissBox` dismisses; a row that reveals buttons needs `anchoredDraggable` |
-| Full swipe | Runs the first action, nearest the edge | Material: runs the primary action, the last one at the end |
+| Full swipe | Runs the first action, nearest the edge | No Material 3 rule for phone lists; `SwipeToDismissBox` commits its one action |
 | Undo | Your own, for anything destructive | A Snackbar with one Undo action that stays until used |
 
 Keep one meaning per direction, the same across the app. Nielsen Norman Group
@@ -54,8 +54,10 @@ the icon lets go of the edge and jumps to the finger, the colour fills, and a
 [haptic](https://critly.vercel.app/haptics) fires. Drag back and it all reverses. Nothing commits
 until the finger lifts.
 
-I don't let a fast flick commit a destructive swipe. A flick opens or closes
-the row. Only a release past the line you were shown deletes.
+For destructive actions, a safer default is to let a fast flick only open or
+close the row, and to delete only on a release past the line people were
+shown. A flick is easy to make by accident, and the line is the one thing
+they could see.
 
 ### Get the physics right
 
@@ -74,13 +76,13 @@ the row. Only a release past the line you were shown deletes.
 
 ### The back swipe wants the same gesture
 
-Since iOS 26, a pushed screen pops on a left-to-right pan anywhere in its
-content, not only from the edge (see [Back Navigation](https://critly.vercel.app/back-navigation)).
-So a leading swipe action on a row inside a pushed screen competes with
-back. In UIKit, make `interactiveContentPopGestureRecognizer` wait for your
-recognizer with `require(toFail:)`. I found no SwiftUI modifier for it, so on
-pushed screens I keep row actions on the trailing edge. On Android, back owns
-both screen edges, so start row swipes inside the `systemGestures` insets.
+Since iOS 26 a pushed screen also pops on a left-to-right pan anywhere in its
+content, so a leading swipe action on a row there competes with back. UIKit
+can make back wait ([Back Navigation](https://critly.vercel.app/back-navigation)), but I found no
+SwiftUI modifier for it, so on pushed screens the safer default is row
+actions on the trailing edge only, where they can't collide with back. On
+Android, back owns both screen edges, so start row swipes inside the
+`systemGestures` insets.
 
 ### Usage
 
@@ -96,7 +98,10 @@ List(messages) { message in
             .tint(.blue)
         }
         .swipeActions(edge: .trailing) {      // full swipe runs the first: Delete
-            Button(role: .destructive) { delete(message) } label: {
+            Button(role: .destructive) {
+                delete(message)
+                showUndo(for: message)        // a full swipe deletes at once, so offer Undo
+            } label: {
                 Label("Delete", systemImage: "trash")
             }
             Button { archive(message) } label: {
@@ -181,9 +186,9 @@ function MailRow({ mail, openRow }: Props) {
 // Gesture.Pan().activeOffsetX([-10, 10]).failOffsetY([-10, 10])
 ```
 
-Every swipe needs a visible twin: a ••• button or a context menu on the row
-with the same actions, which is also how keyboard, switch and screen reader
-users reach them. In Compose, add the actions as `customActions` semantics.
+Every swipe needs a visible twin, a ••• button or a context menu on the row
+with the same actions ([Gestures](https://critly.vercel.app/gestures)). In Compose, also add them as
+`customActions` semantics.
 Under reduced motion, keep the row tracking the finger and settle it without
 bounce.
 

@@ -36,7 +36,9 @@ type.
 
 A 2px solid `outline` with a 2px `outline-offset` is a good default. The offset
 leaves a gap, so the ring reads as separate from the control even when they
-are the same color. Outlines follow `border-radius` in every major browser, so
+are the same color. The ring can be the brand color or `currentColor`, as
+long as it has 3:1 contrast against the background around it. Outlines follow
+`border-radius` in every major browser, so
 a pill gets a pill-shaped ring.
 
 <FocusOffsetDemo />

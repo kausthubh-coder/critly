@@ -1,6 +1,6 @@
 ---
 title: Color Roles
-description: Gray does the work, color has a job.
+description: One color for the next action, status colors for meaning.
 section: Color
 order: 5
 publishedAt: "2026-10-03"
@@ -20,13 +20,13 @@ resources:
 ---
 
 Give the brand color to everything that could take it, and it stops meaning
-anything. The title is blue, the tabs are blue, the numbers, links and status
-badges are blue, and the one button you want people to press is just another
-blue thing.
+anything. The title, the tabs, the numbers, the links and the status badges
+all wear it, and the one button you want people to press is just one more
+colored thing.
 
-**Let neutrals do almost all the work. Use the accent only for the main
-action and the current selection, and use green, amber and red only when they
-mean something.**
+**Keep one color whose job is the next action and the current selection, and
+use green, amber and red only when they mean something. Color the rest as
+freely as the brand wants, as long as that signal still stands out.**
 
 <ColorRolesDemo />
 
@@ -36,13 +36,16 @@ the second, the accent is on two: the selected tab and Deploy. Each status
 gets a small dot, and the failed build is the first thing you notice after the
 button.
 
-This is [visual hierarchy](/visual-hierarchy) applied to color. Every colored
-element competes for attention, so only color the ones that should win.
+This is [visual hierarchy](/visual-hierarchy) applied to color. Everything in
+the accent competes for attention, so only give it to the things that should
+win.
 
 ## Three roles
 
-- **Neutrals** are backgrounds, surfaces, lines, text and icons. They are
-  nearly everything on screen.
+- **Neutrals** are backgrounds, surfaces, lines, text and icons. In a calm
+  tool they are nearly everything on screen. A brand-led product can color
+  its surfaces boldly instead, as long as the accent and statuses still stand
+  out against them.
 - **The accent** marks what you can do next and where you are: the primary
   button, the selected tab, a checked box. One hue.
 - **Status colors** report state: success, warning, danger. They never
@@ -61,8 +64,11 @@ the indigo accent. By `0.03` the whole card has turned blue.
 
 Not everyone tints. Radix ships plain gray, which works with any accent, next
 to grays pre-tinted toward each hue. Linear's redesign went the other way and
-cut back the blue in its neutrals. I'd tint, and stay under `0.015`.
-This site has no brand hue, so its own grays sit at `0`.
+cut back the blue in its neutrals. For a neutral-led UI I'd tint, and stay
+under `0.015` so the grays still read as gray. A brand that wants colored
+surfaces can go well past that; then give the accent a hue or lightness far
+enough from the surfaces that it still stands out. This site has no brand
+hue, so its own grays sit at `0`.
 
 ## Usage
 

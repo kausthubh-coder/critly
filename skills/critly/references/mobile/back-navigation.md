@@ -43,7 +43,7 @@ replacement.
 Android's back comes from either edge. Since Android 16, apps that target API
 36 get predictive back by default: `onBackPressed()` isn't called and
 `KEYCODE_BACK` isn't dispatched. Google Play has required API 36 for new apps
-and updates since 2026-08-31, so this is now every app.
+and updates since 2026-08-31, so any app that ships an update gets it.
 
 > **Interactive demo: Predictive Back.** Open https://critly.vercel.app/back-navigation to try it.
 

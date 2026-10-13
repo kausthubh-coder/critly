@@ -43,8 +43,9 @@ controls, so don't paint opaque backgrounds onto system bars.
 Android 15 made apps that target API 35 edge-to-edge. The status bar and
 the gesture navigation bar are transparent, and 3-button navigation gets
 an 80% opaque scrim. Android 16 removed the opt-out for apps that target
-API 36. Google Play has required API 36 for new apps and updates since
-2026-08-31, so every app you ship is edge-to-edge now.
+API 36, which Google Play now requires
+([Back Navigation](https://critly.vercel.app/back-navigation)), so every app you ship is edge-to-edge
+now.
 
 Call `enableEdgeToEdge()` for the same behavior on older versions. In
 Compose, Material 3's `Scaffold` pads its bars and passes the remaining
@@ -92,9 +93,10 @@ automatically for system bars, and React Native needs
 
 The insets change between models and in landscape, where the camera cutout
 moves to one side and the side insets grow. On iPhone Duo, the outer display puts the
-tab bar and toolbar in a strip on one side, so the left and right insets
-differ. iOS 27 also lets iPhone apps resize freely in iPhone Mirroring and
-on iPad. Read the insets from the system every time. A `padding(.top, 47)`
+tab bar, toolbar and back button in a strip on one side, so the left and
+right insets differ. Standard bars move there by themselves; a hand-built
+bottom bar stays where you drew it. iOS 27 also lets iPhone apps resize
+freely in iPhone Mirroring and on iPad. Read the insets from the system every time. A `padding(.top, 47)`
 or `24.dp` that fits your phone is wrong on the next one.
 
 ### Usage
@@ -103,7 +105,7 @@ or `24.dp` that fits your phone is wrong on the next one.
 
 ```swift
 ZStack {
-    LinearGradient(colors: [.indigo, .black], startPoint: .top, endPoint: .bottom)
+    LinearGradient(colors: [.accentColor, .black], startPoint: .top, endPoint: .bottom)
         .ignoresSafeArea()                 // the background only
     ScrollView {
         SongList()                         // content stays in the safe area

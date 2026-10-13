@@ -31,13 +31,18 @@ uppercase.**
 The second word follows the formula Rasmus Andersson published for Inter 3.
 Around body size it barely moves. From 24px up it settles near `-0.02em`,
 which pulls "Headline" in by about 8px at 48px. The dashed line marks where
-the tracked word ends. The untouched one runs past it.
+the tracked word ends. The untouched one runs past it. These amounts are
+Inter's. Every typeface is spaced differently, so take the direction from here
+and the amounts from your own font.
 
 ## Fonts with optical sizes
 
-Some fonts already do this for you. Inter 4, the version this site uses, has
-an [optical size](/optical-alignment) axis, and browsers apply it on their own
-through `font-optical-sizing: auto`. From 32px up you get the display design,
+Some fonts already do this for you. Strokes that are sturdy at 14px look
+clumsy at 40px, so some typefaces ship an optical size axis that redraws the
+letters, spacing included, for the size they are set at. Inter 4, the version
+this site uses, has one, and browsers apply it on their own through
+`font-optical-sizing: auto`, so you usually get the right design for free.
+From 32px up you get the display design,
 which sets "Headline" about 13px narrower at 48px than the text design does.
 The demo pins the text design so you can see the problem.
 

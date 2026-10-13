@@ -57,7 +57,7 @@ font is showing.
 ## Pick the display behaviour on purpose
 
 - **`swap`**: text at once, swapped whenever the font arrives. Safe only
-  with a matched fallback. Half the web uses it anyway.
+  with a matched fallback. Nearly half of pages use it anyway.
 - **`fallback`**: swaps only if the font arrives within about 3 seconds,
   then keeps the fallback. Good for body text.
 - **`optional`**, with a preload: uses the font only if it's ready almost
@@ -71,7 +71,8 @@ font is showing.
   font CDN gives no head start, only one more connection.
 - **WOFF2, subset, variable.** One variable file replaces several weights,
   and `unicode-range` subsets mean a page in English doesn't download
-  Cyrillic. Aim for two families and about 100 KB of fonts on first load.
+  Cyrillic. Two families and about 100 KB on first load is a good starting
+  budget; a type-led brand can spend more if it measures what that costs.
 - **Preload one or two files,** the ones the first screen uses, with
   `crossorigin` even on your own domain, or the font downloads twice.
 - **Consider system fonts** for interface text. `system-ui` costs nothing

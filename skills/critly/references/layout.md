@@ -466,6 +466,9 @@ and it is why those icons look softer than a box with the same radius.
 
 Both tiles use the same `28px` radius. Only the corner shape changes.
 
+Corner shape is a brand choice. Round, bevelled and sharp corners are just as
+valid. This is how to do the squircle well if it's the one you pick.
+
 **Keep the radius, change the shape.** `border-radius` still sets how big the
 corner is, and `corner-shape` sets the curve that fills it. Because the shape
 belongs to the box, the background, border, outline, shadow and
@@ -495,9 +498,9 @@ button barely moves, and that is fine.
 
 > **Interactive demo: Squircle Examples.** Open https://critly.vercel.app/squircles to try it.
 
-The shape is not inherited, so set it on nested boxes too, and keep the outer
-radius equal to the inner radius plus the inset. The card above uses `24px`
-outside, `16px` inside and an `8px` inset.
+The shape is not inherited, so set it on nested boxes too, and size their
+radii as in [Nested Border Radius](https://critly.vercel.app/nested-border-radius). The card above
+uses `24px` outside, `16px` inside and an `8px` inset.
 
 ### Usage
 
@@ -573,8 +576,9 @@ Remove the lines and see what is left.
 
 On the left, every row is 12px apart and the dividers carry all the grouping.
 Without them it is five equal rows. On the right, the lines are optional. Get
-the spacing right first, then add a line or a [shadow](https://critly.vercel.app/shadows-not-borders)
-only where it still helps.
+the grouping right with space first. After that, a line, a card or a
+[shadow](https://critly.vercel.app/edges-and-elevation) is a style choice you make for the look, not a
+crutch holding the structure up.
 
 ### Squint
 
@@ -660,7 +664,7 @@ Spacing drifts. One card gets 14px of padding, the next one 16px, a third
 18px because it looked tight that day. Nobody sees the 2px, but people feel
 that the page is slightly off, and every new screen adds another value.
 
-**Pick every space from a small scale, and let the steps grow as the gaps do.**
+**Pick every space from a small scale whose steps grow as the gaps do, and extend it, or make it fluid, for page-level rhythm.**
 
 > **Interactive demo: Spacing Scale.** Open https://critly.vercel.app/spacing-scale to try it.
 
@@ -672,8 +676,9 @@ of seven guesses.
 
 ### Steps that grow
 
-Start from 4px: 4, 8, 12, 16, 24, 32, 48, 64. The steps are 4px apart at the
-bottom, then 8, then 16.
+Start from 4px: 4, 8, 12, 16, 24, 32, 48, 64, then 96 and 128 for the space
+between page sections. The steps are 4px apart at the bottom, then 8, 16 and
+32.
 
 > **Interactive demo: Spacing Steps.** Open https://critly.vercel.app/spacing-scale to try it.
 
@@ -690,8 +695,11 @@ reason. A 4px base covers them and still lands on every multiple of 8.
 
 Tailwind v4 derives every spacing utility from one variable,
 `--spacing: 0.25rem`, so `gap-3` is 12px and `p-6` is 24px. That is a 4px
-base, but not a scale: `gap-5`, `p-13` and `mt-4.5` all work too. Reset the
-namespace and name only the steps you allow.
+base, but not a scale: `gap-5`, `p-13` and `mt-4.5` all work too. Don't reset
+the namespace to fix that. Sizing utilities like `w-64` and `size-10` read the
+same variable, so a reset removes them too. Keep the defaults, use only 1, 2,
+3, 4, 6, 8, 12, 16, 24 and 32 for gaps and padding, and add a named step for what a multiple of 4px
+can't say, like spacing that grows with the screen.
 
 ### Usage
 
@@ -700,16 +708,12 @@ namespace and name only the steps you allow.
 ```css
 @import "tailwindcss";
 
+/* Keep the default --spacing: 0.25rem. The steps are
+   1, 2, 3, 4, 6, 8, 12, 16, 24 and 32: 4px to 128px. */
+
 @theme {
-  --spacing-*: initial;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
+  /* py-section: 64px on a phone, 128px on a wide screen */
+  --spacing-section: clamp(64px, 40px + 6vw, 128px);
 }
 ```
 
@@ -725,18 +729,25 @@ namespace and name only the steps you allow.
   --space-8: 32px;
   --space-12: 48px;
   --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+  /* 64px on a phone, 128px on a wide screen */
+  --space-section: clamp(64px, 40px + 6vw, 128px);
 }
 
 .card {
   padding: var(--space-6);
   gap: var(--space-2);
 }
+
+.hero {
+  padding-block: var(--space-section);
+}
 ```
 
-Sizing utilities like `w-64` and `size-10` read the same namespace, so the
-reset removes them too, and arbitrary values like `gap-[13px]` still compile.
-If that is too strict for your codebase, keep the defaults and treat 1, 2, 3,
-4, 6, 8, 12 and 16 as the only numbers you type. The scale decides which
+An app screen rarely needs more than 64px. A marketing page wants far more
+between sections, and a fixed 128px is too much on a phone. A fluid step like
+`section` covers both without a breakpoint per section. The scale decides which
 values exist. [Whitespace](https://critly.vercel.app/whitespace) decides where the big ones go.
 
 ### Resources
@@ -749,7 +760,7 @@ values exist. [Whitespace](https://critly.vercel.app/whitespace) decides where t
 
 ## Alignment
 
-> Fewer edges, less to read.
+> Near misses read as mistakes.
 
 - Section: Layout
 - URL: https://critly.vercel.app/alignment
@@ -760,15 +771,17 @@ Every element starts somewhere, and the eye notices where. When a card's
 content starts at 14px, the list below it at 8px and the input text at 10px,
 nobody can say what is wrong, but the section looks unfinished.
 
-**Line things up to as few edges as possible. Every new left edge is one more
-thing the eye has to resolve.**
+**Edges that almost line up read as mistakes, so align what belongs together.
+When you break alignment, break it far enough to look intended.**
 
 > **Interactive demo: Alignment.** Open https://critly.vercel.app/alignment to try it.
 
 Both versions use the same components. The near-miss one has 6 left edges,
 because each component brought its own padding: 14px in the card, 8px in the
 rows, 10px in the input. The aligned one has 3: the boxes at 0, everything
-else at 12px, and the text after an icon or avatar at 44px.
+else at 12px, and the text after an icon or avatar at 44px. A 2px or 4px
+difference never looks like a choice. An image that bleeds past the column or
+a pull quote set far out does, because the break is too big to be a slip.
 
 ### Text aligns to text
 
@@ -778,8 +791,9 @@ words, not the faint boxes around them. In the demo, Members, Invite by email
 and the placeholder all start at 12px.
 
 Atlassian's grid aligns the containers and leaves what's inside to spacing
-tokens. That keeps the frame tidy, but the text inside can still drift. I'd
-give every box in a section the same inset, so the words line up too.
+tokens. That keeps the frame tidy, but the text inside can still drift. When
+boxes stack in one column, I'd give them the same inset, so the words line up
+too.
 
 Within a column, keep one axis. The avatars and the card icon share a 24px
 slot, so the text after them shares an edge too. Apple's guidelines note
@@ -1010,9 +1024,15 @@ floats over the post, and the error has its own line.
 - **Conditional buttons and badges:** keep their slot, or overlay them. A
   number that changes width as it ticks is a small shift too, which
   [tabular numbers](https://critly.vercel.app/tabular-numbers) fixes.
-- **Scrollbars:** on Windows, a scrollbar appearing narrows the page and
-  everything centered jumps sideways. `scrollbar-gutter: stable` keeps room
-  for it.
+- **Scrollbars:** with classic scrollbars, the Windows default and an option
+  on macOS and Linux, a scrollbar appearing narrows the page and everything
+  centered jumps sideways. `scrollbar-gutter: stable` keeps room for it. Use
+  it where overflow toggles: routes that switch between short and long pages,
+  or [scroll lock](https://critly.vercel.app/overlays) under a modal. It isn't a default for every page.
+  On a page that doesn't overflow, it leaves an empty strip in the root
+  background beside full-bleed sections. Overlay scrollbars, the macOS default
+  with a trackpad and the norm on phones, take no room, so there it does
+  nothing.
 
 ### Web fonts
 
@@ -1045,7 +1065,9 @@ nothing in CLS. It still costs the person pressing again.
 
 <p class="h-5 text-sm text-red-600">{error}</p>
 
-<html class="[scrollbar-gutter:stable]">
+<!-- While a modal is open, and only if the page scrolls:
+     hide the scrollbar but keep its room -->
+<html class="overflow-hidden [scrollbar-gutter:stable]">
 ```
 
 **CSS**
@@ -1063,12 +1085,15 @@ img {
   height: 1.25rem;
 }
 
-html {
+/* While a modal is open, and only if the page scrolls:
+   hide the scrollbar but keep its room */
+html.scroll-locked {
+  overflow: hidden;
   scrollbar-gutter: stable;
 }
 
 @font-face {
-  font-family: "Inter Fallback";
+  font-family: "Brand Fallback"; /* these overrides fit Inter: generate your font's */
   src: local("Arial");
   size-adjust: 107.89%;
   ascent-override: 89.79%;
@@ -1077,7 +1102,7 @@ html {
 }
 
 body {
-  font-family: "Inter", "Inter Fallback", sans-serif;
+  font-family: "Brand", "Brand Fallback", sans-serif;
 }
 ```
 

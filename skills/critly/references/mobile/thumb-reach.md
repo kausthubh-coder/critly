@@ -21,7 +21,7 @@ hard zones. With the bottom bar, the tabs, search and compose sit under the
 thumb, and the only control left at the top is Edit, which people rarely
 need.
 
-**Put persistent, frequent controls at the bottom, keep content in the middle, and leave the top for actions people rarely take.**
+**Put the controls people use constantly where the thumb rests and keep navigation visible; the top costs a shift of grip, which is fine for occasional actions and the ones the platform puts there.**
 
 ### What the data says
 
@@ -45,8 +45,10 @@ So the overlay above shows effort, not a wall. Read it like this:
   grip change.
 - Middle: content, which people scroll to where they can see and tap it
   best.
-- Top: titles, settings, rare and destructive actions, where a slip of
-  the thumb won't reach them.
+- Top: titles, settings, occasional and destructive actions, and the ones
+  the platform puts there, like Done and Save at the top trailing corner of
+  an iOS sheet. A grip shift is a fair price for something done once per
+  screen, and a slip of the thumb won't reach them.
 - Edges and corners: bigger targets than the minimum. See
   [Hit Areas](https://critly.vercel.app/hit-areas).
 
@@ -74,9 +76,10 @@ destinations, so show them there.
 
 Bigger phones make the stretch longer. In a 2018 CHI study of phones from
 4 to 5.96 inches, people's grip moved up the phone as it got bigger, and
-today's largest phones are bigger still. Don't answer "more actions" with a menu in the
-top corner. Open a [bottom sheet](https://critly.vercel.app/bottom-sheets) from a button at the
-bottom: it rises into the thumb's zone, and a swipe down closes it.
+today's largest phones are bigger still. If people reach for "more actions"
+often, a menu in the top corner makes every use a stretch. Open a
+[bottom sheet](https://critly.vercel.app/bottom-sheets) from a button at the bottom instead: it rises
+into the thumb's zone, and a swipe down closes it.
 
 ### Usage
 

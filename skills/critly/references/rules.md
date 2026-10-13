@@ -4,13 +4,12 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 
 ## Craft
 
-- **Performance Is Design**: What you show during a wait decides how long it feels. ([full](craft.md#performance-is-design))
+- **Performance Is Design**: What you show during a wait shapes how long it feels. ([full](craft.md#performance-is-design))
 - **How to Get References**: Collect references from outside your field, and borrow how they work, not how they look. ([full](craft.md#how-to-get-references))
-- **Novelty Budget**: The rarer the moment, the more expressive it can be. ([full](craft.md#novelty-budget))
-- **Taste Is Trained**: Taste is a skill, and it takes reps. ([full](craft.md#taste-is-trained))
-- **Taste Pass**: Before you call a screen done, squint at it, count its boxes and edges, and find the one thing it leads with. ([full](craft.md#taste-pass))
-- **Timelessness**: Surface ages fast. Structure ages slowly. ([full](craft.md#timelessness))
-- **Product Feel**: Decide how it should feel, then let that pick the numbers. ([full](craft.md#product-feel))
+- **Novelty Budget**: The rarer the moment, the more of people's time and attention its expression can take. Color, type, shape and voice cost no time, so frequency doesn't limit them. ([full](craft.md#novelty-budget))
+- **Taste Pass**: Before you call a screen done, squint at it: the first thing the eye lands on should be what the screen is for, and every box and edge should be doing grouping work. ([full](craft.md#taste-pass))
+- **Timelessness**: Surface ages fast. Structure ages slowly, so get the structure right and pick the surface on purpose, for this brand and this moment. ([full](craft.md#timelessness))
+- **Product Feel**: How often and in what state of mind people use it decides the feel: density and pace. What the brand is decides its identity. Make both decisions, then let them pick the numbers. ([full](craft.md#product-feel))
 - **Design Tokens**: Name the role, not the value, and let components use only the names. ([full](craft.md#design-tokens))
 
 ## Typography
@@ -19,21 +18,21 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 - **Text Wrapping**: Balance short text and make long text pretty. ([full](typography.md#text-wrapping))
 - **Tabular Numbers**: Steady digits for values that change. ([full](typography.md#tabular-numbers))
 - **Optical Alignment**: Center for the eye, not the math. ([full](typography.md#optical-alignment))
-- **Icons**: Pick one set, use one weight, and size icons a little larger than the text beside them. ([full](typography.md#icons))
+- **Icons**: Pick one set, give it one default weight that sits with your text, and size icons a little larger than the text beside them. Switch weight or fill only on purpose, for a selected state or a family of section icons. ([full](typography.md#icons))
 - **Font Smoothing**: On macOS, turn the thickening off so text renders at the weight you chose. ([full](typography.md#font-smoothing))
-- **Visual Hierarchy**: Quiet the rest instead of making the important thing louder. ([full](typography.md#visual-hierarchy))
+- **Visual Hierarchy**: Decide what people should see first and make it win by contrast. Quiet what competes with it before you make it louder, using whichever lever fits the voice: tone, weight, size or color. ([full](typography.md#visual-hierarchy))
 - **Line Length**: Keep body text between 45 and 75 characters per line. ([full](typography.md#line-length))
-- **Type Scale**: Pick about five sizes from a scale, give each one a job, and use nothing else. ([full](typography.md#type-scale))
+- **Type Scale**: Pick a small set of sizes far enough apart to read as deliberate, and give each one a job. Dense UI wants small steps; editorial and marketing pages can take far larger jumps. ([full](typography.md#type-scale))
 
 ## Color
 
 - **OKLCH**: Pick colors in OKLCH, so equal lightness numbers actually look equally light. ([full](color.md#oklch))
-- **Noise**: Grain hides banding and adds texture. ([full](color.md#noise))
-- **Shadows, Not Borders**: Give surfaces their edge with a faint shadow, not a border. ([full](color.md#shadows-not-borders))
+- **Noise**: Add grain when a surface should feel tactile or a gradient bands. On anything large, render it once and tile it so it stays cheap. ([full](color.md#noise))
+- **Edges and Elevation**: Choose how surfaces separate (a line, a shadow, a fill or plain space) by what the layering should say, and derive every level from one token. ([full](color.md#edges-and-elevation))
 - **Image Outlines**: Paint the line over the image, not around it. ([full](color.md#image-outlines))
-- **Color Roles**: Let neutrals do almost all the work. Use the accent only for the main action and the current selection, and use green, amber and red only when they mean something. ([full](color.md#color-roles))
+- **Color Roles**: Keep one color whose job is the next action and the current selection, and use green, amber and red only when they mean something. Color the rest as freely as the brand wants, as long as that signal still stands out. ([full](color.md#color-roles))
 - **Dark Mode**: Design dark mode as its own theme: lift surfaces with lightness, soften the extremes, and recheck every color. ([full](color.md#dark-mode))
-- **Liquid Glass**: Use glass only for controls that float above content, and make them readable over the worst background they can cross. ([full](color.md#liquid-glass))
+- **Liquid Glass**: If you use glass, keep what sits on it readable over the worst content that can pass beneath, and give it something to refract. ([full](color.md#liquid-glass))
 
 ## Layout
 
@@ -44,8 +43,8 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 - **Scroll Fades**: Fade an edge only when there is more to scroll past it. ([full](layout.md#scroll-fades))
 - **Squircles**: Keep the radius, change the shape. ([full](layout.md#squircles))
 - **Whitespace**: Gaps inside a group should be about half the gaps between groups, or less. ([full](layout.md#whitespace))
-- **Spacing Scale**: Pick every space from a small scale, and let the steps grow as the gaps do. ([full](layout.md#spacing-scale))
-- **Alignment**: Line things up to as few edges as possible. Every new left edge is one more thing the eye has to resolve. ([full](layout.md#alignment))
+- **Spacing Scale**: Pick every space from a small scale whose steps grow as the gaps do, and extend it, or make it fluid, for page-level rhythm. ([full](layout.md#spacing-scale))
+- **Alignment**: Edges that almost line up read as mistakes, so align what belongs together. When you break alignment, break it far enough to look intended. ([full](layout.md#alignment))
 - **Density**: Choose density from how often and how long people use the screen. ([full](layout.md#density))
 - **Layout Shift**: Anything that arrives late should land in space that was already waiting for it. ([full](layout.md#layout-shift))
 - **Responsive**: A component should respond to the space it is given, not to the size of the screen. ([full](layout.md#responsive))
@@ -68,18 +67,18 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 
 ## Motion
 
-- **Icon Morph**: Don't swap icons. Blur, scale and fade between them. ([full](motion.md#icon-morph))
-- **Button Press**: Scale it down a little while it is pressed. ([full](motion.md#button-press))
-- **Easings**: Use ease-out for anything that appears because the user did something. ([full](motion.md#easings))
-- **Springs**: Start every spring at bounce 0. Add bounce only when a gesture gave the motion momentum. ([full](motion.md#springs))
-- **Stagger**: Keep the gap between 30ms and 60ms. ([full](motion.md#stagger))
+- **Icon Morph**: Make an icon change read as the same control changing, not two icons trading places. A blur crossfade, a morph or a quick snap with a small pop can all do it; pick the one that suits the brand. ([full](motion.md#icon-morph))
+- **Button Press**: Make a press visible the moment it lands, so people know the click registered before anything else has happened. How far it moves is a brand decision; for controls people hit all day, keep it small and quick. ([full](motion.md#button-press))
+- **Easings**: When the user triggers motion, start it at once and let it settle, with a front-loaded curve like an ease-out. Which curve, how hard it front-loads and whether it overshoots is part of the brand's feel. ([full](motion.md#easings))
+- **Springs**: Bounce reads as energy. Use it where something gave the motion energy, like a throw or a swipe, or where the brand is playful, and keep it off opacity. ([full](motion.md#springs))
+- **Stagger**: A stagger gives the eye a direction but delays the last item, so cap the total delay. In interface lists keep the gap short; longer gaps are choreography for showcase moments. ([full](motion.md#stagger))
 - **Interruptibility**: If something can be triggered again before it finishes, animate it toward a target instead of playing a clip. ([full](motion.md#interruptibility))
 - **Momentum**: Hand the release velocity to the animation that finishes the gesture, and aim for where the throw was going, not where it was let go. ([full](motion.md#momentum))
-- **Hover Restraint**: The more often something happens, the less animation it can afford. ([full](motion.md#hover-restraint))
+- **Hover Restraint**: The more often something happens, the less animation it can afford. Hovers people sweep across all day should keep up with the pointer; a rare or showcase hover can perform. ([full](motion.md#hover-restraint))
 - **Shared Layout**: If two elements are the same thing to the user, move one instead of swapping two. ([full](motion.md#shared-layout))
-- **Liquid Motion**: Morph the surface the user touched instead of fading in a new one, and close it back to where it came from. ([full](motion.md#liquid-motion))
-- **Exit Animations**: Something leaving deserves less ceremony than something arriving. ([full](motion.md#exit-animations))
-- **Scale Entrances**: Start a scale entrance between 0.9 and 0.97, fade it in, and grow it from the thing that opened it. ([full](motion.md#scale-entrances))
+- **Liquid Motion**: Where it helps to show that this is the same thing, morph the surface the user touched instead of fading in a new one, and close it back to where it came from. It's loud, so save it for a signature moment, not every control. ([full](motion.md#liquid-motion))
+- **Exit Animations**: An exit shouldn't make people wait. Keep it shorter and quieter than the entrance, unless the motion shows where the thing went. ([full](motion.md#exit-animations))
+- **Scale Entrances**: Grow a scale entrance from the thing that opened it, and keep it readable from the first frame: start close to full size and fade it in. ([full](motion.md#scale-entrances))
 - **Reduced Motion**: Reduced motion means less movement, not no animation. ([full](motion.md#reduced-motion))
 
 ## Performance
@@ -93,7 +92,7 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 - **JavaScript Cost**: Ship the least JavaScript that makes the first screen work. Load the rest when someone is about to need it. ([full](performance.md#javascript-cost))
 - **Long Lists**: Render only the rows people can see. Keep the rest as space, not as elements. ([full](performance.md#long-lists))
 - **Smooth Animation**: Animate `transform` and `opacity`, and let CSS or the Web Animations API run them. ([full](performance.md#smooth-animation))
-- **Effect Cost**: Budget expensive effects by how many are on the page, not by how one looks. Keep blur and heavy shadows to a few small floating surfaces, and remove them when they're hidden. ([full](performance.md#effect-cost))
+- **Effect Cost**: Blur and glass cost GPU work for every instance and every pixel they cover, so budget them by count and area, not by how one looks. If the look is the brand, make it cheap: keep it off repeated items, remove it when hidden, and measure on a phone. ([full](performance.md#effect-cost))
 
 ## Sound
 
@@ -107,10 +106,10 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 
 ## Mobile
 
-- **Native Feel**: Draw the parts people learned from the system the way their platform draws them, and put your brand in color, content and voice. ([full](mobile/native-feel.md))
-- **Thumb Reach**: Put persistent, frequent controls at the bottom, keep content in the middle, and leave the top for actions people rarely take. ([full](mobile/thumb-reach.md))
-- **Touch Feedback**: Show the pressed state the moment the finger lands, and drop it the moment the touch turns into a scroll, a drag or a slide off. ([full](mobile/touch-feedback.md))
-- **Gestures**: Treat every gesture as a shortcut for something people can see and tap. ([full](mobile/gestures.md))
+- **Native Feel**: Keep the behaviors people learned from their platform, like where back is, the order of dialog buttons, what a press and a switch do, and Dynamic Type, and style the rest as freely as your brand wants. ([full](mobile/native-feel.md))
+- **Thumb Reach**: Put the controls people use constantly where the thumb rests and keep navigation visible; the top costs a shift of grip, which is fine for occasional actions and the ones the platform puts there. ([full](mobile/thumb-reach.md))
+- **Touch Feedback**: Show the pressed state the moment the finger lands, or after about 100 ms inside a scrolling list, and drop it the moment the touch turns into a scroll, a drag or a slide off. ([full](mobile/touch-feedback.md))
+- **Gestures**: Treat every gesture that triggers an action as a shortcut for something people can see and tap; direct manipulation like scrolling, pinching and dragging needs no twin. ([full](mobile/gestures.md))
 - **Swipe Actions**: Let a short swipe reveal the actions and a long swipe commit the first one, and make the moment it switches impossible to miss. ([full](mobile/swipe-actions.md))
 - **Long Press**: Show the hold progressing, mark the moment it completes, and open the menu attached to the thing you pressed. ([full](mobile/long-press.md))
 - **Bottom Sheets**: Give a sheet a few resting heights and a grabber, let the flick pick the height, and let a swipe down close it. ([full](mobile/bottom-sheets.md))

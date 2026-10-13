@@ -188,14 +188,21 @@ to "Saving…" first, lets the browser paint that frame, then does the work in
 
 ### Feedback that matches the wait
 
+These bands follow Jakob Nielsen's
+[response time limits](https://www.nngroup.com/articles/response-times-3-important-limits/):
+under 0.1 seconds feels instant, under 1 second people notice the delay but
+keep their train of thought, and past 10 seconds their attention drifts.
+
 - **Under 100ms:** just the state change. A pressed button, a checked box,
   the typed letter.
-- **Up to about 400ms:** nothing more. A spinner that flashes for 200ms
+- **Up to about 400ms:** nothing more, and hold the space so the layout
+  doesn't jump when the result lands. A spinner that flashes for 200ms
   reads as a glitch.
 - **400ms to 1s:** a quiet cue, like dimming the old content or a button
   label that says "Saving…".
-- **Over 1s:** a real loading state; past 10 seconds, progress and a way
-  out. See [Performance Is Design](https://critly.vercel.app/performance-is-design).
+- **Over 1s:** a real loading state, a skeleton or a spinner; past 10
+  seconds, progress, an estimate and a way out. See
+  [Performance Is Design](https://critly.vercel.app/performance-is-design) for which to show.
 
 To stop double submits, switch the button to a pending state that ignores
 repeat presses, instead of a silent `disabled` that greys it out and drops
@@ -295,7 +302,7 @@ you wait.**
 
 People hover on a link for a while before they click it. instant.page's
 measurements found that after 65ms of hover, half of users go on to click,
-with over 300ms still to go. Pressing the button gives about 80ms more
+and on desktop that still leaves over 300ms, on average, before the click. Pressing the button gives about 80ms more
 before the click fires, and on touch screens `touchstart` gives about 90ms.
 That's why the right app also loads on press: it's free and wastes nothing.
 
@@ -310,13 +317,13 @@ such as the first items in a list.
 
 ### What to show while it loads
 
-- **Under 100ms:** nothing. Keep the old screen, show the pressed link, then
-  swap.
-- **Longer, and you know the next layout:** show the destination's skeleton
-  straight away, filled with what you already know, like the title from the
-  link.
-- **Longer, and you don't:** keep the old screen and dim it after about
-  100ms.
+How long to wait before showing anything is the same as for any input, in
+[Responsiveness](https://critly.vercel.app/responsiveness). A fast load keeps the old screen, shows the
+pressed link, then swaps. When it takes longer:
+
+- **You know the next layout:** show the destination's skeleton straight
+  away, filled with what you already know, like the title from the link.
+- **You don't:** keep the old screen and dim it.
 
 Spinners need the same care. Load each panel a few times.
 
@@ -325,7 +332,9 @@ Spinners need the same care. Load each panel a few times.
 Most loads take about 100ms. The left spinner appears for every one of them,
 so the panel blinks. The right one only appears if the load is still going
 after 150ms, and then stays for at least 300ms, so fast loads look instant
-and slow ones look steady.
+and slow ones look steady. The delay is a setting: a full-screen spinner can
+wait longer, as [Responsiveness](https://critly.vercel.app/responsiveness) suggests, while a small one
+inside the panel people are watching can show sooner.
 
 ### Usage
 
@@ -543,7 +552,7 @@ font is showing.
 ### Pick the display behaviour on purpose
 
 - **`swap`**: text at once, swapped whenever the font arrives. Safe only
-  with a matched fallback. Half the web uses it anyway.
+  with a matched fallback. Nearly half of pages use it anyway.
 - **`fallback`**: swaps only if the font arrives within about 3 seconds,
   then keeps the fallback. Good for body text.
 - **`optional`**, with a preload: uses the font only if it's ready almost
@@ -557,7 +566,8 @@ font is showing.
   font CDN gives no head start, only one more connection.
 - **WOFF2, subset, variable.** One variable file replaces several weights,
   and `unicode-range` subsets mean a page in English doesn't download
-  Cyrillic. Aim for two families and about 100 KB of fonts on first load.
+  Cyrillic. Two families and about 100 KB on first load is a good starting
+  budget; a type-led brand can spend more if it measures what that costs.
 - **Preload one or two files,** the ones the first screen uses, with
   `crossorigin` even on your own domain, or the font downloads twice.
 - **Consider system fonts** for interface text. `system-ui` costs nothing
@@ -604,13 +614,13 @@ body {
 **Next.js**
 
 ```tsx
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 
 // Self-hosted at build time, preloaded, with a matched fallback generated.
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const brand = localFont({ src: "./fonts/brand-latin-var.woff2", display: "swap" });
 
 export default function RootLayout({ children }) {
-  return <html className={inter.className}>{children}</html>;
+  return <html className={brand.className}>{children}</html>;
 }
 ```
 
@@ -640,9 +650,10 @@ look at the layout-shift entries around the moment the font arrives; see
 - Source: https://github.com/kausthubh-coder/critly/blob/main/content/performance/video-and-embeds.mdx
 
 A video player is one of the heaviest things you can put on a page, and
-often nobody presses play. A single YouTube embed downloads about a megabyte
-of script and keeps a phone's main thread busy for over a second, before
-anyone clicks. Maps and social embeds are not much lighter.
+often nobody presses play. A single YouTube embed downloads over half a
+megabyte of player and keeps a phone's main thread busy for over a second,
+before anyone clicks; in HTTP Archive's mobile tests, pages with YouTube
+average about 6 seconds of its script. Maps and social embeds are not much lighter.
 
 Look at what each card has loaded before you touch it, then click both.
 
@@ -773,8 +784,9 @@ attribute.
 Every kilobyte of JavaScript costs more than a kilobyte of anything else. An
 image is downloaded and decoded mostly off to the side. A script is
 downloaded, then parsed, compiled and run on the main thread, and while it
-runs the page can't answer a tap. The median mobile page now ships about
-650 KB of it, compressed, and about 250 KB of what it loads never runs.
+runs the page can't answer a tap. The median mobile page now ships well over
+half a megabyte of it, compressed, and close to half of what it loads never
+runs.
 
 Reload, then tap both buttons as soon as you see them. Try each device.
 
@@ -818,17 +830,21 @@ dialog this way.
 
 ### Watch the third parties
 
-Analytics, tag managers, chat widgets and A/B tools account for over half
-of all script execution on the web. A YouTube embed alone averages about 6
-seconds of main-thread work. Load them after the page is interactive or on
+Third-party scripts (analytics, tag managers, chat widgets, A/B tools,
+embeds) account for over half of all script execution on the web. A single
+YouTube embed keeps a phone's main thread busy for over a second, and in
+HTTP Archive's mobile tests, pages with YouTube average about 6 seconds of
+its script. Load them after the page is interactive or on
 first interaction, replace widgets with a facade that loads the real thing
 on click, and remove the ones nobody looks at.
 
 ### Set a budget and enforce it
 
-For a phone to load a page in about 3 seconds, Alex Russell's 2026
-numbers allow roughly 300 KB of compressed JavaScript on the critical path.
-A good default is 150 KB for content pages and 300 KB for app shells, no
+For a typical phone to load a page in about 3 seconds, Alex Russell's 2026
+numbers allow roughly 300 KB of compressed JavaScript on the critical path
+for a page that is mostly markup, and about 620 KB for a JavaScript-heavy app,
+because it ships less HTML, CSS and images to make room. A good default is
+150 KB for content pages and 300 KB for app shells, no
 single chunk over 100 KB, and a check in CI that fails the build when a
 change goes over. Set the limit at today's size and lower it with every win.
 
@@ -930,8 +946,9 @@ Check with `document.querySelectorAll("*").length`.
 - **A few hundred simple rows, well under 1,400 elements:** just render them.
 - **Long, mostly static content** (articles, docs, a long settings page):
   add `content-visibility: auto` to each section. The browser skips laying
-  out and painting what's off screen, and find-in-page still works. In one
-  test, 10,000 rows went from about 436ms to 247ms.
+  out and painting what's off screen, and find-in-page still works. In
+  web.dev's test on a long travel blog, rendering on first load went from
+  232ms to 30ms.
 - **Thousands of elements, or anything filtered, sorted or updated live:**
   virtualize. Only the visible rows exist, so the cost stays flat, around 5
   to 20ms whether there are a thousand rows or a million.
@@ -1065,9 +1082,10 @@ run them.**
   `opacity`.
 - **Depends on the browser:** `filter`, `backdrop-filter`, `clip-path` and
   `background-color` run on the compositor in some engines and on the main
-  thread in others. Treat them as expensive.
-- **Paint every frame:** `box-shadow`, `border-radius`, `color`,
-  `filter: blur()` in Chrome.
+  thread in others. Treat them as expensive. Even where a blur runs on the
+  compositor, as it can in Chromium, the GPU redraws it every frame, and the
+  cost grows with the blur radius and the area.
+- **Paint every frame:** `box-shadow`, `border-radius`, `color`.
 - **Layout every frame:** `width`, `height`, `top`, `left`, `margin`,
   `padding`. Moving one box can move every box after it.
 
@@ -1087,8 +1105,8 @@ smooth.
 JavaScript engines compute each frame on the main thread, so they're only as
 smooth as the page around them. In Motion, `x`, `y` and `scale` run that
 way. A full `transform` string can be handed to the browser instead. Springs
-handed over this way become `linear()` curves, which Safari runs on the main
-thread anyway. In React, never animate through state: a re-render per frame
+handed over this way become `linear()` curves, which Safari has run on the
+main thread anyway (WebKit's threaded animations fix this). In React, never animate through state: a re-render per frame
 is exactly the main-thread work that causes the stutter. Use motion values,
 refs or CSS.
 
@@ -1189,23 +1207,25 @@ small row of actions that appears on hover.
 > **Interactive demo: Effect Count.** Open https://critly.vercel.app/effect-cost to try it.
 
 With glass on every card, you only ever see one blur, but the page is
-paying for all of them: the hidden ones sit at opacity 0 and still blur the
-moving background on every frame. Budgeted, the actions use a plain dark
+paying for more than one: the hidden ones sit at opacity 0 with the effect
+still applied, so each keeps its own layer and can still cost blur work.
+Budgeted, the actions use a plain dark
 backing and the only blur is the toolbar. On a fast laptop the frame time
 may barely move; on a phone, dozens of hidden blurs are the difference
 between smooth scrolling and stutter.
 
-**Budget expensive effects by how many are on the page, not by how one looks.
-Keep blur and heavy shadows to a few small floating surfaces, and remove them
-when they're hidden.**
+**Blur and glass cost GPU work for every instance and every pixel they cover,
+so budget them by count and area, not by how one looks. If the look is the
+brand, make it cheap: keep it off repeated items, remove it when hidden, and
+measure on a phone.**
 
 ### Where the count comes from
 
 The usual cause isn't one ambitious design. It's a shared component. Glass
 added to the default button, or a layered shadow on the card component, is
-repeated by every list, grid and menu that uses it. In one real app, a glass
-icon button repeated on every poster put about 1,500 blurred elements on a
-single page.
+repeated by every list, grid and menu that uses it. A glass icon button on
+every poster in a long grid can put hundreds, even thousands, of blurred
+elements on a single page.
 
 - **Count instances.** Run the quick check from
   [Measuring Performance](https://critly.vercel.app/measuring-performance) in the console: how many
@@ -1242,7 +1262,8 @@ single page.
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
 }
 
-/* Glass is a variant you opt into, never the default. */
+/* On a shared component, make glass an opt-in variant,
+   so every list and grid doesn't pay for it by default. */
 .button[data-variant="glass"] {
   backdrop-filter: blur(12px) saturate(170%);
 }
@@ -1267,7 +1288,7 @@ To see layers, open DevTools' Layers panel or turn on Rendering → Layer
 borders. To see the cost, record a trace while scrolling the busiest page on
 a real phone, then remove one effect at a time and record again. GPU cost
 doesn't show up under CPU throttling, so a laptop can't tell you this one.
-See [Liquid Glass](https://critly.vercel.app/liquid-glass) for where glass belongs at all.
+See [Liquid Glass](https://critly.vercel.app/liquid-glass) for keeping glass readable.
 
 ### Resources
 

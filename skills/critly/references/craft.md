@@ -12,7 +12,7 @@
 Two apps can fetch the same data in the same time, and one will still feel
 faster. The difference is what each one shows you while you wait.
 
-**What you show during a wait decides how long it feels.** That makes
+**What you show during a wait shapes how long it feels.** That makes
 waiting a design problem, and usually a cheaper one to fix than the network.
 
 Press load. Both cards take the same 1.2 seconds.
@@ -20,22 +20,19 @@ Press load. Both cards take the same 1.2 seconds.
 > **Interactive demo: Perceived Performance.** Open https://critly.vercel.app/performance-is-design to try it.
 
 The spinner says "please wait". The skeleton shows the shape of what is
-coming, so your eye already has somewhere to go. Same wait, and the second one
-feels shorter.
+coming, so your eye already has somewhere to go. Whether that makes the same
+wait feel shorter is less settled than it looks. A 2018 study found people
+rated skeleton pages faster, while
+[Viget's test](https://www.viget.com/articles/a-bone-to-pick-with-skeleton-screens)
+with 136 people found the skeleton felt like the longest wait of the three it
+tried. What a skeleton does reliably is hold the layout, so nothing jumps when
+the content lands.
 
 ### Match the wait
 
-Jakob Nielsen's
-[response time limits](https://www.nngroup.com/articles/response-times-3-important-limits/)
-are still the best guide:
-
-- Under 100ms feels instant. Just show the result.
-- Under 1 second, people notice the delay but keep their train of thought. Show nothing, and hold the space so the layout does not jump.
-- Past 1 second, show that something is happening, with a skeleton or a spinner.
-- Past 10 seconds, show progress and an estimate.
-
-The second row is the one people get wrong. A skeleton that lives for 300ms is
-not reassurance. It is a flash.
+How long a wait can run before it needs feedback, and what kind, is set out
+in [Responsiveness](https://critly.vercel.app/responsiveness). The short wait is the one people get
+wrong. A skeleton that lives for 300ms is not reassurance. It is a flash.
 
 > **Interactive demo: Loading Flash.** Open https://critly.vercel.app/performance-is-design to try it.
 
@@ -145,6 +142,32 @@ roll of door handles and ticket stubs.
 it builds tension, or what it leaves out. If you can explain what a reference
 taught you without showing it to anyone, it was a good one.
 
+### Train your eye
+
+References only help if you can see what they're doing, and that is a skill.
+Nobody's sense of whether an easing is right came pre-installed. [Emil
+Kowalski](https://emilkowal.ski/ui/developing-taste) calls taste "a trained
+instinct": surround yourself with great work, work out why you like it, and
+practice.
+
+**Use good software slowly.** Open the same menu three times. Ask what the
+shadow is doing, why the exit is faster than the entrance, what the hover
+state is not doing.
+
+**Rebuild it, then compare.** Put your copy next to the original. The gap
+between them is the curriculum.
+
+**Judge in pairs.** Two options side by side are far easier to judge than one
+on its own. Keep the component fixed and change a single variable.
+
+> **Interactive demo: Pair Judgement.** Open https://critly.vercel.app/how-to-get-references to try it.
+
+Once you can tell 150ms from 400ms without thinking, you have a reference
+point you did not have before. When a tool can generate a plausible interface
+in seconds, making one stops being the hard part. Picking the right one out of
+five is the job, so make the five different on purpose, then compare them two
+at a time.
+
 ### Resources
 
 - [Designing Depth](https://rauno.me/craft/depth): Rauno Freiberg takes "dirtying the frame" from film and turns it into blurred backdrops, layering and choreography.
@@ -152,6 +175,8 @@ taught you without showing it to anyone, it was a good one.
 - [Creative Output](https://paco.me/writing/creative-output): Paco Coursey on whether work built from other people's ideas still counts as your own.
 - [The Best Things](https://shud.in/thoughts/the-best-things): Shu Ding's list of favourite work, from Kurosawa to Borges, with almost no software in it.
 - [Are.na](https://www.are.na): A quiet place to collect references without an algorithm deciding what you see next.
+- [Developing taste](https://emilkowal.ski/ui/developing-taste): Emil Kowalski on taste as a trained instinct, and the three habits that train it.
+- [Train your judgement](https://emilkowal.ski/ui/train-your-judgement): Pairs of animations side by side. Pick the better one, say why, then read the breakdown.
 
 
 ## Novelty Budget
@@ -182,13 +207,14 @@ When only clearing the list animates, that moment lands.
 
 ### Spend by frequency
 
-**The rarer the moment, the more expressive it can be.** Benji Taylor calls
+**The rarer the moment, the more of people's time and attention its expression can take. Color, type, shape and voice cost no time, so frequency doesn't limit them.** Benji Taylor calls
 this the [Delight-Impact Curve](https://benji.org/family-values): the potential
 for delight goes up as the frequency of use goes down.
 
-- Hovering, switching tabs, checking a box. These happen constantly. Spend nothing here.
-- Opening a dialog, sending a message. Occasional. A short, quiet transition is plenty.
-- Finishing onboarding, clearing your inbox, a yearly recap. Rare. This is where the budget goes.
+Hovering, switching tabs and checking a box happen all day, so they stay
+instant; [Hover Restraint](https://critly.vercel.app/hover-restraint) sets out the whole scale. The
+budget goes to the rare moments: finishing onboarding, clearing your inbox, a
+yearly recap.
 
 Some moments should only happen once. On Rauno's Devouring Details, the
 welcome transition plays right after you log in and never on a reload.
@@ -209,8 +235,9 @@ learn them before they can use them. Rauno calls this the novelty tax, and
 points to Arc: a browser its fans loved, that most people found too much to
 learn.
 
-None of this means "no delight". It means a calm baseline, so the one loud
-moment has something to stand against.
+None of this means "no delight", or a plain look. It means the frequent moments
+never make you wait, so the rare loud one has something to stand against. A
+bold palette or a distinctive typeface costs nobody any time.
 
 ### Resources
 
@@ -219,76 +246,6 @@ moment has something to stand against.
 - [You don't need animations](https://emilkowal.ski/ui/you-dont-need-animations): Emil Kowalski on frequency of use, and why Raycast opens with no animation at all.
 - [Invisible Details of Interaction Design](https://rauno.me/craft/interaction-design): Where Rauno first wrote about how frequency wears novelty down.
 - [Semantic satiation](https://en.wikipedia.org/wiki/Semantic_satiation): The effect where repetition drains a word of its meaning.
-
-
-## Taste Is Trained
-
-> Taste is a skill, and it takes reps.
-
-- Section: Craft
-- URL: https://critly.vercel.app/taste-is-trained
-- Published: 2026-07-16
-- Source: https://github.com/kausthubh-coder/critly/blob/main/content/craft/taste-is-trained.mdx
-
-Taste gets talked about like a gift. Some people have the eye, and the rest
-of us install a component library. It is a comfortable story, because it
-excuses not practicing.
-
-Nobody's sense of whether an easing is right came pre-installed. The people
-we call tasteful have noticed more things, more carefully, for longer.
-**Taste is a skill, and it takes reps.**
-
-One of these cards has three small mistakes. Click anything that looks off,
-then reveal.
-
-> **Interactive demo: Spot The Difference.** Open https://critly.vercel.app/taste-is-trained to try it.
-
-If you found all three, good. If you found none, also good. You can only fix
-what you can see, and seeing gets better with practice.
-
-### The training loop
-
-[Emil Kowalski](https://emilkowal.ski/ui/developing-taste) calls taste "a
-trained instinct", and his recipe is to surround yourself with great work,
-work out why you like it, and practice. In concrete terms:
-
-**Use good software slowly.** Open the same menu three times. Ask what the
-shadow is doing, why the exit is faster than the entrance, what the hover
-state is not doing.
-
-**Name what you notice.** "This feels nice" trains nothing. "The popover
-scales from its trigger, not its center" is a rep.
-
-**Rebuild it, then compare.** Put your copy next to the original. The gap
-between them is the curriculum.
-
-### Change one thing at a time
-
-Judging two options side by side is far easier than judging one on its own.
-Keep the component fixed and change a single variable. Press play a few times
-for each pair.
-
-> **Interactive demo: Pair Judgement.** Open https://critly.vercel.app/taste-is-trained to try it.
-
-Once you can tell 150ms from 400ms without thinking, you have a reference
-point you did not have before. Do the same for easing, origin, shadow and
-spacing. Emil's [Train your judgement](https://emilkowal.ski/ui/train-your-judgement)
-is a whole page of pairs like these.
-
-### Why it matters more now
-
-When a tool can generate a plausible interface in seconds, making one stops
-being the hard part. Picking the right one out of five is the job. As Emil
-puts it, AI "can write animation code. What it can't do is know what feels
-right."
-
-### Resources
-
-- [Developing taste](https://emilkowal.ski/ui/developing-taste): Emil Kowalski on taste as a trained instinct, and the three habits that train it.
-- [Train your judgement](https://emilkowal.ski/ui/train-your-judgement): Pairs of animations side by side. Pick the better one, say why, then read the breakdown.
-- [The concept of taste](https://www.raphaelsalaja.com/library/the-concept-of-taste): Raphael Salaja on taste from Hume to Bourdieu, and why it is built rather than inherited.
-- [Taste for Makers](https://paulgraham.com/taste.html): Paul Graham argues taste is not just preference, and lists what good design shares across fields.
-- [Invisible Details of Interaction Design](https://rauno.me/craft/interaction-design): A long, patient look at the small decisions that make interfaces feel right.
 
 
 ## Taste Pass
@@ -305,7 +262,7 @@ box, the text starts in five slightly different places, and two buttons shout
 at once. No lint fails it. A designer spots it in a few seconds, with three
 habits.
 
-**Before you call a screen done, squint at it, count its boxes and edges, and find the one thing it leads with.**
+**Before you call a screen done, squint at it: the first thing the eye lands on should be what the screen is for, and every box and edge should be doing grouping work.**
 
 > **Interactive demo: Taste Pass.** Open https://critly.vercel.app/taste-pass to try it.
 
@@ -334,10 +291,14 @@ mistake: each component brought its own frame, and nobody took any away.
 
 Group with space first, then with one background tone, and keep lines for
 where space can't do it. That is what [whitespace](https://critly.vercel.app/whitespace) and
-[shadows, not borders](https://critly.vercel.app/shadows-not-borders) are about. There's no right
-number of boxes. Compare before and after: fewer is calmer. In a study of 450
-sites seen for half a second, the number of regions was the best predictor of
-how busy a page looked, and busy pages were liked less.
+[edges and elevation](https://critly.vercel.app/edges-and-elevation) are about. There's no right
+number of boxes. For each one, ask what it groups. If space already does that
+job, the box is one more edge to read for nothing. In a study of 450 sites
+seen for half a second, the amount of text and the number of separate text and
+image groups best predicted how complex a page looked, and the most complex
+pages were liked least. That study counted content groups, not borders. A box
+adds to the load when it splits content into one more group, and helps when it
+holds a real group together.
 
 ### Count the edges
 
@@ -350,8 +311,9 @@ them. See [alignment](https://critly.vercel.app/alignment) for lining things up.
 
 Say in a few words what the screen is for. Then check that it's the heaviest
 shape when you squint. If two things weigh about the same, nothing leads, and
-the fix is to quiet one, not to make the other louder (see
-[visual hierarchy](https://critly.vercel.app/visual-hierarchy)). Buttons follow the same rule: one solid
+the fix is to make one clearly win. Quieting the other is usually the cheaper
+move, since making the lead louder tends to raise the whole screen, but either
+works if the lead ends up obvious (see [visual hierarchy](https://critly.vercel.app/visual-hierarchy)). Buttons follow the same rule: one solid
 button per area, as Atlassian puts it, and at most one or two per view, as
 Apple does.
 
@@ -405,7 +367,7 @@ It can find the heaviest shape, but not whether that's the right one. That
 depends on what the screen is for, which only you and the people using it
 know. It also sees one screen in one state, so open the menu, fill the form and
 run it again. Then look at the images yourself. Taste gets better with
-[reps](https://critly.vercel.app/taste-is-trained), and this is one.
+[reps](https://critly.vercel.app/how-to-get-references#train-your-eye), and this is one.
 
 ### Resources
 
@@ -413,7 +375,7 @@ run it again. Then look at the images yourself. Taste gets better with
 - [The squint test](https://www.nngroup.com/videos/squint-test/): A two-minute video from Nielsen Norman Group on squinting to find what catches attention first.
 - [Refactoring UI](https://www.refactoringui.com/): Adam Wathan and Steve Schoger on using fewer borders, and grouping with space, background color and shadow instead.
 - [Avoiding clutter](https://docs.appian.com/suite/help/25.1/sail/ux-avoiding-clutter.html): Appian's design system on why a card inside a card adds clutter instead of structure.
-- [Predicting users' first impressions of website aesthetics](https://kgajos.seas.harvard.edu/papers/reinecke13aesthetics.pdf): Reinecke and colleagues on 450 sites seen for half a second each. The number of regions on a page predicted how complex it looked, and complex pages were liked less.
+- [Predicting users' first impressions of website aesthetics](https://kgajos.seas.harvard.edu/papers/reinecke13aesthetics.pdf): Reinecke and colleagues on 450 sites seen for half a second each. The amount of text and the number of text and image groups predicted how complex a page looked, and the most complex pages were liked least.
 - [Button usage](https://atlassian.design/components/button/usage): Atlassian's rule of one primary button per page or area.
 - [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons): Apple's guidelines, which keep prominent buttons to one or two per view.
 
@@ -436,7 +398,7 @@ Here is one button wearing four eras. The shape, size and label never change.
 > **Interactive demo: Surface Eras.** Open https://critly.vercel.app/timelessness to try it.
 
 Only the surface moves, and the surface is what gives the date away.
-**Surface ages fast. Structure ages slowly.**
+**Surface ages fast. Structure ages slowly, so get the structure right and pick the surface on purpose, for this brand and this moment.**
 
 ### Long-lasting
 
@@ -465,16 +427,18 @@ The left card is hard to read in every era, including this one.
 **Function.** Choices with a reason behind them, like a visible focus ring or
 a hit area that fits a fingertip, don't date, because the reason doesn't.
 
-**Restraint.** A monochrome, type-led interface is very hard to date. That is
-a big part of why terminal aesthetics keep coming back.
+**Restraint.** Every effect is one more thing that can date, so the fewer you
+stack, the slower the whole ages. That isn't the same as monochrome. A plain,
+type-led look is a surface too, and it comes and goes in waves like any other.
 
 ### Not a ban on style
 
 Timelessness isn't beige. It is one question, asked before adopting anything:
 would this still make sense if the trend around it vanished tomorrow?
 
-A trend is a good reason to examine a technique. It is never a reason to use
-one.
+A trend is a good reason to examine a technique. On its own it isn't a reason
+to use one. If it fits the brand and passes that question, use it, and expect
+to refresh the surface in a few years.
 
 ### Resources
 
@@ -501,7 +465,7 @@ nobody decided what the product should feel like before picking them.
 AI agents make this worse. They usually know what the product does, but not
 how it should feel, so they reach for the average.
 
-**Decide how it should feel, then let that pick the numbers.**
+**How often and in what state of mind people use it decides the feel: density and pace. What the brand is decides its identity. Make both decisions, then let them pick the numbers.**
 
 Same tasks, three feels. Tick a task, add one, then switch.
 
@@ -515,21 +479,25 @@ it came from the same decision, so they agree with each other.
 Most of a feel comes down to three dials. Set them first and the values
 mostly follow.
 
-**Density: compact or comfortable.** The tool uses 32px rows and 8px of
-padding, the calm version 48px rows and 16px. Both come from the same
-[spacing scale](https://critly.vercel.app/spacing-scale). Density only decides which end of it you
-live at. Radius tends to follow: 6px reads precise, 16px reads soft.
+**Density: compact or comfortable.** How often and how long people use the
+screen sets this one, as [density](https://critly.vercel.app/density) explains. Radius tends to
+follow: 6px reads precise, 16px reads soft.
 
 **Pace: instant or animated.** Frequency sets this one, as with
 [hover restraint](https://critly.vercel.app/hover-restraint). The tool answers in 150ms with a strong
 ease-out, calm takes 300ms on a gentler [easing](https://critly.vercel.app/easings), and playful uses
 a spring that overshoots.
 
-**Tone: quiet or expressive.** Weight, color and sound. Quiet means 400 and
-500, a neutral palette and silence. Expressive means 600, a saturated accent,
-pill shapes and a sound when you finish something. Even then, keep the
-loudest moments for the rare actions. That is the
-[novelty budget](https://critly.vercel.app/novelty-budget).
+**Tone: quiet or expressive.** How much the interface performs while you
+use it. Quiet stays out of the way: no sound, no celebration, nothing that
+holds up the next action. Expressive reacts, with springs, a sound or a moment
+when you finish something. Even then, keep the loudest moments for the rare
+actions. That is the [novelty budget](https://critly.vercel.app/novelty-budget).
+
+None of the three dials picks a palette or a typeface. That is identity: the
+type, color, imagery, shapes and voice that say what the brand is. It is a
+separate decision, and a quiet tool can have a strong one. See
+[how to get references](https://critly.vercel.app/how-to-get-references) for where it comes from.
 
 ### Archetypes
 
@@ -543,6 +511,9 @@ reader: comfortable, unhurried, quiet. Trust matters more than speed.
 
 **A playful app you choose to open**, like a habit tracker or a language
 course: comfortable, springy, expressive. Delight is part of the job.
+
+These describe how each one behaves, not how it looks. A quiet bank can still
+have a bold color and its own typeface.
 
 ### Mismatch
 
@@ -564,6 +535,7 @@ Answer these first, and put them in the prompt if an agent is building it:
 - How often: all day, daily, or a few times a year?
 - In what state of mind: focused, rushed, relaxed, anxious?
 - What should it feel like, in three words?
+- What is the brand, and what should make it recognizable?
 
 "A pro tool used all day: compact, instant, quiet" changes more values than
 any list of values would.
@@ -625,8 +597,9 @@ cut choices. Each category needs a handful, not dozens.
 - Text: `text`, `text-muted`, `text-faint`.
 - Radius: `radius-control`, and `radius-card` as the control radius plus the
   card's padding, so [nested corners](https://critly.vercel.app/nested-border-radius) stay concentric.
-- Shadow: `shadow-raised` and `shadow-overlay`, layered as in
-  [shadows, not borders](https://critly.vercel.app/shadows-not-borders).
+- Elevation: `shadow-raised` and `shadow-overlay`, or a `border` and
+  `border-strong` pair if the brand separates surfaces with lines. Either way,
+  every level comes from these (see [how surfaces separate](https://critly.vercel.app/edges-and-elevation)).
 
 When a component needs a value no token has, that is a design conversation,
 not a new hex code.
@@ -636,6 +609,7 @@ not a new hex code.
 **Tailwind**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 @import "tailwindcss";
 
 @theme {
@@ -644,7 +618,7 @@ not a new hex code.
   --color-surface-raised: oklch(1 0 0);
   --color-fg: oklch(0.205 0 0);
   --color-fg-muted: oklch(0.556 0 0);
-  --color-accent: oklch(0.546 0.215 262.9);
+  --color-accent: oklch(0.546 0.215 var(--brand-hue));
   --radius-control: 8px;
   --radius-card: calc(var(--radius-control) + 8px);
 }
@@ -664,12 +638,13 @@ not a new hex code.
 **CSS**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 :root {
   --surface: oklch(0.985 0 0);
   --surface-raised: oklch(1 0 0);
   --text: oklch(0.205 0 0);
   --text-muted: oklch(0.556 0 0);
-  --accent: oklch(0.546 0.215 262.9);
+  --accent: oklch(0.546 0.215 var(--brand-hue));
   --radius-control: 8px;
   --radius-card: calc(var(--radius-control) + 8px);
 }

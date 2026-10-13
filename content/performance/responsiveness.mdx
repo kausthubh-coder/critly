@@ -62,14 +62,21 @@ to "Saving…" first, lets the browser paint that frame, then does the work in
 
 ## Feedback that matches the wait
 
+These bands follow Jakob Nielsen's
+[response time limits](https://www.nngroup.com/articles/response-times-3-important-limits/):
+under 0.1 seconds feels instant, under 1 second people notice the delay but
+keep their train of thought, and past 10 seconds their attention drifts.
+
 - **Under 100ms:** just the state change. A pressed button, a checked box,
   the typed letter.
-- **Up to about 400ms:** nothing more. A spinner that flashes for 200ms
+- **Up to about 400ms:** nothing more, and hold the space so the layout
+  doesn't jump when the result lands. A spinner that flashes for 200ms
   reads as a glitch.
 - **400ms to 1s:** a quiet cue, like dimming the old content or a button
   label that says "Saving…".
-- **Over 1s:** a real loading state; past 10 seconds, progress and a way
-  out. See [Performance Is Design](/performance-is-design).
+- **Over 1s:** a real loading state, a skeleton or a spinner; past 10
+  seconds, progress, an estimate and a way out. See
+  [Performance Is Design](/performance-is-design) for which to show.
 
 To stop double submits, switch the button to a pending state that ignores
 repeat presses, instead of a silent `disabled` that greys it out and drops

@@ -23,9 +23,10 @@ resources:
 ---
 
 A video player is one of the heaviest things you can put on a page, and
-often nobody presses play. A single YouTube embed downloads about a megabyte
-of script and keeps a phone's main thread busy for over a second, before
-anyone clicks. Maps and social embeds are not much lighter.
+often nobody presses play. A single YouTube embed downloads over half a
+megabyte of player and keeps a phone's main thread busy for over a second,
+before anyone clicks; in HTTP Archive's mobile tests, pages with YouTube
+average about 6 seconds of its script. Maps and social embeds are not much lighter.
 
 Look at what each card has loaded before you touch it, then click both.
 

@@ -38,7 +38,8 @@ own.
 
 That budget covers the whole frame, the system's work included. Android's docs
 round it to 16, 11 and 8 ms and note that missing it by even 1 ms drops the
-frame. ProMotion iPhones switch between 10 and 120 Hz and can be capped by Low
+frame. ProMotion iPhones switch between 1 Hz (since the iPhone 14 Pro's
+always-on display) and 120 Hz and can be capped by Low
 Power Mode or heat, so don't assume any one rate. A frame that is fine at 60 Hz
 can be late at 120.
 
@@ -49,7 +50,8 @@ and 16.7 ms as a hitch. On iPhone, UIKit, SwiftUI and Core Animation run at
 ProMotion rates on their own. Custom `CADisplayLink` or `CAAnimation`
 frame-rate hints above 60 Hz need `CADisableMinimumFrameDurationOnPhone` set to
 true in Info.plist ([Apple](https://developer.apple.com/documentation/quartzcore/optimizing-iphone-and-ipad-apps-to-support-promotion-displays)).
-React Native sets it by default since 0.82.
+React Native's app template sets it since 0.82; a project created on an
+older version needs the key added.
 
 ### How much jank is too much
 

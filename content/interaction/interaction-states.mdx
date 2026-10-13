@@ -36,7 +36,9 @@ so nothing next to it moves.
 
 ## Hover must not move anything
 
-Hover should change color, never size. Bold text is wider than regular text,
+Hover must not change layout: no switch in weight, padding or width.
+Transform and color effects are fine, because they don't move anything around
+them. Bold text is wider than regular text,
 so a hover that switches font weight pushes every neighbor sideways. Sweep the
 pointer across both rows and watch the dashed edge.
 

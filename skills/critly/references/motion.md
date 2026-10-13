@@ -2,7 +2,7 @@
 
 ## Icon Morph
 
-> Blur, scale and fade between icons.
+> Change the icon, don't trade it for another.
 
 - Section: Motion
 - URL: https://critly.vercel.app/icon-morph
@@ -13,7 +13,9 @@ When an icon changes state, like copy to check or play to pause, the default
 is a hard swap. One frame shows the old icon, the next frame shows the new
 one, and the eye registers a jump.
 
-**Don't swap icons. Blur, scale and fade between them.** Click either button.
+**Make an icon change read as the same control changing, not two icons
+trading places. A blur crossfade, a morph or a quick snap with a small pop can all do it; pick
+the one that suits the brand.** Here is the blur crossfade. Click either button.
 
 > **Interactive demo: Icon Morph.** Open https://critly.vercel.app/icon-morph to try it.
 
@@ -96,16 +98,17 @@ this component.
 
 ## Button Press
 
-> Scale down on press so it feels real.
+> Show the press the moment it lands.
 
 - Section: Motion
 - URL: https://critly.vercel.app/button-press
 - Published: 2026-07-15
 - Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/button-press.mdx
 
-A real button moves when you push it. A button on screen can borrow that with
-one rule: **scale it down a little while it is pressed.** It tells you the
-click landed before anything else has happened.
+A real button moves when you push it. A button on screen can borrow that.
+**Make a press visible the moment it lands, so people know the click
+registered before anything else has happened. How far it moves is a brand
+decision; for controls people hit all day, keep it small and quick.**
 
 Press and hold both buttons.
 
@@ -124,8 +127,9 @@ Drag the sliders and keep pressing.
 > **Interactive demo: Press Amount.** Open https://critly.vercel.app/button-press to try it.
 
 Around `0.97` the press feels physical. Below about `0.92` it turns into an
-effect, and you notice the animation instead of the click. Keep the duration
-near `100ms`. A quick click is over in about that long, so at 300ms the
+effect, and you notice the animation instead of the click. That can suit a
+playful brand or a one-off button, but on controls people use all day it gets
+old fast. Whatever the amount, keep the duration near `100ms`. A quick click is over in about that long, so at 300ms the
 button is still shrinking when you let go and never seems to land.
 
 Scale runs on the compositor, so the press costs nothing, and the label and
@@ -196,8 +200,10 @@ The left one eases in. It starts slow and reaches full speed at the very end,
 so the menu hesitates, then slams into place. The right one eases out. It
 starts fast and slows as it lands, the way most physical things come to rest.
 
-**Use ease-out for anything that appears because the user did something.**
-They clicked, so the interface should move at once and then settle. Ease-in
+**When the user triggers motion, start it at once and let it settle, with a
+front-loaded curve like an ease-out. Which curve, how hard it front-loads and
+whether it overshoots is part of the brand's feel.** They clicked, so the
+interface should answer right away. Ease-in
 has one good use: things that are leaving, where nobody needs to watch them
 settle. [Exit animations](https://critly.vercel.app/exit-animations) covers that.
 
@@ -229,8 +235,8 @@ twice as fast.
 
 For a little overshoot, CSS can fake a spring with `linear()`, a list of
 points the browser joins with straight lines. The site's `--ease-spring`
-overshoots by 16% before it settles. Pick two or three curves like these and
-use them everywhere. Consistent easing does more for a product than any single
+overshoots by 16% before it settles. Pick two or three curves that fit how
+the product should feel and use them everywhere. Consistent easing does more for a product than any single
 animation.
 
 ### Usage
@@ -311,14 +317,14 @@ Both sheets open from the same click. Open and close them a few times.
 > **Interactive demo: Spring Bounce.** Open https://critly.vercel.app/springs to try it.
 
 The bouncy one wobbles. Nothing threw it, so the overshoot reads as sloppy,
-not physical. Apple Music opens Now Playing on a tap with no bounce, and
-dismisses it after a swipe with a bounce of 0.2. The swipe gave the sheet
-energy, and the bounce gives it back.
+not physical. Apple's springs session makes the same point: bounce makes
+sense "at the end of a gesture". A swipe gives a sheet energy, and the bounce
+gives it back.
 
-**Start every spring at bounce 0. Add bounce only when a gesture gave the
-motion momentum.**
+**Bounce reads as energy. Use it where something gave the motion energy, like
+a throw or a swipe, or where the brand is playful, and keep it off opacity.**
 
-Bounce also never belongs on an exit, and never on opacity or color. Opacity
+Bounce rarely belongs on an exit, and never on opacity or color. Opacity
 can't go past 1, so the overshoot becomes a flat pause before the fade ends.
 Give those a short tween, as Material does with its "effects" springs, which
 are always critically damped.
@@ -383,8 +389,9 @@ duration, so `visualDuration: 0.42` matches SwiftUI's 0.5. The physics form
 above has neither problem.
 
 CSS `linear()` can draw a spring's shape in every browser, but it's a
-recording: a fixed duration, no velocity when interrupted, and in Safari
-it's not run on the [compositor](https://critly.vercel.app/smooth-animation). It's still a good fit for
+recording: a fixed duration, no velocity when interrupted, and Safari has
+run it on the main thread rather than the [compositor](https://critly.vercel.app/smooth-animation)
+(WebKit's threaded animations fix this). It's still a good fit for
 hover and open/close motion, where reversing from the current position is
 enough. Use JavaScript springs where velocity matters, like drags and flicks.
 
@@ -424,8 +431,10 @@ them changes.
 
 > **Interactive demo: Stagger.** Open https://critly.vercel.app/stagger to try it.
 
-**Keep the gap between 30ms and 60ms.** That is enough for your eye to pick up
-a direction, top to bottom. Past 100ms the last row is still arriving after
+**A stagger gives the eye a direction but delays the last item, so cap the
+total delay. In interface lists keep the gap short; longer gaps are
+choreography for showcase moments.** A gap of 30ms to 60ms is enough for your
+eye to pick up a direction, top to bottom. Past 100ms the last row is still arriving after
 you have started reading the first, and the detail turns into a wait.
 
 ### Block vs sequence
@@ -435,9 +444,8 @@ identical.
 
 > **Interactive demo: Stagger Compare.** Open https://critly.vercel.app/stagger to try it.
 
-The staggered list is not faster. It is easier to follow, because your eye
-gets a starting point and a direction. The block gives you five things at
-once.
+The staggered list is not faster. It gives your eye a starting point and a
+direction, where the block gives you five things at once.
 
 ### Long lists
 
@@ -449,7 +457,9 @@ total instead of fixing the step.
 
 A good cap is about 300ms from the first row to the last. Divide that by the
 number of gaps and you have your step: 33ms for ten rows. For very long lists,
-stagger only the rows on screen and show the rest at once.
+stagger only the rows on screen and show the rest at once. Skip it on lists
+that re-render often, like results that update as you type: the sequence
+replays on every change, and people wait for rows they were already reading.
 
 The rows are content, not decoration. Animate only `opacity` and `transform`
 so every row holds its space from the first frame, and keep rows clickable
@@ -738,18 +748,20 @@ and settle the release with no bounce and no long coast.
 - Published: 2026-07-15
 - Source: https://github.com/kausthubh-coder/critly/blob/main/content/motion/hover-restraint.mdx
 
-Hover fires more than any other interaction. When you sweep the cursor across a nav
+Hover fires constantly. When you sweep the cursor across a nav
 you can cross ten items in a second. If each one fades in, the
 interface is always a few frames behind the pointer, and it reads as slow
 even when nothing is.
 
 **The more often something happens, the less
-animation it can afford.**
+animation it can afford. Hovers people sweep across all day should keep up
+with the pointer; a rare or showcase hover can perform.**
 
 > **Interactive demo: Hover Restraint.** Open https://critly.vercel.app/hover-restraint to try it.
 
 The right one switches its highlight on with no transition at all. Instant
-is the correct default for hover.
+is a good default for hovers in navigation, lists and toolbars. A hero card
+or a portfolio tile that people hover once can take its time.
 
 ### Tooltips
 
@@ -779,14 +791,20 @@ Someone toggling a sidebar with a shortcut is your fastest user. They are
 not looking for the panel to arrive from somewhere. They already know what
 the shortcut does, and a 250ms slide is like a speeding ticket.
 
-The line to draw is by frequency and intent, not by input device. A modal
-that opens once a session can animate. A panel you flip forty times a day
-should not.
+The line to draw is by frequency and intent, not by input device:
+
+- Hovering, switching tabs, checking a box, a panel you flip forty times a
+  day. These happen constantly. Keep them instant, and let how they look
+  carry the character.
+- Opening a dialog, sending a message, a modal that opens once a session.
+  Occasional. A short transition is plenty.
+- Finishing onboarding, clearing your inbox, a yearly recap. Rare. These can
+  take their time; that's where the [novelty budget](https://critly.vercel.app/novelty-budget) goes.
 
 Notable examples of interactions that would be worse if animated:
 
 - [Raycast launcher](https://www.raycast.com/): Opens and closes with no transition, every time.
-- [macOS Alt+Tab](https://rauno.me/craft/interaction-design): Rauno Freiberg on why the app switcher appears instantly.
+- [macOS Cmd+Tab](https://rauno.me/craft/interaction-design): Rauno Freiberg on why the app switcher appears instantly.
 
 ### Resources
 
@@ -920,8 +938,9 @@ find it. On the right the button itself becomes the menu: the corners
 round off, the label slides up into the title, and the rows fade in once
 the surface is moving. As Benji Taylor puts it, fly instead of teleport.
 
-**Morph the surface the user touched instead of fading in a new one, and
-close it back to where it came from.**
+**Where it helps to show that this is the same thing, morph the surface the
+user touched instead of fading in a new one, and close it back to where it
+came from. It's loud, so save it for a signature moment, not every control.**
 
 A few details decide whether a morph looks liquid or broken. Put the corner
 radius in `style`, so Motion can correct it while the box scales. Use the
@@ -1049,7 +1068,8 @@ around, and the page can't be clicked while one plays.
 
 The lazy exit is the entrance played backwards: same distance, same
 duration, same curve. It looks tidy, but it gives a goodbye as much time as a
-hello. **Something leaving deserves less ceremony than something arriving.**
+hello. **An exit shouldn't make people wait. Keep it shorter and quieter than
+the entrance, unless the motion shows where the thing went.**
 
 Dismiss the toasts and watch them go.
 
@@ -1060,9 +1080,11 @@ that again in reverse. The right one fades out in half the time, 120ms, with
 2px of blur, no travel and an ease-in.
 
 An entrance has a job. Something new is here, and the motion shows you where
-it came from. An exit has none. The user has already moved on, and anything
-that makes them watch is in the way. So exits get about half the duration and
-less movement. They are also the one place ease-in fits, since the element is
+it came from. Most exits have a smaller one. The user has already moved on,
+and anything that makes them watch is in the way. The exception is an exit
+that tells you something: a file flying to the trash, or a popover shrinking
+back into the button that opened it, shows where the thing went and where to
+find it again. Other exits get about half the duration and less movement. They are also the one place ease-in fits, since the element is
 speeding away and nobody needs to watch it settle.
 
 In React, an element removed from the tree is gone before it can animate.
@@ -1168,8 +1190,9 @@ The left menu spends the start of its animation as an unreadable smudge,
 because the text scales with the box. The right one is readable from the
 first frame. The scale is a hint of movement, not the movement itself.
 
-**Start a scale entrance between 0.9 and 0.97, fade it in, and grow it from
-the thing that opened it.**
+**Grow a scale entrance from the thing that opened it, and keep it readable
+from the first frame: start close to full size and fade it in.** Between
+`0.9` and `0.97` is a good starting point.
 
 ### Grow from the trigger
 

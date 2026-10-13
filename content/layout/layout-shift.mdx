@@ -42,9 +42,15 @@ floats over the post, and the error has its own line.
 - **Conditional buttons and badges:** keep their slot, or overlay them. A
   number that changes width as it ticks is a small shift too, which
   [tabular numbers](/tabular-numbers) fixes.
-- **Scrollbars:** on Windows, a scrollbar appearing narrows the page and
-  everything centered jumps sideways. `scrollbar-gutter: stable` keeps room
-  for it.
+- **Scrollbars:** with classic scrollbars, the Windows default and an option
+  on macOS and Linux, a scrollbar appearing narrows the page and everything
+  centered jumps sideways. `scrollbar-gutter: stable` keeps room for it. Use
+  it where overflow toggles: routes that switch between short and long pages,
+  or [scroll lock](/overlays) under a modal. It isn't a default for every page.
+  On a page that doesn't overflow, it leaves an empty strip in the root
+  background beside full-bleed sections. Overlay scrollbars, the macOS default
+  with a trackpad and the norm on phones, take no room, so there it does
+  nothing.
 
 ## Web fonts
 
@@ -80,7 +86,9 @@ nothing in CLS. It still costs the person pressing again.
 
 <p class="h-5 text-sm text-red-600">{error}</p>
 
-<html class="[scrollbar-gutter:stable]">`,
+<!-- While a modal is open, and only if the page scrolls:
+     hide the scrollbar but keep its room -->
+<html class="overflow-hidden [scrollbar-gutter:stable]">`,
     },
     {
       label: "CSS",
@@ -98,7 +106,10 @@ nothing in CLS. It still costs the person pressing again.
   height: 1.25rem;
 }
 
-html {
+/* While a modal is open, and only if the page scrolls:
+   hide the scrollbar but keep its room */
+html.scroll-locked {
+  overflow: hidden;
   scrollbar-gutter: stable;
 }
 

@@ -16,15 +16,17 @@ resources:
     description: How the grain layer combines with the color underneath it.
 ---
 
-When the UI feels too flat, sometimes I like to add noise to some components to give them some texture.
+A screen has only so many shades between two close colors, so a wide, subtle gradient has to repeat each shade across many pixels, and the steps show up as stripes. That's banding. A flat fill has the opposite problem: it can look like plastic when the brand wants paper, print or film.
 
-**Noise** is a layer of random light and dark pixels laid over the surface. It breaks the steps up and gives the color some texture.
+**Add grain when a surface should feel tactile or a gradient bands. On anything large, render it once and tile it so it stays cheap.**
+
+**Noise** is a layer of random light and dark pixels laid over the surface. It breaks the steps up and gives the color some texture. Where a surface has neither problem, a flat fill is fine as it is.
 
 <NoiseDemo />
 
 ## Grain size
 
-The `baseFrequency` attribute controls how fine the noise is. Low values give big soft blobs, whle high values give the tight speckle of film grain.
+The `baseFrequency` attribute controls how fine the noise is. Low values give big soft blobs, while high values give the tight speckle of film grain.
 
 <NoiseFrequencyDemo />
 

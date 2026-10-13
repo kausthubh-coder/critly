@@ -21,13 +21,18 @@ uppercase.**
 The second word follows the formula Rasmus Andersson published for Inter 3.
 Around body size it barely moves. From 24px up it settles near `-0.02em`,
 which pulls "Headline" in by about 8px at 48px. The dashed line marks where
-the tracked word ends. The untouched one runs past it.
+the tracked word ends. The untouched one runs past it. These amounts are
+Inter's. Every typeface is spaced differently, so take the direction from here
+and the amounts from your own font.
 
 ### Fonts with optical sizes
 
-Some fonts already do this for you. Inter 4, the version this site uses, has
-an [optical size](https://critly.vercel.app/optical-alignment) axis, and browsers apply it on their own
-through `font-optical-sizing: auto`. From 32px up you get the display design,
+Some fonts already do this for you. Strokes that are sturdy at 14px look
+clumsy at 40px, so some typefaces ship an optical size axis that redraws the
+letters, spacing included, for the size they are set at. Inter 4, the version
+this site uses, has one, and browsers apply it on their own through
+`font-optical-sizing: auto`, so you usually get the right design for free.
+From 32px up you get the display design,
 which sets "Headline" about 13px narrower at 48px than the text design does.
 The demo pins the text design so you can see the problem.
 
@@ -245,9 +250,12 @@ the nudge.
 
 > **Interactive demo: Optical Alignment.** Open https://critly.vercel.app/optical-alignment to try it.
 
-The play icon moves left, because a triangle pointing right has most of its area on the
-left. The star and the download icon move up a bit. The amounts are tiny and
-specific to each icon, so this is a per icon decision, not a global rule.
+A triangle pointing right has most of its area on the left, so centered by its
+box it looks too far left and needs a nudge right. Some icon sets already draw
+it shifted: Phosphor's play triangle sits right of center inside its box, a
+little too far, so in this demo it moves back left. The star and the download
+icon move up a bit. The amounts are tiny and specific to each icon, so this is
+a per icon decision, not a global rule. Check the icon before you nudge it.
 
 #### How to align the icon
 
@@ -278,15 +286,14 @@ Different shapes have varying visual weight. For example, when a circle or trian
 
 ### Optical sizes
 
-Type has the same problem across sizes. Strokes that are sturdy at 14px look
-clumsy at 40px. Some typefaces ship an **optical size** axis that redraws the
-letters for the size they are set at.
+Type has the same problem across sizes, and some typefaces solve it with an
+optical size axis that redraws the letters for each size, as
+[Letter Spacing](https://critly.vercel.app/letter-spacing) explains.
 
 > **Interactive demo: Optical Sizing.** Open https://critly.vercel.app/optical-alignment to try it.
 
-Browsers turn this on automatically through `font-optical-sizing: auto`, so
-you usually get the right design for free. The demo forces the text design
-onto a display size so you can see what you would be missing.
+The demo forces the text design onto a display size so you can see what you
+would be missing.
 
 ### Hanging punctuation
 
@@ -305,7 +312,11 @@ Safari supports `hanging-punctuation: first`. Elsewhere a small negative
 
 ```html
 <button class="grid size-12 place-items-center rounded-full">
-    <PlayIcon class="size-5 translate-x-px" weight="fill" />
+    <!-- Centered by its box, so it looks left: nudge it right. Check your
+         icon set first; some, like Phosphor, already offset the triangle. -->
+    <svg class="size-5 translate-x-px" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M5 4v16l14-8z" />
+    </svg>
 </button>
 
 <blockquote class="indent-[-0.42em]">
@@ -317,6 +328,7 @@ Safari supports `hanging-punctuation: first`. Elsewhere a small negative
 
 ```css
 .play-icon {
+  /* A triangle centered by its box goes right; some icon sets already offset it. */
   transform: translateX(1px);
 }
 
@@ -341,7 +353,7 @@ blockquote {
 
 ## Icons
 
-> One set, one weight, sized to the text.
+> One set, one default weight, sized to the text.
 
 - Section: Typography
 - URL: https://critly.vercel.app/icons
@@ -352,8 +364,9 @@ Icons are part of the type. A set has a voice, like a typeface does: the
 stroke width, the corner radius, the grid it was drawn on. Next to text, that
 voice either agrees with the letters or fights them.
 
-**Pick one set, use one weight, and size icons a little larger than the text
-beside them.**
+**Pick one set, give it one default weight that sits with your text, and size
+icons a little larger than the text beside them. Switch weight or fill only
+on purpose, for a selected state or a family of section icons.**
 
 > **Interactive demo: Icon Weights.** Open https://critly.vercel.app/icons to try it.
 
@@ -503,7 +516,7 @@ fine, because the extra weight is a macOS problem. Set them once on the
 
 ## Visual Hierarchy
 
-> Quiet the rest so one thing leads.
+> Decide what leads, then let it win.
 
 - Section: Typography
 - URL: https://critly.vercel.app/visual-hierarchy
@@ -518,7 +531,9 @@ The instinct is to make the important part louder. That starts an arms race:
 a bigger name, a bolder price, and now the row is loud in two places instead of
 one.
 
-**Quiet the rest instead of making the important thing louder.**
+**Decide what people should see first and make it win by contrast. Quiet what
+competes with it before you make it louder, using whichever lever fits the
+voice: tone, weight, size or color.**
 
 > **Interactive demo: Visual Hierarchy.** Open https://critly.vercel.app/visual-hierarchy to try it.
 
@@ -530,26 +545,33 @@ quiet one still leads with what matters. It is the same blur test as in
 
 ### Tone and weight before size
 
-Size is the bluntest tool. It costs space, breaks alignment, and needs its own
-[letter spacing](https://critly.vercel.app/letter-spacing). Color and weight do most of the work for
-less. Three text tones are enough: one for the thing, one for its details, one
-for metadata. Two weights, 400 and 500, cover almost everything else.
+In a dense list like this one, size is the costliest lever. It takes space,
+breaks alignment, and needs its own [letter spacing](https://critly.vercel.app/letter-spacing). Color
+and weight do the same work for less. Three text tones usually cover it: one
+for the thing, one for its details, one for metadata. In a quiet interface,
+two weights, 400 and 500, go a long way. An editorial page or a loud brand
+can lead with big type, a heavy weight or color instead; the squint test is
+the same.
 
 Keep even the quietest tone at 4.5:1 or more. Here it is `neutral-500` on
 white, which lands at 4.7:1.
 
-### Labels are a last resort
+### Labels cost a read
 
 A label is more text to read before you reach the value. Formatted well, most
 values explain themselves. "12 left" says what "Stock: 12" says, in one glance.
+Keep the label when the value is ambiguous on its own, or when people scan for
+the label, as in forms and spec tables.
 
 > **Interactive demo: Hierarchy Labels.** Open https://critly.vercel.app/visual-hierarchy to try it.
 
 ### Actions have ranks
 
 Buttons follow the same rule. One solid primary action, a quiet secondary one,
-and a destructive action that is not the main job can be plain text that turns
-red on hover. Save the big red button for the confirmation step.
+and a destructive action that is not the main job can be plain red text. Show
+the red from the start: touch screens have no hover, so a danger cue that
+waits for hover never appears before the press. Save the big red button for
+the confirmation step.
 
 > **Interactive demo: Hierarchy Actions.** Open https://critly.vercel.app/visual-hierarchy to try it.
 
@@ -621,8 +643,9 @@ land on the wrong line.
 > **Interactive demo: Line Length.** Open https://critly.vercel.app/line-length to try it.
 
 Sources disagree at the edges. Butterick allows up to 90 characters, Baymard
-recommends 50 to 75, and WCAG caps lines at 80. 45 to 75 is where they all
-overlap, so that is the band I use.
+recommends 50 to 75, and WCAG's Visual Presentation criterion (1.4.8, Level
+AAA, above the AA most sites aim for) asks for 80 or fewer. 45 to 75 is where
+they all overlap, so that is the band I use.
 
 ### Finding the next line
 
@@ -643,7 +666,8 @@ at 1.5.
 
 > **Interactive demo: Line Height.** Open https://critly.vercel.app/line-length to try it.
 
-Butterick suggests 1.2 to 1.45, WCAG asks for at least 1.5. On screens I side
+Butterick suggests 1.2 to 1.45, and the same AAA criterion asks for at
+least 1.5. On screens I side
 with 1.5. This page is a good reference: its column is 576px, about 72
 characters of 16px Inter, inside the band, with a 1.75 line height.
 
@@ -681,7 +705,7 @@ cleans up.
 
 - [Line length](https://practicaltypography.com/line-length.html): Matthew Butterick's case for 45 to 90 characters, and the easy ways to get there.
 - [Readability - the optimal line length](https://baymard.com/blog/line-length-readability): Baymard Institute's research summary, which lands on 50 to 75 characters.
-- [Understanding visual presentation](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html): The WCAG criterion that caps lines at 80 characters and asks for 1.5 line spacing.
+- [Understanding visual presentation](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html): WCAG SC 1.4.8, a Level AAA criterion, which asks for lines of 80 characters or fewer and 1.5 line spacing.
 - [Axioms](https://every-layout.dev/rudiments/axioms/): Every Layout on setting a measure in ch once and letting the whole site inherit it.
 - [CSS length units](https://developer.mozilla.org/en-US/docs/Web/CSS/length): How ch is defined, as the advance width of the 0 glyph.
 
@@ -700,8 +724,9 @@ looked small, a value gets 17px so it stands out from the 16px next to it, and
 soon one card holds nine sizes. Some of them are a pixel apart, and two sizes
 a pixel apart don't read as a choice. They read as a mistake.
 
-**Pick about five sizes from a scale, give each one a job, and use nothing
-else.**
+**Pick a small set of sizes far enough apart to read as deliberate, and give
+each one a job. Dense UI wants small steps; editorial and marketing pages can
+take far larger jumps.**
 
 > **Interactive demo: Type Scale.** Open https://critly.vercel.app/type-scale to try it.
 
@@ -720,8 +745,9 @@ A scale is a base size multiplied by the same ratio, step after step. Start at
 
 For app interfaces I'd stay between 1.2 and 1.25. Dense screens need small
 steps, but each step still has to be visible. At 1.1 and below, neighbouring
-steps round to the same size and the scale stops being one. Marketing pages,
-with a few big words per screen, can go to 1.333 or 1.5.
+steps round to the same size and the scale stops being one. Marketing and
+editorial pages, with a few big words per screen, can go to 1.333 or 1.5, and
+their display size often lands at 48px or more, well past this scale's 24.
 
 Name the steps by their job: caption, body, subhead, title, display. The name
 tells the next person which one to reach for. A button or form label doesn't
@@ -745,7 +771,6 @@ body line height.
 @import "tailwindcss";
 
 @theme {
-  --text-*: initial;
   --text-caption: 0.75rem;
   --text-caption--line-height: 1rem;
   --text-body: 0.875rem;
@@ -775,15 +800,17 @@ body line height.
 }
 
 .title {
-  font: 600 var(--text-title) Inter, sans-serif;
+  font: 600 var(--text-title) "Brand", sans-serif;
   letter-spacing: -0.01em;
 }
 ```
 
 Keep sizes and line heights in `rem`. Someone who raises their browser's
 default font size then gets the whole scale bigger, still in proportion. The
-`--text-*: initial` line removes Tailwind's default sizes, so `text-sm` stops
-existing and only the five roles are left to choose from.
+roles sit next to Tailwind's default sizes, so `text-5xl` is still there for a
+marketing hero. If you want the roles to be the only choice in an app, add
+`--text-*: initial;` at the top of the block. It removes every default size,
+`text-sm` included.
 
 ### Resources
 
