@@ -25,7 +25,7 @@ bun run check    # site build + package tests + skill copy drift; run before cal
 
 - Every task in a new worktree starts with `worktree-critly`.
 - Ship only with `ship-critly`, when I say so.
-- Leave the main checkout (`C:\Users\kaust\OneDrive\Documents\dev\critly\craft`) alone. Its `skills/` is live in every agent on this machine.
+- Leave the main checkout (`C:\Users\kaust\OneDrive\Documents\dev\critly`) alone. It also holds local folders that aren't in git (`plan/` for plans and research, `eval/`, `prototype/`, `craft-tools/`), listed in `LOCAL.md` there. Its `skills/` is live in every agent on this machine.
 
 ## Where things live
 

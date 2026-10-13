@@ -11,7 +11,7 @@ Critly ships to three places, all from `main` on `kausthubh-coder/critly`:
 - **Package.** `@kausthubh/critly` on npm, from `packages/critly`. It ships only when its `version` is newer than npm's.
 - **Skills.** `skills/critly` and `skills/critly-audit`, linked into every agent from the main checkout. They go live when the main checkout pulls them.
 
-The repo is public, so changes land through a PR. `<main>` below is `C:\Users\kaust\OneDrive\Documents\dev\critly\craft`.
+The repo is public, so changes land through a PR. `<main>` below is `C:\Users\kaust\OneDrive\Documents\dev\critly`.
 
 **Rules.** Production needs my go in this conversation. Stop at the first failure. Never force-push, never skip checks, never edit `.critly/policy.json` to pass. Write the rollback (end of this file) into your notes before step 3.
 

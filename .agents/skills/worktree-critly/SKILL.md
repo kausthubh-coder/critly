@@ -30,15 +30,15 @@ There is no backend, database or secret. The site is static, so nothing is share
 
 ## The main checkout
 
-`C:\Users\kaust\OneDrive\Documents\dev\critly\craft`. Work only in worktrees and leave it alone: its `skills/critly` and `skills/critly-audit` are linked into every agent on this machine, so an edit there goes live everywhere at once. It often holds another thread's uncommitted work. Only `ship-critly` touches it, and only with a fast-forward pull.
+`C:\Users\kaust\OneDrive\Documents\dev\critly`. Its local folders (`plan/`, `eval/`, `prototype/` and others in `LOCAL.md`) aren't in git, so worktrees don't have them; read plans there. Work only in worktrees and leave it alone: its `skills/critly` and `skills/critly-audit` are linked into every agent on this machine, so an edit there goes live everywhere at once. It often holds another thread's uncommitted work. Only `ship-critly` touches it, and only with a fast-forward pull.
 
 ## Helpers
 
 One worktree per helper agent, never two agents in one checkout:
 
 ```
-git -C C:\Users\kaust\OneDrive\Documents\dev\critly\craft fetch origin
-git -C C:\Users\kaust\OneDrive\Documents\dev\critly\craft worktree add C:\Users\kaust\.t3\worktrees\critly\<name> -b <name> origin/main
+git -C C:\Users\kaust\OneDrive\Documents\dev\critly fetch origin
+git -C C:\Users\kaust\OneDrive\Documents\dev\critly worktree add C:\Users\kaust\.t3\worktrees\critly\<name> -b <name> origin/main
 cd C:\Users\kaust\.t3\worktrees\critly\<name>
 bun run setup
 ```
