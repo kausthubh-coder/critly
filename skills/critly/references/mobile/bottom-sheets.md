@@ -86,7 +86,9 @@ Swipe down closes a sheet, but give it a visible Close or Done too, and let
 the system back gesture close it. On Android that comes with
 `ModalBottomSheet`, as a predictive back animation. If the sheet holds
 unsaved edits, block the swipe with `interactiveDismissDisabled(hasChanges)`
-and confirm on Cancel. Don't stack a sheet on a sheet.
+and confirm on Cancel. iOS lets you present a sheet from a sheet, but
+usually avoid it: each layer is one more swipe to get out, and the one
+below gets hard to see. Push the next step inside the sheet instead.
 
 In React Native and Expo, start with the native sheet: `presentation:
 "formSheet"` with `sheetAllowedDetents` in the native stack or Expo Router.

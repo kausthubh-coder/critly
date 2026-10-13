@@ -25,8 +25,9 @@ resources:
 Every kilobyte of JavaScript costs more than a kilobyte of anything else. An
 image is downloaded and decoded mostly off to the side. A script is
 downloaded, then parsed, compiled and run on the main thread, and while it
-runs the page can't answer a tap. The median mobile page now ships about
-650 KB of it, compressed, and about 250 KB of what it loads never runs.
+runs the page can't answer a tap. The median mobile page now ships well over
+half a megabyte of it, compressed, and close to half of what it loads never
+runs.
 
 Reload, then tap both buttons as soon as you see them. Try each device.
 
@@ -70,17 +71,21 @@ dialog this way.
 
 ## Watch the third parties
 
-Analytics, tag managers, chat widgets and A/B tools account for over half
-of all script execution on the web. A YouTube embed alone averages about 6
-seconds of main-thread work. Load them after the page is interactive or on
+Third-party scripts (analytics, tag managers, chat widgets, A/B tools,
+embeds) account for over half of all script execution on the web. A single
+YouTube embed keeps a phone's main thread busy for over a second, and in
+HTTP Archive's mobile tests, pages with YouTube average about 6 seconds of
+its script. Load them after the page is interactive or on
 first interaction, replace widgets with a facade that loads the real thing
 on click, and remove the ones nobody looks at.
 
 ## Set a budget and enforce it
 
-For a phone to load a page in about 3 seconds, Alex Russell's 2026
-numbers allow roughly 300 KB of compressed JavaScript on the critical path.
-A good default is 150 KB for content pages and 300 KB for app shells, no
+For a typical phone to load a page in about 3 seconds, Alex Russell's 2026
+numbers allow roughly 300 KB of compressed JavaScript on the critical path
+for a page that is mostly markup, and about 620 KB for a JavaScript-heavy app,
+because it ships less HTML, CSS and images to make room. A good default is
+150 KB for content pages and 300 KB for app shells, no
 single chunk over 100 KB, and a check in CI that fails the build when a
 change goes over. Set the limit at today's size and lower it with every win.
 

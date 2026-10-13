@@ -29,10 +29,11 @@ it?". Pick one word for each thing and use it everywhere. Generic mode calls it
 a project, then a workspace, and the button says Remove while the dialog says
 deleted. Two names for one thing make people wonder whether it's two things.
 
-Write in sentence case. GOV.UK asks for it on buttons. Apple lets you choose
-title or sentence case per element, as long as you stay consistent. I prefer
-sentence case everywhere: it reads like speech, and nobody has to argue about
-which words get a capital.
+Case is a voice choice, as long as you pick one per element and keep it.
+GOV.UK asks for sentence case on buttons. Apple lets you choose title or
+sentence case per element, as long as you stay consistent. I prefer sentence
+case everywhere: it reads like speech, and nobody has to argue about which
+words get a capital.
 
 ### Errors
 
@@ -42,9 +43,11 @@ An error has two jobs: say what happened, and say what to do next.
 
 "An error occurred" does neither. "Error 402" is for the server log.
 "You entered an invalid username!" blames the person for a rule they couldn't
-see. NN/g and GOV.UK both warn against "invalid", and GOV.UK adds "please", "sorry" and
-"oops" to the list. None of them help fix anything. For when to show an error,
-see [input details](https://critly.vercel.app/input-details).
+see. NN/g and GOV.UK both warn against "invalid". GOV.UK also leaves out
+"please", "sorry" and "oops", which suits a government service's plain voice.
+That part is a voice choice. A playful product can say "oops" and a warm one
+can apologize, as long as the message still says what happened and what to do
+next. For when to show an error, see [input details](https://critly.vercel.app/input-details).
 
 ### Counts and ellipses
 
@@ -157,7 +160,10 @@ Clamp previews to two or three lines. Wrap anything people have to read in
 full, like errors and addresses, with a sensible [line length](https://critly.vercel.app/line-length)
 and [text wrapping](https://critly.vercel.app/text-wrapping).
 
-Images need a plan too. Give them a fixed aspect ratio and let them crop.
+Images need a plan too. For thumbnails and decoration, give them a fixed aspect
+ratio and let them crop. When the image is the content, like a photo, a
+painting or a product someone came to see, keep the whole frame: let the box
+take the image's own ratio, or use `object-fit: contain`.
 
 > **Interactive demo: Real Content Grid.** Open https://critly.vercel.app/real-content to try it.
 
@@ -166,7 +172,7 @@ Real uploads arrive as a panorama, a square, a painting and no image at all.
 Every image is a different height, one title wraps to four lines or more,
 another is missing, and the counts land wherever the text ends. A 4:3 box with
 `object-fit: cover`, a two-line clamp, "Untitled" and a placeholder put it
-back in order.
+back in order. That suits a grid of previews. Open one, and show it uncropped.
 
 ### Usage
 

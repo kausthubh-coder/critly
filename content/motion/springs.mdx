@@ -51,14 +51,14 @@ Both sheets open from the same click. Open and close them a few times.
 <SpringBounceDemo />
 
 The bouncy one wobbles. Nothing threw it, so the overshoot reads as sloppy,
-not physical. Apple Music opens Now Playing on a tap with no bounce, and
-dismisses it after a swipe with a bounce of 0.2. The swipe gave the sheet
-energy, and the bounce gives it back.
+not physical. Apple's springs session makes the same point: bounce makes
+sense "at the end of a gesture". A swipe gives a sheet energy, and the bounce
+gives it back.
 
-**Start every spring at bounce 0. Add bounce only when a gesture gave the
-motion momentum.**
+**Bounce reads as energy. Use it where something gave the motion energy, like
+a throw or a swipe, or where the brand is playful, and keep it off opacity.**
 
-Bounce also never belongs on an exit, and never on opacity or color. Opacity
+Bounce rarely belongs on an exit, and never on opacity or color. Opacity
 can't go past 1, so the overshoot becomes a flat pause before the fade ends.
 Give those a short tween, as Material does with its "effects" springs, which
 are always critically damped.
@@ -127,8 +127,9 @@ duration, so `visualDuration: 0.42` matches SwiftUI's 0.5. The physics form
 above has neither problem.
 
 CSS `linear()` can draw a spring's shape in every browser, but it's a
-recording: a fixed duration, no velocity when interrupted, and in Safari
-it's not run on the [compositor](/smooth-animation). It's still a good fit for
+recording: a fixed duration, no velocity when interrupted, and Safari has
+run it on the main thread rather than the [compositor](/smooth-animation)
+(WebKit's threaded animations fix this). It's still a good fit for
 hover and open/close motion, where reversing from the current position is
 enough. Use JavaScript springs where velocity matters, like drags and flicks.
 

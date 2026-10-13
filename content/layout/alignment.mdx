@@ -1,6 +1,6 @@
 ---
 title: Alignment
-description: Fewer edges, less to read.
+description: Near misses read as mistakes.
 section: Layout
 order: 9
 publishedAt: "2026-10-03"
@@ -23,15 +23,17 @@ Every element starts somewhere, and the eye notices where. When a card's
 content starts at 14px, the list below it at 8px and the input text at 10px,
 nobody can say what is wrong, but the section looks unfinished.
 
-**Line things up to as few edges as possible. Every new left edge is one more
-thing the eye has to resolve.**
+**Edges that almost line up read as mistakes, so align what belongs together.
+When you break alignment, break it far enough to look intended.**
 
 <AlignmentDemo />
 
 Both versions use the same components. The near-miss one has 6 left edges,
 because each component brought its own padding: 14px in the card, 8px in the
 rows, 10px in the input. The aligned one has 3: the boxes at 0, everything
-else at 12px, and the text after an icon or avatar at 44px.
+else at 12px, and the text after an icon or avatar at 44px. A 2px or 4px
+difference never looks like a choice. An image that bleeds past the column or
+a pull quote set far out does, because the break is too big to be a slip.
 
 ## Text aligns to text
 
@@ -41,8 +43,9 @@ words, not the faint boxes around them. In the demo, Members, Invite by email
 and the placeholder all start at 12px.
 
 Atlassian's grid aligns the containers and leaves what's inside to spacing
-tokens. That keeps the frame tidy, but the text inside can still drift. I'd
-give every box in a section the same inset, so the words line up too.
+tokens. That keeps the frame tidy, but the text inside can still drift. When
+boxes stack in one column, I'd give them the same inset, so the words line up
+too.
 
 Within a column, keep one axis. The avatars and the card icon share a 24px
 slot, so the text after them shares an edge too. Apple's guidelines note

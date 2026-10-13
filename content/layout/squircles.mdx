@@ -34,6 +34,9 @@ and it is why those icons look softer than a box with the same radius.
 
 Both tiles use the same `28px` radius. Only the corner shape changes.
 
+Corner shape is a brand choice. Round, bevelled and sharp corners are just as
+valid. This is how to do the squircle well if it's the one you pick.
+
 **Keep the radius, change the shape.** `border-radius` still sets how big the
 corner is, and `corner-shape` sets the curve that fills it. Because the shape
 belongs to the box, the background, border, outline, shadow and
@@ -63,9 +66,9 @@ button barely moves, and that is fine.
 
 <SquircleExamplesDemo />
 
-The shape is not inherited, so set it on nested boxes too, and keep the outer
-radius equal to the inner radius plus the inset. The card above uses `24px`
-outside, `16px` inside and an `8px` inset.
+The shape is not inherited, so set it on nested boxes too, and size their
+radii as in [Nested Border Radius](/nested-border-radius). The card above
+uses `24px` outside, `16px` inside and an `8px` inset.
 
 ## Usage
 

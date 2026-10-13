@@ -26,7 +26,9 @@ so nothing next to it moves.
 
 ### Hover must not move anything
 
-Hover should change color, never size. Bold text is wider than regular text,
+Hover must not change layout: no switch in weight, padding or width.
+Transform and color effects are fine, because they don't move anything around
+them. Bold text is wider than regular text,
 so a hover that switches font weight pushes every neighbor sideways. Sweep the
 pointer across both rows and watch the dashed edge.
 
@@ -131,7 +133,9 @@ type.
 
 A 2px solid `outline` with a 2px `outline-offset` is a good default. The offset
 leaves a gap, so the ring reads as separate from the control even when they
-are the same color. Outlines follow `border-radius` in every major browser, so
+are the same color. The ring can be the brand color or `currentColor`, as
+long as it has 3:1 contrast against the background around it. Outlines follow
+`border-radius` in every major browser, so
 a pill gets a pill-shaped ring.
 
 > **Interactive demo: Focus Offset.** Open https://critly.vercel.app/focus-rings to try it.
@@ -341,8 +345,10 @@ the reward for finishing, and it's the best place to spend your
 is nothing left to do, so don't add a button.
 
 GitHub's Primer asks first-use screens to be playful. Atlassian saves the
-excitement for finished work. I side with Atlassian: on first use the person is
-trying to learn something, and a joke gets between them and the button.
+excitement for finished work. Both can work. On first use the person is trying
+to learn something, so an illustration or a line in the brand's voice is
+welcome as long as the next action stays the most prominent thing on the
+screen.
 
 ### Usage
 
@@ -384,8 +390,9 @@ return (
 );
 ```
 
-Give the empty state the same height as the list it replaces. Otherwise the
-page jumps when the first item arrives and again when the last one leaves.
+Give the empty state and the list a shared min-height, so the area keeps its
+size either way. Otherwise the page jumps when the first item arrives and
+again when the last one leaves.
 
 ### Resources
 
@@ -678,8 +685,9 @@ until it's fixed.
 
 Adrian Roselli argues no toast should time out, since a message that leaves
 on its own fails slow readers. I'd keep the timer for news you can also find
-elsewhere, and make anything with a button stay until it's dismissed or
-reachable another way.
+elsewhere. The same goes for a button: it gets the 8 seconds only if what it
+does is reachable another way, like the report in the exports list. If the
+toast is the only way to it, the toast stays until it's dismissed.
 
 ### Usage
 
@@ -704,7 +712,8 @@ import { toast } from "sonner";
 
 // <Toaster /> renders once, at the root of the app.
 
-// A background job finished: the person may be anywhere by now
+// A background job finished: the person may be anywhere by now.
+// The report is in the exports list too, so the toast can time out.
 toast("Q4 report.pdf is ready", {
   duration: 8000,
   action: { label: "Download", onClick: download },
@@ -749,7 +758,8 @@ Delete a few files each way.
 
 With a dialog on every row, three files take six clicks, and every dialog asks
 the same question. With Undo they take three. The file goes as soon as you
-press, and a toast keeps Undo around for 5 seconds. Delete another while it's
+press, and a toast keeps Undo around for 8 seconds, like any
+[toast](https://critly.vercel.app/toasts) with a button. Delete another while it's
 up and Undo brings both back where they were.
 
 Aza Raskin made this case in 2007: never use a warning when you mean undo. A
@@ -818,7 +828,7 @@ function remove(file: File) {
   softDelete(file.id);
 
   toast(`Deleted “${file.name}”`, {
-    duration: 5000,
+    duration: 8000,
     action: { label: "Undo", onClick: () => restore(file.id) },
   });
 }

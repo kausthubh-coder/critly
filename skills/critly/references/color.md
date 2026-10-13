@@ -64,7 +64,8 @@ this site are all OKLCH too.
 **Tailwind**
 
 ```html
-<button class="bg-[oklch(0.48_0.13_250)] text-white hover:bg-[oklch(0.38_0.1_250)]">
+<!-- --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. -->
+<button class="bg-[oklch(0.48_0.13_var(--brand-hue))] text-white hover:bg-[oklch(0.38_0.1_var(--brand-hue))]">
   Continue
 </button>
 
@@ -76,10 +77,11 @@ this site are all OKLCH too.
 **CSS**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 :root {
-  --brand-200: oklch(0.93 0.03 250);
-  --brand-700: oklch(0.48 0.13 250);
-  --brand-800: oklch(0.38 0.1 250);
+  --brand-200: oklch(0.93 0.03 var(--brand-hue));
+  --brand-700: oklch(0.48 0.13 var(--brand-hue));
+  --brand-800: oklch(0.38 0.1 var(--brand-hue));
 }
 
 .button {
@@ -117,15 +119,17 @@ in, and its lightness can shift on the way, so check new colors at
 - Published: 2026-07-15
 - Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/noise.mdx
 
-When the UI feels too flat, sometimes I like to add noise to some components to give them some texture.
+A screen has only so many shades between two close colors, so a wide, subtle gradient has to repeat each shade across many pixels, and the steps show up as stripes. That's banding. A flat fill has the opposite problem: it can look like plastic when the brand wants paper, print or film.
 
-**Noise** is a layer of random light and dark pixels laid over the surface. It breaks the steps up and gives the color some texture.
+**Add grain when a surface should feel tactile or a gradient bands. On anything large, render it once and tile it so it stays cheap.**
+
+**Noise** is a layer of random light and dark pixels laid over the surface. It breaks the steps up and gives the color some texture. Where a surface has neither problem, a flat fill is fine as it is.
 
 > **Interactive demo: Noise.** Open https://critly.vercel.app/noise to try it.
 
 ### Grain size
 
-The `baseFrequency` attribute controls how fine the noise is. Low values give big soft blobs, whle high values give the tight speckle of film grain.
+The `baseFrequency` attribute controls how fine the noise is. Low values give big soft blobs, while high values give the tight speckle of film grain.
 
 > **Interactive demo: Noise Frequency.** Open https://critly.vercel.app/noise to try it.
 
@@ -136,6 +140,7 @@ Put the filter in one SVG anywhere on the page, then reference it from an overla
 **Tailwind**
 
 ```html
+<!-- bg-accent is your theme's accent color (--color-accent). -->
 <svg class="absolute size-0" aria-hidden="true">
   <filter id="grain">
     <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
@@ -143,7 +148,7 @@ Put the filter in one SVG anywhere on the page, then reference it from an overla
   </filter>
 </svg>
 
-<div class="relative isolate overflow-hidden rounded-2xl bg-violet-600">
+<div class="relative isolate overflow-hidden rounded-2xl bg-accent">
   <div class="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay filter-[url(#grain)]" aria-hidden="true"></div>
   <!-- content -->
 </div>
@@ -182,7 +187,8 @@ You do not even need an image file. Put the filter inside an SVG data URI and le
 **Tailwind**
 
 ```html
-<div class="relative isolate min-h-screen overflow-hidden bg-violet-600">
+<!-- bg-accent is your theme's accent color (--color-accent). -->
+<div class="relative isolate min-h-screen overflow-hidden bg-accent">
   <div
     class="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay bg-size-[200px_200px] bg-repeat"
     style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E&quot;)"
@@ -225,23 +231,30 @@ As a rule: use the live filter on small surfaces and in demos where you want to 
 - [mix-blend-mode](https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode): How the grain layer combines with the color underneath it.
 
 
-## Shadows, Not Borders
+## Edges and Elevation
 
-> Layered shadows give edge and depth.
+> Lines, shadows or space, from one token.
 
 - Section: Color
-- URL: https://critly.vercel.app/shadows-not-borders
+- URL: https://critly.vercel.app/edges-and-elevation
 - Published: 2026-07-15
-- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/shadows-not-borders.mdx
+- Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/edges-and-elevation.mdx
 
-A 1px border is the default way to give a card an edge. It works, but every
-border is a line, and a screen full of lines starts to look like a
-spreadsheet. A **layered shadow** draws the same edge with a faint ring, then
-adds a hint of depth below it.
+A 1px border is the default way to give a card an edge. It works, and a line
+says the card is drawn on the page, at the same level. Nest a card in a panel
+in a page and the lines pile up. A **layered shadow** draws the same edge with
+a faint ring, then adds a hint of depth below it, so the card reads as
+sitting above.
 
-**Give surfaces their edge with a faint shadow, not a border.**
+**Choose how surfaces separate (a line, a shadow, a fill or plain space) by
+what the layering should say, and derive every level from one token.**
 
-> **Interactive demo: Shadows Not Borders.** Open https://critly.vercel.app/shadows-not-borders to try it.
+Borders still have a place. Inputs, table rows and dividers want a plain
+line, because they are not surfaces and should not look raised, and a flat,
+line-drawn look can be a brand of its own. This article is the shadow route:
+save it for things that hold other things.
+
+> **Interactive demo: Shadows Not Borders.** Open https://critly.vercel.app/edges-and-elevation to try it.
 
 The shadow is just as sharp at the edge. The difference is that the card now
 sits slightly above the page instead of being drawn on it, so you can stack a
@@ -252,7 +265,7 @@ card inside a panel inside a page without the lines piling up.
 The recipe this site uses has three layers, and each does one job. Step
 through them.
 
-> **Interactive demo: Shadow Layers.** Open https://critly.vercel.app/shadows-not-borders to try it.
+> **Interactive demo: Shadow Layers.** Open https://critly.vercel.app/edges-and-elevation to try it.
 
 - The **ring** is a `0 0 0 1px` shadow at 6% black. It is the edge, and
   unlike a border it takes up no space.
@@ -269,7 +282,7 @@ it is too strong.
 Elevation is adding layers on top of the same base. Hover adds a mid blur,
 and a popover adds a long, soft one on top of that.
 
-> **Interactive demo: Shadow Elevation.** Open https://critly.vercel.app/shadows-not-borders to try it.
+> **Interactive demo: Shadow Elevation.** Open https://critly.vercel.app/edges-and-elevation to try it.
 
 All three levels start from the same token. That is what makes them read as
 the same material at different heights, instead of three different styles.
@@ -284,7 +297,7 @@ light rim and one drop shadow. See [Effect Cost](https://critly.vercel.app/effec
 A dark shadow on a dark background is invisible. Here is the light mode
 shadow on a dark surface, next to the version this site uses in dark mode.
 
-> **Interactive demo: Shadow Dark Mode.** Open https://critly.vercel.app/shadows-not-borders to try it.
+> **Interactive demo: Shadow Dark Mode.** Open https://critly.vercel.app/edges-and-elevation to try it.
 
 In dark mode the edge comes from light. A 1px inset ring at 3% white draws
 the outline from the inside, and a 1px inset highlight along the top suggests
@@ -328,10 +341,6 @@ These are the `--custom-shadow` values from this site's `globals.css`.
   box-shadow: var(--custom-shadow);
 }
 ```
-
-Borders still have a place. Inputs, table rows and dividers want a plain
-line, because they are not surfaces and should not look raised. Save the
-shadow for things that hold other things.
 
 ### Resources
 
@@ -432,7 +441,7 @@ img {
 
 ## Color Roles
 
-> Gray does the work, color has a job.
+> One color for the next action, status colors for meaning.
 
 - Section: Color
 - URL: https://critly.vercel.app/color-roles
@@ -440,13 +449,13 @@ img {
 - Source: https://github.com/kausthubh-coder/critly/blob/main/content/color/color-roles.mdx
 
 Give the brand color to everything that could take it, and it stops meaning
-anything. The title is blue, the tabs are blue, the numbers, links and status
-badges are blue, and the one button you want people to press is just another
-blue thing.
+anything. The title, the tabs, the numbers, the links and the status badges
+all wear it, and the one button you want people to press is just one more
+colored thing.
 
-**Let neutrals do almost all the work. Use the accent only for the main
-action and the current selection, and use green, amber and red only when they
-mean something.**
+**Keep one color whose job is the next action and the current selection, and
+use green, amber and red only when they mean something. Color the rest as
+freely as the brand wants, as long as that signal still stands out.**
 
 > **Interactive demo: Color Roles.** Open https://critly.vercel.app/color-roles to try it.
 
@@ -456,13 +465,16 @@ the second, the accent is on two: the selected tab and Deploy. Each status
 gets a small dot, and the failed build is the first thing you notice after the
 button.
 
-This is [visual hierarchy](https://critly.vercel.app/visual-hierarchy) applied to color. Every colored
-element competes for attention, so only color the ones that should win.
+This is [visual hierarchy](https://critly.vercel.app/visual-hierarchy) applied to color. Everything in
+the accent competes for attention, so only give it to the things that should
+win.
 
 ### Three roles
 
-- **Neutrals** are backgrounds, surfaces, lines, text and icons. They are
-  nearly everything on screen.
+- **Neutrals** are backgrounds, surfaces, lines, text and icons. In a calm
+  tool they are nearly everything on screen. A brand-led product can color
+  its surfaces boldly instead, as long as the accent and statuses still stand
+  out against them.
 - **The accent** marks what you can do next and where you are: the primary
   button, the selected tab, a checked box. One hue.
 - **Status colors** report state: success, warning, danger. They never
@@ -481,23 +493,27 @@ the indigo accent. By `0.03` the whole card has turned blue.
 
 Not everyone tints. Radix ships plain gray, which works with any accent, next
 to grays pre-tinted toward each hue. Linear's redesign went the other way and
-cut back the blue in its neutrals. I'd tint, and stay under `0.015`.
-This site has no brand hue, so its own grays sit at `0`.
+cut back the blue in its neutrals. For a neutral-led UI I'd tint, and stay
+under `0.015` so the grays still read as gray. A brand that wants colored
+surfaces can go well past that; then give the accent a hue or lightness far
+enough from the surfaces that it still stands out. This site has no brand
+hue, so its own grays sit at `0`.
 
 ### Usage
 
 **Tailwind**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 @import "tailwindcss";
 
 @theme {
-  --color-page: oklch(0.965 0.01 265);
-  --color-surface: oklch(0.99 0.005 265);
-  --color-line: oklch(0.92 0.01 265);
-  --color-ink: oklch(0.21 0.01 265);
-  --color-ink-soft: oklch(0.52 0.01 265);
-  --color-accent: oklch(0.52 0.18 265);
+  --color-page: oklch(0.965 0.01 var(--brand-hue));
+  --color-surface: oklch(0.99 0.005 var(--brand-hue));
+  --color-line: oklch(0.92 0.01 var(--brand-hue));
+  --color-ink: oklch(0.21 0.01 var(--brand-hue));
+  --color-ink-soft: oklch(0.52 0.01 var(--brand-hue));
+  --color-accent: oklch(0.52 0.18 var(--brand-hue));
   --color-success: oklch(0.62 0.15 150);
   --color-warning: oklch(0.75 0.15 75);
   --color-danger: oklch(0.58 0.2 27);
@@ -509,8 +525,9 @@ This site has no brand hue, so its own grays sit at `0`.
 **CSS**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 :root {
-  --hue: 265;
+  --hue: var(--brand-hue);
   --tint: 0.01;
 
   --page: oklch(0.965 var(--tint) var(--hue));
@@ -580,7 +597,7 @@ At `+0.000` only shadows separate the layers, and they barely do. At
 `+0.035` per level, the step this site takes from page to card, every layer
 reads at a glance. Push past `+0.05` and the menu starts to look gray rather
 than dark. Keep the shadows anyway: here they carry a faint inset highlight
-along the top edge, as in [shadows, not borders](https://critly.vercel.app/shadows-not-borders).
+along the top edge, as in [edges and elevation](https://critly.vercel.app/edges-and-elevation).
 
 ### Recheck the rest
 
@@ -599,6 +616,7 @@ along the top edge, as in [shadows, not borders](https://critly.vercel.app/shado
 **Tailwind**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 @import "tailwindcss";
 
 @theme {
@@ -606,7 +624,7 @@ along the top edge, as in [shadows, not borders](https://critly.vercel.app/shado
   --color-card: oklch(1 0 0);
   --color-popover: oklch(1 0 0);
   --color-ink: oklch(0.205 0 0);
-  --color-accent: oklch(0.52 0.18 265);
+  --color-accent: oklch(0.52 0.18 var(--brand-hue));
 }
 
 :root {
@@ -618,7 +636,7 @@ along the top edge, as in [shadows, not borders](https://critly.vercel.app/shado
     --color-card: oklch(0.205 0 0);    /* one step up */
     --color-popover: oklch(0.24 0 0);  /* two steps up */
     --color-ink: oklch(0.945 0 0);     /* not #fff */
-    --color-accent: oklch(0.72 0.12 265);
+    --color-accent: oklch(0.72 0.12 var(--brand-hue));
   }
 }
 
@@ -628,13 +646,14 @@ along the top edge, as in [shadows, not borders](https://critly.vercel.app/shado
 **CSS**
 
 ```css
+/* --brand-hue is your accent's OKLCH hue (0-360): set it once in :root. */
 :root {
   color-scheme: light dark;
   --page: oklch(0.985 0 0);
   --card: oklch(1 0 0);
   --popover: oklch(1 0 0);
   --ink: oklch(0.205 0 0);
-  --accent: oklch(0.52 0.18 265);
+  --accent: oklch(0.52 0.18 var(--brand-hue));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -643,7 +662,7 @@ along the top edge, as in [shadows, not borders](https://critly.vercel.app/shado
     --card: oklch(0.205 0 0);
     --popover: oklch(0.24 0 0);
     --ink: oklch(0.945 0 0);
-    --accent: oklch(0.72 0.12 265);
+    --accent: oklch(0.72 0.12 var(--brand-hue));
   }
 }
 
@@ -667,7 +686,7 @@ this site uses, writes it on the root element for you.
 
 ## Liquid Glass
 
-> A lens for controls, never for content.
+> A lens over content, readable first.
 
 - Section: Color
 - URL: https://critly.vercel.app/liquid-glass
@@ -687,8 +706,8 @@ With blur, the panel is a smudge. With refraction, the lines bend at the
 rim and stay straight in the middle, and the edges catch a highlight. Same
 size, same position, much lighter.
 
-**Use glass only for controls that float above content, and make them
-readable over the worst background they can cross.**
+**If you use glass, keep what sits on it readable over the worst content that
+can pass beneath, and give it something to refract.**
 
 ### Readable first
 
@@ -710,9 +729,12 @@ That's what keeps the shape visible over both white and black.
 
 ### One layer
 
-Glass is for the layer that floats above content: tab bars, toolbars,
-floating buttons, media controls. Lists, cards and articles stay solid.
-Never stack glass on glass; things that sit on glass get plain fills.
+Apple keeps glass to the layer that floats above content: tab bars, toolbars,
+floating buttons, media controls. Lists, cards and articles stay solid,
+because text people read for a while needs a steady background. That's a
+good default for an app; a page that wants glass as its look can use it more
+widely if it stays readable and cheap. Never stack glass on glass; things
+that sit on glass get plain fills.
 
 On the web this is also a rendering rule. A `backdrop-filter` only sees
 what's painted up to the nearest ancestor with `opacity`, `filter`, `mask`
@@ -736,8 +758,8 @@ the fade ends.
 surfaces" setting of your own, the web version of Apple's Tinted option.
 
 Glass is expensive. The browser re-renders the backdrop every time anything
-under it changes, including every scroll frame. Keep glass small and use
-three or four glass elements per screen at most. Count elements in the page,
+under it changes, including every scroll frame. Keep glass small and keep it
+to a handful of elements per screen. Count elements in the page,
 not designs: glass in a shared button component, repeated on every card in a
 list, can quietly put a thousand blurs on one screen, and hidden ones still
 count. Turn page glass off while a modal covers it, and drop the blur from

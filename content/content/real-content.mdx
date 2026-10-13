@@ -57,7 +57,10 @@ Clamp previews to two or three lines. Wrap anything people have to read in
 full, like errors and addresses, with a sensible [line length](/line-length)
 and [text wrapping](/text-wrapping).
 
-Images need a plan too. Give them a fixed aspect ratio and let them crop.
+Images need a plan too. For thumbnails and decoration, give them a fixed aspect
+ratio and let them crop. When the image is the content, like a photo, a
+painting or a product someone came to see, keep the whole frame: let the box
+take the image's own ratio, or use `object-fit: contain`.
 
 <RealContentGridDemo />
 
@@ -66,7 +69,7 @@ Real uploads arrive as a panorama, a square, a painting and no image at all.
 Every image is a different height, one title wraps to four lines or more,
 another is missing, and the counts land wherever the text ends. A 4:3 box with
 `object-fit: cover`, a two-line clamp, "Untitled" and a placeholder put it
-back in order.
+back in order. That suits a grid of previews. Open one, and show it uncropped.
 
 ## Usage
 

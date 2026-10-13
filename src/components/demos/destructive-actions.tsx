@@ -14,7 +14,7 @@ import { SegmentedControl } from "@/components/app/segmented-control";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const UNDO_MS = 5000;
+const UNDO_MS = 8000;
 const ROW_H = 36;
 
 const FILES = [

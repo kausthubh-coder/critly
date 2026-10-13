@@ -2,7 +2,7 @@
 
 ## Gestures
 
-> Every gesture needs a visible twin.
+> Every gesture that acts needs a visible twin.
 
 - Section: Mobile
 - URL: https://critly.vercel.app/gestures
@@ -23,7 +23,7 @@ can't know whether a second one is coming, so it waits out the double-tap
 window before it selects. The right photo has no double tap; the heart button
 likes it, and the tap answers in a frame.
 
-**Treat every gesture as a shortcut for something people can see and tap.**
+**Treat every gesture that triggers an action as a shortcut for something people can see and tap; direct manipulation like scrolling, pinching and dragging needs no twin.**
 
 ### The vocabulary
 
@@ -64,31 +64,36 @@ like is the main thing people do in a feed, give it a button.
 
 Some swipes belong to the system. Don't build anything that competes with them.
 
-- **iOS:** swipe in from the leading edge to go back. Since **iOS 26**, a
-  pushed screen also goes back on a left-to-right pan **anywhere** in its
-  content, so a horizontal carousel or chart scrubber there now competes with
-  Back. Leave the bottom edge to the home indicator and the top edge to
-  Notification Center and Control Center.
+- **iOS:** swipe in from the leading edge to go back, and since iOS 26 a
+  left-to-right pan anywhere in a pushed screen does it too. Leave the bottom
+  edge to the home indicator and the top edge to Notification Center and
+  Control Center.
 - **Android:** back is an inward swipe from **either** edge. You can exclude
   small strips, like a slider thumb, but the system honors at most **200dp**
   of exclusion per edge. Apps can't opt out of the home and quick-switch
   swipes at the bottom.
 
-See [Back Navigation](https://critly.vercel.app/back-navigation) for building back itself.
+See [Back Navigation](https://critly.vercel.app/back-navigation) for building back itself, and for
+what the iOS 26 swipe means for horizontal gestures in pushed screens.
 
 ### Pan against scroll
 
 A horizontal drag inside a vertical list has to decide which way it's going
-before it takes the touch. Give it a small dead zone. I start the pan after
-about 10pt of horizontal movement and let it fail if the finger moves 10pt
-vertically first. That's `activeOffsetX` and `failOffsetY` in Gesture Handler.
+before it takes the touch. Give it a small dead zone: about 10pt of
+horizontal movement before the pan starts, and a fail if the finger moves
+10pt vertically first. It's close to the system's own touch slop, so the
+list scrolls as people expect, and small enough that the drag still feels
+immediate. That's `activeOffsetX` and `failOffsetY` in Gesture Handler.
 Compose's `draggable` and `anchoredDraggable` wait for the 8dp touch slop in
 their own direction, so a vertical `LazyColumn` still scrolls. In a pushed iOS
-26 screen, a left-to-right pan also competes with the content back swipe;
-in UIKit, make `interactiveContentPopGestureRecognizer` wait for yours with
-`require(toFail:)`.
+26 screen, a left-to-right pan also competes with
+[back](https://critly.vercel.app/back-navigation).
 
 ### Give every gesture a twin
+
+This is for gestures that do something, like archive, delete or like.
+Scrolling a list, pinching a photo or dragging a map is the content
+answering the finger, and people try it without being told.
 
 Each gesture in this inbox has a visible equivalent. Use the gestures, then
 turn them off and do the same things with the ··· button.

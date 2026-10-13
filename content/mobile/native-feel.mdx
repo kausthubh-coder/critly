@@ -1,6 +1,6 @@
 ---
 title: Native Feel
-description: Follow the platform people already know.
+description: Keep the behaviors people know from their platform.
 section: Mobile
 order: 1
 publishedAt: "2026-10-12"
@@ -34,15 +34,17 @@ platforms and watch what changes: the back button, the title, the list, the
 switches, and what a press looks like. On iPhone a row highlights under
 your finger. On Android a ripple grows from the point you touched.
 
-**Draw the parts people learned from the system the way their platform draws them, and put your brand in color, content and voice.**
+**Keep the behaviors people learned from their platform, like where back is, the order of dialog buttons, what a press and a switch do, and Dynamic Type, and style the rest as freely as your brand wants.**
 
 ## What changes
+
+The back, switch, press and type rows are behaviors people rely on. The title, list, icon and sheet rows are each platform's default look: a good place to start, not a requirement.
 
 | | iPhone | Android |
 | --- | --- | --- |
 | Back | Chevron, top leading. Swipe right from the edge, or from anywhere in the content since iOS 26 | Arrow in the top app bar. The system back gesture from either edge, or the back button |
 | Title | Large title that shrinks into the bar as you scroll | 64dp top app bar, title after the arrow |
-| Lists | Grouped, inset rows on a gray background, Title Case labels | Full-width rows, section labels in the primary color, sentence case |
+| Lists | By default, grouped inset rows on a gray background, Title Case labels | By default, full-width rows, section labels in the primary color, sentence case |
 | Switches | iOS switch; only the switch toggles | M3 switch, the thumb grows when on; the whole row toggles |
 | Press | Highlight or dim on touch-down | Ripple from the touch point, a 10% state layer |
 | Type | SF Pro, Dynamic Type, 17pt body | Roboto, sizes in sp, scaling up to 200% |
@@ -65,8 +67,9 @@ action on the right.
 
 - On iPhone, Apple puts the default button on the trailing side of a
   row, or at the top of a stack, and Cancel on the leading side or at the
-  bottom. Always call it Cancel, and name the action with a verb, never
-  "OK".
+  bottom. Always call it Cancel, and name the action with a verb. Apple
+  allows "OK" only in a purely informational alert, where there's no
+  action to name.
 - On Android, Material 3 puts text buttons at the trailing edge, with the
   dismiss button left of the confirm button, and allows at most two.
   Compose's `AlertDialog(confirmButton, dismissButton)` does the layout.
@@ -78,26 +81,25 @@ an undo is often better than a question.
 
 ## Where the brand goes
 
-Your brand belongs in what's yours: color, illustration, content, copy and
-the motion of your own content. Tint the system switch with your color. If
+Your brand can shape everything that isn't a learned behavior: color, type,
+shape, illustration, content, copy and motion. Tint the system switch with your color. If
 you use your own font, make it scale like the system one: SwiftUI's
 `.custom(_:size:relativeTo:)` follows Dynamic Type, and sizes in sp follow
-Android's font scale. Don't redraw the back button.
+Android's font scale. Keep the system back button: replacing it can lose
+the swipe back.
 
 ## The 2026 look
 
 iOS 26 put bars and tab bars on [Liquid Glass](/liquid-glass), floating over
-content, and iOS 27 adds a setting that lets people choose between clear
+content, and iOS 26.1 added a setting that lets people choose between clear
 and tinted. Android has Material 3 Expressive, with springier motion and
 new shapes, on Pixel since September 2025. In Compose, `MaterialExpressiveTheme`
-and `MotionScheme` are internal in material3 1.4.0, the stable version. They
-only become public in 1.5.0, which is in beta.
+and `MotionScheme` are internal in material3 1.4.0. They become public in
+1.5.0, which was still in beta in October 2026.
 
-System bars pick up these changes on their own. iOS 27 also makes iPhone
-apps resizable, in iPhone Mirroring and on iPad. And on iPhone Duo, the tab
-bar, toolbar and back button move into a strip on one side of the screen.
-Standard bars move by themselves. A hand-built bottom bar stays where you
-drew it.
+System bars pick up these changes on their own, including the resizable
+iPhone apps in iOS 27 and the side strip on iPhone Duo
+([Safe Areas](/safe-areas)). A hand-built bottom bar stays where you drew it.
 
 ## Cross-platform
 

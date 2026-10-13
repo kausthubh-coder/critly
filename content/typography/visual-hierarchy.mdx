@@ -1,6 +1,6 @@
 ---
 title: Visual Hierarchy
-description: Quiet the rest so one thing leads.
+description: Decide what leads, then let it win.
 section: Typography
 order: 7
 publishedAt: "2026-10-02"
@@ -27,7 +27,9 @@ The instinct is to make the important part louder. That starts an arms race:
 a bigger name, a bolder price, and now the row is loud in two places instead of
 one.
 
-**Quiet the rest instead of making the important thing louder.**
+**Decide what people should see first and make it win by contrast. Quiet what
+competes with it before you make it louder, using whichever lever fits the
+voice: tone, weight, size or color.**
 
 <VisualHierarchyDemo />
 
@@ -39,26 +41,33 @@ quiet one still leads with what matters. It is the same blur test as in
 
 ## Tone and weight before size
 
-Size is the bluntest tool. It costs space, breaks alignment, and needs its own
-[letter spacing](/letter-spacing). Color and weight do most of the work for
-less. Three text tones are enough: one for the thing, one for its details, one
-for metadata. Two weights, 400 and 500, cover almost everything else.
+In a dense list like this one, size is the costliest lever. It takes space,
+breaks alignment, and needs its own [letter spacing](/letter-spacing). Color
+and weight do the same work for less. Three text tones usually cover it: one
+for the thing, one for its details, one for metadata. In a quiet interface,
+two weights, 400 and 500, go a long way. An editorial page or a loud brand
+can lead with big type, a heavy weight or color instead; the squint test is
+the same.
 
 Keep even the quietest tone at 4.5:1 or more. Here it is `neutral-500` on
 white, which lands at 4.7:1.
 
-## Labels are a last resort
+## Labels cost a read
 
 A label is more text to read before you reach the value. Formatted well, most
 values explain themselves. "12 left" says what "Stock: 12" says, in one glance.
+Keep the label when the value is ambiguous on its own, or when people scan for
+the label, as in forms and spec tables.
 
 <HierarchyLabelsDemo />
 
 ## Actions have ranks
 
 Buttons follow the same rule. One solid primary action, a quiet secondary one,
-and a destructive action that is not the main job can be plain text that turns
-red on hover. Save the big red button for the confirmation step.
+and a destructive action that is not the main job can be plain red text. Show
+the red from the start: touch screens have no hover, so a danger cue that
+waits for hover never appears before the press. Save the big red button for
+the confirmation step.
 
 <HierarchyActionsDemo />
 

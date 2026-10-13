@@ -113,10 +113,9 @@ On iPhone, a tap on the status bar scrolls the scroll view closest to it to
 the top. UIKit turns this on by default, but on iPhone it does nothing if more
 than one scroll view on screen has `scrollsToTop` on
 ([Apple](https://developer.apple.com/documentation/uikit/uiscrollview/scrollstotop)).
-Horizontal carousels inside a feed count, so switch it off on them. On both
-platforms, tapping the tab you're already on should go back to that tab's
-root, and if you're already there, scroll to the top
-([Back Navigation](/back-navigation)).
+Horizontal carousels inside a feed count, so switch it off on them. Tapping
+the tab you're already on is the other shortcut to the top; what it does on
+each platform is in [Back Navigation](/back-navigation).
 
 Measure all of this in a release build on a low-end Android phone. Debug
 builds run slower code, and a simulator on a fast laptop hides what a slow

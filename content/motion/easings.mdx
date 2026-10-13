@@ -34,8 +34,10 @@ The left one eases in. It starts slow and reaches full speed at the very end,
 so the menu hesitates, then slams into place. The right one eases out. It
 starts fast and slows as it lands, the way most physical things come to rest.
 
-**Use ease-out for anything that appears because the user did something.**
-They clicked, so the interface should move at once and then settle. Ease-in
+**When the user triggers motion, start it at once and let it settle, with a
+front-loaded curve like an ease-out. Which curve, how hard it front-loads and
+whether it overshoots is part of the brand's feel.** They clicked, so the
+interface should answer right away. Ease-in
 has one good use: things that are leaving, where nobody needs to watch them
 settle. [Exit animations](/exit-animations) covers that.
 
@@ -67,8 +69,8 @@ twice as fast.
 
 For a little overshoot, CSS can fake a spring with `linear()`, a list of
 points the browser joins with straight lines. The site's `--ease-spring`
-overshoots by 16% before it settles. Pick two or three curves like these and
-use them everywhere. Consistent easing does more for a product than any single
+overshoots by 16% before it settles. Pick two or three curves that fit how
+the product should feel and use them everywhere. Consistent easing does more for a product than any single
 animation.
 
 ## Usage

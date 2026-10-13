@@ -67,8 +67,9 @@ until it's fixed.
 
 Adrian Roselli argues no toast should time out, since a message that leaves
 on its own fails slow readers. I'd keep the timer for news you can also find
-elsewhere, and make anything with a button stay until it's dismissed or
-reachable another way.
+elsewhere. The same goes for a button: it gets the 8 seconds only if what it
+does is reachable another way, like the report in the exports list. If the
+toast is the only way to it, the toast stays until it's dismissed.
 
 ## Usage
 
@@ -95,7 +96,8 @@ reachable another way.
 
 // <Toaster /> renders once, at the root of the app.
 
-// A background job finished: the person may be anywhere by now
+// A background job finished: the person may be anywhere by now.
+// The report is in the exports list too, so the toast can time out.
 toast("Q4 report.pdf is ready", {
   duration: 8000,
   action: { label: "Download", onClick: download },

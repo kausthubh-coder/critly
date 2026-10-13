@@ -48,9 +48,10 @@ run them.**
   `opacity`.
 - **Depends on the browser:** `filter`, `backdrop-filter`, `clip-path` and
   `background-color` run on the compositor in some engines and on the main
-  thread in others. Treat them as expensive.
-- **Paint every frame:** `box-shadow`, `border-radius`, `color`,
-  `filter: blur()` in Chrome.
+  thread in others. Treat them as expensive. Even where a blur runs on the
+  compositor, as it can in Chromium, the GPU redraws it every frame, and the
+  cost grows with the blur radius and the area.
+- **Paint every frame:** `box-shadow`, `border-radius`, `color`.
 - **Layout every frame:** `width`, `height`, `top`, `left`, `margin`,
   `padding`. Moving one box can move every box after it.
 
@@ -70,8 +71,8 @@ smooth.
 JavaScript engines compute each frame on the main thread, so they're only as
 smooth as the page around them. In Motion, `x`, `y` and `scale` run that
 way. A full `transform` string can be handed to the browser instead. Springs
-handed over this way become `linear()` curves, which Safari runs on the main
-thread anyway. In React, never animate through state: a re-render per frame
+handed over this way become `linear()` curves, which Safari has run on the
+main thread anyway (WebKit's threaded animations fix this). In React, never animate through state: a re-render per frame
 is exactly the main-thread work that causes the stutter. Use motion values,
 refs or CSS.
 

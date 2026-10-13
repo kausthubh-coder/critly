@@ -19,7 +19,7 @@ resources:
     description: Appian's design system on why a card inside a card adds clutter instead of structure.
   - url: https://kgajos.seas.harvard.edu/papers/reinecke13aesthetics.pdf
     title: Predicting users' first impressions of website aesthetics
-    description: Reinecke and colleagues on 450 sites seen for half a second each. The number of regions on a page predicted how complex it looked, and complex pages were liked less.
+    description: Reinecke and colleagues on 450 sites seen for half a second each. The amount of text and the number of text and image groups predicted how complex a page looked, and the most complex pages were liked least.
   - url: https://atlassian.design/components/button/usage
     title: Button usage
     description: Atlassian's rule of one primary button per page or area.
@@ -33,7 +33,7 @@ box, the text starts in five slightly different places, and two buttons shout
 at once. No lint fails it. A designer spots it in a few seconds, with three
 habits.
 
-**Before you call a screen done, squint at it, count its boxes and edges, and find the one thing it leads with.**
+**Before you call a screen done, squint at it: the first thing the eye lands on should be what the screen is for, and every box and edge should be doing grouping work.**
 
 <TastePassDemo />
 
@@ -62,10 +62,14 @@ mistake: each component brought its own frame, and nobody took any away.
 
 Group with space first, then with one background tone, and keep lines for
 where space can't do it. That is what [whitespace](/whitespace) and
-[shadows, not borders](/shadows-not-borders) are about. There's no right
-number of boxes. Compare before and after: fewer is calmer. In a study of 450
-sites seen for half a second, the number of regions was the best predictor of
-how busy a page looked, and busy pages were liked less.
+[edges and elevation](/edges-and-elevation) are about. There's no right
+number of boxes. For each one, ask what it groups. If space already does that
+job, the box is one more edge to read for nothing. In a study of 450 sites
+seen for half a second, the amount of text and the number of separate text and
+image groups best predicted how complex a page looked, and the most complex
+pages were liked least. That study counted content groups, not borders. A box
+adds to the load when it splits content into one more group, and helps when it
+holds a real group together.
 
 ## Count the edges
 
@@ -78,8 +82,9 @@ them. See [alignment](/alignment) for lining things up.
 
 Say in a few words what the screen is for. Then check that it's the heaviest
 shape when you squint. If two things weigh about the same, nothing leads, and
-the fix is to quiet one, not to make the other louder (see
-[visual hierarchy](/visual-hierarchy)). Buttons follow the same rule: one solid
+the fix is to make one clearly win. Quieting the other is usually the cheaper
+move, since making the lead louder tends to raise the whole screen, but either
+works if the lead ends up obvious (see [visual hierarchy](/visual-hierarchy)). Buttons follow the same rule: one solid
 button per area, as Atlassian puts it, and at most one or two per view, as
 Apple does.
 
@@ -143,4 +148,4 @@ It can find the heaviest shape, but not whether that's the right one. That
 depends on what the screen is for, which only you and the people using it
 know. It also sees one screen in one state, so open the menu, fill the form and
 run it again. Then look at the images yourself. Taste gets better with
-[reps](/taste-is-trained), and this is one.
+[reps](/how-to-get-references#train-your-eye), and this is one.

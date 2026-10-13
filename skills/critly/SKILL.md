@@ -4,7 +4,7 @@ description: 'Design engineering concepts from Critly (critly.vercel.app) for th
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
-  version: "2026-10-12"
+  version: "2026-10-13"
 ---
 
 # Critly
@@ -20,6 +20,11 @@ looks like; the check proves you did it. For what can't be measured as wrong,
 `critly taste <url>` runs a taste pass: it squints at each screen, counts its
 boxes and edges, finds what it leads with, and writes the images to look at
 (https://critly.vercel.app/taste-pass).
+
+Critly is design principles and the checks that hold them, not a style. The
+look (typefaces, palette, mood) comes from the brief or the project's
+existing design; Critly makes whatever look that is clear, consistent and
+well made.
 
 `references/rules.md` lists every concept's rule in one line. It is short on
 purpose: read it whenever you start a new piece of work. Open the full
@@ -43,14 +48,19 @@ it runs a full top-down pass with these concepts.
    or animated, quiet or expressive. Read **Product Feel** for how each
    choice maps to values. If the project already has tokens (spacing scale,
    type scale, color roles, radii), use them instead of adding new ones.
+   With nothing to follow, choose the typefaces and palette from this feel
+   and the brief, not from Critly's examples.
 3. Map the work to concepts with the table in **What to open** below, and
    skim `references/rules.md`.
 4. Read the matching sections in `references/` before writing code. Each
    concept there has the full reasoning, the rule, and the code. Do not apply
    a concept from its one-line summary alone.
-5. Apply the rule, and prefer the exact values from the reference (durations,
-   easings, scales, radii, opacities, spacing steps) over inventing your own.
-   Reuse the same few values everywhere instead of tuning each component.
+5. Apply the rule. For mechanical values (durations, easings, scales, radii,
+   opacities, spacing steps), the reference's numbers are tested best
+   practice: start from them instead of inventing your own. Reuse the same
+   few values everywhere instead of tuning each component. The examples'
+   fonts, colors and layouts only illustrate the principle; don't copy them
+   as a style.
 6. **Come back when the work changes shape.** What you read at the start only
    covers what you planned. The moment the work grows a new kind of thing (you
    add a blur, an animation, a long list, an image or video, a slow action, a
@@ -89,7 +99,7 @@ it runs a full top-down pass with these concepts.
 | Any animation or transition | Easings, Springs, Interruptibility, Smooth Animation, Reduced Motion |
 | Animating size, position or layout | Smooth Animation, Shared Layout, Liquid Motion |
 | Drags, swipes, sheets, carousels | Momentum, Springs, Interruptibility |
-| Blur, glass, `backdrop-filter`, big shadows, filters | Liquid Glass, Effect Cost, Shadows, Not Borders |
+| Blur, glass, `backdrop-filter`, big shadows, filters | Liquid Glass, Effect Cost, Edges and Elevation |
 | Lists, grids, feeds or rows of cards | Long Lists, Responsiveness, Density |
 | Images | Image Loading, Layout Shift, Image Outlines |
 | Video, iframes, maps, widgets | Video and Embeds, Instant Navigation |
@@ -150,7 +160,7 @@ review, in this order, before the details:
 2. **Count the boxes and edges.** Every border, ring, shadow and tinted
    background is an edge. A box in a box in a box, two edges a few px apart,
    or a bordered box inside a bordered box: group with space and one
-   background tone instead (Whitespace, Shadows, Not Borders). Count where
+   background tone instead (Whitespace, Edges and Elevation). Count where
    things start; line up near misses (Alignment).
 3. **Find the one thing.** Say in a few words what the screen is for, then
    check that it leads. If two things weigh the same, quiet one; one solid
@@ -167,7 +177,10 @@ feel you wrote down in step 2. Read **Taste Pass** for the reasoning.
 
 The code samples in the references use Tailwind v4 (`outline-hidden`,
 `shadow-(--var)`, `@theme`). Check the project's Tailwind version, and
-translate to plain CSS or v3 syntax when it differs. Mobile concepts carry
+translate to plain CSS or v3 syntax when it differs. Where a sample needs a
+brand choice it uses a placeholder: `var(--brand-hue)` for the accent's
+OKLCH hue, `"Brand"` for the typeface, `bg-accent` and `.accentColor` for
+the accent. Fill them from the project or the brief. Mobile concepts carry
 SwiftUI, Compose and React Native (Expo) tabs; use the one for the project's
 stack, and check its versions (Expo SDK, Reanimated, Gesture Handler, Material3)
 before copying an API. Only cite a concept that is in the index.
@@ -197,7 +210,6 @@ before copying an API. Only cite a concept that is in the index.
 - **Performance Is Design**: How fast it feels is a design choice. ([reference](references/craft.md#performance-is-design), [demo](https://critly.vercel.app/performance-is-design))
 - **How to Get References**: Great work starts with great inputs. ([reference](references/craft.md#how-to-get-references), [demo](https://critly.vercel.app/how-to-get-references))
 - **Novelty Budget**: Save delight for the rare moments. ([reference](references/craft.md#novelty-budget), [demo](https://critly.vercel.app/novelty-budget))
-- **Taste Is Trained**: Taste is a skill, and it takes reps. ([reference](references/craft.md#taste-is-trained), [demo](https://critly.vercel.app/taste-is-trained))
 - **Taste Pass**: Squint, count the boxes, find the one thing. ([reference](references/craft.md#taste-pass), [demo](https://critly.vercel.app/taste-pass))
 - **Timelessness**: Surface ages fast. Structure doesn't. ([reference](references/craft.md#timelessness), [demo](https://critly.vercel.app/timelessness))
 - **Product Feel**: Decide the feel before the numbers. ([reference](references/craft.md#product-feel), [demo](https://critly.vercel.app/product-feel))
@@ -209,9 +221,9 @@ before copying an API. Only cite a concept that is in the index.
 - **Text Wrapping**: Balanced headings, no lonely last words. ([reference](references/typography.md#text-wrapping), [demo](https://critly.vercel.app/text-wrapping))
 - **Tabular Numbers**: Steady digits for values that change. ([reference](references/typography.md#tabular-numbers), [demo](https://critly.vercel.app/tabular-numbers))
 - **Optical Alignment**: Center for the eye, not the math. ([reference](references/typography.md#optical-alignment), [demo](https://critly.vercel.app/optical-alignment))
-- **Icons**: One set, one weight, sized to the text. ([reference](references/typography.md#icons), [demo](https://critly.vercel.app/icons))
+- **Icons**: One set, one default weight, sized to the text. ([reference](references/typography.md#icons), [demo](https://critly.vercel.app/icons))
 - **Font Smoothing**: Light text on dark renders heavier. ([reference](references/typography.md#font-smoothing), [demo](https://critly.vercel.app/font-smoothing))
-- **Visual Hierarchy**: Quiet the rest so one thing leads. ([reference](references/typography.md#visual-hierarchy), [demo](https://critly.vercel.app/visual-hierarchy))
+- **Visual Hierarchy**: Decide what leads, then let it win. ([reference](references/typography.md#visual-hierarchy), [demo](https://critly.vercel.app/visual-hierarchy))
 - **Line Length**: Lines short enough to find the next one. ([reference](references/typography.md#line-length), [demo](https://critly.vercel.app/line-length))
 - **Type Scale**: A few sizes, each with a job. ([reference](references/typography.md#type-scale), [demo](https://critly.vercel.app/type-scale))
 
@@ -219,11 +231,11 @@ before copying an API. Only cite a concept that is in the index.
 
 - **OKLCH**: Lightness values that look equal. ([reference](references/color.md#oklch), [demo](https://critly.vercel.app/oklch))
 - **Noise**: Grain hides banding and adds texture. ([reference](references/color.md#noise), [demo](https://critly.vercel.app/noise))
-- **Shadows, Not Borders**: Layered shadows give edge and depth. ([reference](references/color.md#shadows-not-borders), [demo](https://critly.vercel.app/shadows-not-borders))
+- **Edges and Elevation**: Lines, shadows or space, from one token. ([reference](references/color.md#edges-and-elevation), [demo](https://critly.vercel.app/edges-and-elevation))
 - **Image Outlines**: A faint inner edge that frames images. ([reference](references/color.md#image-outlines), [demo](https://critly.vercel.app/image-outlines))
-- **Color Roles**: Gray does the work, color has a job. ([reference](references/color.md#color-roles), [demo](https://critly.vercel.app/color-roles))
+- **Color Roles**: One color for the next action, status colors for meaning. ([reference](references/color.md#color-roles), [demo](https://critly.vercel.app/color-roles))
 - **Dark Mode**: A second design, not an inverted one. ([reference](references/color.md#dark-mode), [demo](https://critly.vercel.app/dark-mode))
-- **Liquid Glass**: A lens for controls, never for content. ([reference](references/color.md#liquid-glass), [demo](https://critly.vercel.app/liquid-glass))
+- **Liquid Glass**: A lens over content, readable first. ([reference](references/color.md#liquid-glass), [demo](https://critly.vercel.app/liquid-glass))
 
 ### Layout
 
@@ -235,7 +247,7 @@ before copying an API. Only cite a concept that is in the index.
 - **Squircles**: Corners that ease into the edge. ([reference](references/layout.md#squircles), [demo](https://critly.vercel.app/squircles))
 - **Whitespace**: Space is how things group. ([reference](references/layout.md#whitespace), [demo](https://critly.vercel.app/whitespace))
 - **Spacing Scale**: A few spaces, used everywhere. ([reference](references/layout.md#spacing-scale), [demo](https://critly.vercel.app/spacing-scale))
-- **Alignment**: Fewer edges, less to read. ([reference](references/layout.md#alignment), [demo](https://critly.vercel.app/alignment))
+- **Alignment**: Near misses read as mistakes. ([reference](references/layout.md#alignment), [demo](https://critly.vercel.app/alignment))
 - **Density**: Fit the space to how often it's used. ([reference](references/layout.md#density), [demo](https://critly.vercel.app/density))
 - **Layout Shift**: Hold the space for what arrives late. ([reference](references/layout.md#layout-shift), [demo](https://critly.vercel.app/layout-shift))
 - **Responsive**: Fit the space you're given. ([reference](references/layout.md#responsive), [demo](https://critly.vercel.app/responsive))
@@ -258,8 +270,8 @@ before copying an API. Only cite a concept that is in the index.
 
 ### Motion
 
-- **Icon Morph**: Blur, scale and fade between icons. ([reference](references/motion.md#icon-morph), [demo](https://critly.vercel.app/icon-morph))
-- **Button Press**: Scale down on press so it feels real. ([reference](references/motion.md#button-press), [demo](https://critly.vercel.app/button-press))
+- **Icon Morph**: Change the icon, don't trade it for another. ([reference](references/motion.md#icon-morph), [demo](https://critly.vercel.app/icon-morph))
+- **Button Press**: Show the press the moment it lands. ([reference](references/motion.md#button-press), [demo](https://critly.vercel.app/button-press))
 - **Easings**: Ease-out for anything the user triggers. ([reference](references/motion.md#easings), [demo](https://critly.vercel.app/easings))
 - **Springs**: Tune motion by feel, then convert it. ([reference](references/motion.md#springs), [demo](https://critly.vercel.app/springs))
 - **Stagger**: Turn one block into a sequence. ([reference](references/motion.md#stagger), [demo](https://critly.vercel.app/stagger))
@@ -297,10 +309,10 @@ before copying an API. Only cite a concept that is in the index.
 
 ### Mobile
 
-- **Native Feel**: Follow the platform people already know. ([reference](references/mobile/native-feel.md), [demo](https://critly.vercel.app/native-feel))
+- **Native Feel**: Keep the behaviors people know from their platform. ([reference](references/mobile/native-feel.md), [demo](https://critly.vercel.app/native-feel))
 - **Thumb Reach**: Put frequent actions where the thumb rests. ([reference](references/mobile/thumb-reach.md), [demo](https://critly.vercel.app/thumb-reach))
 - **Touch Feedback**: Answer the finger on touch-down. ([reference](references/mobile/touch-feedback.md), [demo](https://critly.vercel.app/touch-feedback))
-- **Gestures**: Every gesture needs a visible twin. ([reference](references/mobile/gestures.md), [demo](https://critly.vercel.app/gestures))
+- **Gestures**: Every gesture that acts needs a visible twin. ([reference](references/mobile/gestures.md), [demo](https://critly.vercel.app/gestures))
 - **Swipe Actions**: Reveal on a short swipe, commit on a long one. ([reference](references/mobile/swipe-actions.md), [demo](https://critly.vercel.app/swipe-actions))
 - **Long Press**: Show the hold, then open the menu. ([reference](references/mobile/long-press.md), [demo](https://critly.vercel.app/long-press))
 - **Bottom Sheets**: Detents, a grabber, and a swipe down. ([reference](references/mobile/bottom-sheets.md), [demo](https://critly.vercel.app/bottom-sheets))

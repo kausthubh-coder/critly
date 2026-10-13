@@ -74,7 +74,7 @@ Then compare the inventory against the concepts:
 | Many greys, untinted neutrals, accent used for decoration | Color Roles, OKLCH |
 | Raw values in components instead of named roles | Design Tokens |
 | Several radii with no pattern, inner radius equal to outer | Nested Border Radius |
-| Borders everywhere, shadows that differ per component | Shadows, Not Borders |
+| Edges (borders, shadows) that differ per component, or boxes that group nothing | Edges and Elevation |
 | Inverted dark mode, pure #000, glowing accents | Dark Mode, HTML Background |
 | Several easings and durations with no reason | Easings |
 
@@ -127,7 +127,7 @@ concepts:
   Motion.
 - **Content**: Microcopy, Real Content, Tabular Numbers, Text Wrapping.
 - **Images and icons**: Image Outlines, Icons, Optical Alignment.
-- **Glass and effects**: Liquid Glass, Effect Cost, Shadows, Not Borders.
+- **Glass and effects**: Liquid Glass, Effect Cost, Edges and Elevation.
 
 Also note where a screen looks like an unmodified template instead of this
 product: a leftover default accent color, everything boxed in identical

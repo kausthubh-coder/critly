@@ -25,7 +25,7 @@ resources:
 Two apps can fetch the same data in the same time, and one will still feel
 faster. The difference is what each one shows you while you wait.
 
-**What you show during a wait decides how long it feels.** That makes
+**What you show during a wait shapes how long it feels.** That makes
 waiting a design problem, and usually a cheaper one to fix than the network.
 
 Press load. Both cards take the same 1.2 seconds.
@@ -33,22 +33,19 @@ Press load. Both cards take the same 1.2 seconds.
 <PerceivedPerformanceDemo />
 
 The spinner says "please wait". The skeleton shows the shape of what is
-coming, so your eye already has somewhere to go. Same wait, and the second one
-feels shorter.
+coming, so your eye already has somewhere to go. Whether that makes the same
+wait feel shorter is less settled than it looks. A 2018 study found people
+rated skeleton pages faster, while
+[Viget's test](https://www.viget.com/articles/a-bone-to-pick-with-skeleton-screens)
+with 136 people found the skeleton felt like the longest wait of the three it
+tried. What a skeleton does reliably is hold the layout, so nothing jumps when
+the content lands.
 
 ## Match the wait
 
-Jakob Nielsen's
-[response time limits](https://www.nngroup.com/articles/response-times-3-important-limits/)
-are still the best guide:
-
-- Under 100ms feels instant. Just show the result.
-- Under 1 second, people notice the delay but keep their train of thought. Show nothing, and hold the space so the layout does not jump.
-- Past 1 second, show that something is happening, with a skeleton or a spinner.
-- Past 10 seconds, show progress and an estimate.
-
-The second row is the one people get wrong. A skeleton that lives for 300ms is
-not reassurance. It is a flash.
+How long a wait can run before it needs feedback, and what kind, is set out
+in [Responsiveness](/responsiveness). The short wait is the one people get
+wrong. A skeleton that lives for 300ms is not reassurance. It is a flash.
 
 <LoadingFlashDemo />
 

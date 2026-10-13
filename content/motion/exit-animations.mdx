@@ -21,7 +21,8 @@ resources:
 
 The lazy exit is the entrance played backwards: same distance, same
 duration, same curve. It looks tidy, but it gives a goodbye as much time as a
-hello. **Something leaving deserves less ceremony than something arriving.**
+hello. **An exit shouldn't make people wait. Keep it shorter and quieter than
+the entrance, unless the motion shows where the thing went.**
 
 Dismiss the toasts and watch them go.
 
@@ -32,9 +33,11 @@ that again in reverse. The right one fades out in half the time, 120ms, with
 2px of blur, no travel and an ease-in.
 
 An entrance has a job. Something new is here, and the motion shows you where
-it came from. An exit has none. The user has already moved on, and anything
-that makes them watch is in the way. So exits get about half the duration and
-less movement. They are also the one place ease-in fits, since the element is
+it came from. Most exits have a smaller one. The user has already moved on,
+and anything that makes them watch is in the way. The exception is an exit
+that tells you something: a file flying to the trash, or a popover shrinking
+back into the button that opened it, shows where the thing went and where to
+find it again. Other exits get about half the duration and less movement. They are also the one place ease-in fits, since the element is
 speeding away and nobody needs to watch it settle.
 
 In React, an element removed from the tree is gone before it can animate.

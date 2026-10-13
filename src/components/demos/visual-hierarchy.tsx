@@ -271,13 +271,13 @@ export function HierarchyActionsDemo() {
         </div>
         <div className="flex items-center gap-2">
           {/* Same weight: three solid buttons, the destructive one loudest of
-              all. Ranked: one solid, one quiet, and delete as plain text that
-              only turns red on hover. */}
+              all. Ranked: one solid, one quiet, and delete as plain red text,
+              red from the start because touch has no hover. */}
           <Button
             className={cn(
               "mr-auto",
               ranked
-                ? "text-muted-foreground"
+                ? "text-destructive"
                 : "bg-destructive text-white shadow-none hover:bg-destructive/90 dark:bg-destructive dark:hover:bg-destructive/90"
             )}
             size="sm"
