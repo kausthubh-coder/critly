@@ -197,7 +197,7 @@ the two methods agree on the lead to within about 15%.
 | `type-scale` | [type-scale](https://critly.vercel.app/type-scale) | on, needs policy | A font size isn't one of the sizes in the policy's type scale. |
 | `font-family` | [design-tokens](https://critly.vercel.app/design-tokens) | on, needs policy | Interface text uses a font that isn't in the policy (code, kbd and pre are excluded). |
 | `line-length` | [line-length](https://critly.vercel.app/line-length) | on | A paragraph runs wider than 75 characters (or the policy's limit). |
-| `letter-spacing` | [letter-spacing](https://critly.vercel.app/letter-spacing) | on | All-caps text has no positive tracking, or display text (32px and up) has positive tracking. |
+| `letter-spacing` | [letter-spacing](https://critly.vercel.app/letter-spacing) | on | All-caps text under 24px has no positive tracking, or display text (32px and up) has positive tracking. |
 | `tabular-numbers` | [tabular-numbers](https://critly.vercel.app/tabular-numbers) | on | Numbers in table cells (or marked data-critly-number) don't use tabular figures, or a numeric column isn't end-aligned. |
 | `html-background` | [html-background](https://critly.vercel.app/html-background) | on | The html element has no background, or it differs from the body's, so overscroll shows a different color. |
 | `transition-all` | [effect-cost](https://critly.vercel.app/effect-cost) | on | An element uses transition: all. |

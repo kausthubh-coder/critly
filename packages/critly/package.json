@@ -1,6 +1,6 @@
 {
   "name": "@kausthubh/critly",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Check your running app against Critly's design concepts, and run a taste pass on it. Loads the page, measures what it renders, and fails with the fix named.",
   "keywords": ["design", "ui", "lint", "taste", "squint test", "visual hierarchy", "accessibility", "contrast", "agents", "claude", "codex", "cursor", "playwright"],
   "homepage": "https://critly.vercel.app/check",
