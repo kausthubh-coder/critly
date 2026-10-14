@@ -1,10 +1,12 @@
 export const SECTIONS = [
   "Craft",
+  "Identity",
   "Typography",
   "Color",
   "Layout",
   "Interaction",
   "Content",
+  "Marketing",
   "Motion",
   "Performance",
   "Sound",

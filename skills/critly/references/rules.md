@@ -12,6 +12,15 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 - **Product Feel**: How often and in what state of mind people use it decides the feel: density and pace. What the brand is decides its identity. Make both decisions, then let them pick the numbers. ([full](craft.md#product-feel))
 - **Design Tokens**: Name the role, not the value, and let components use only the names. ([full](craft.md#design-tokens))
 
+## Identity
+
+- **Direction First**: Before you choose a font, a color or a shape, decide what the product is like and who it's for, then choose the look by building two different first screens and keeping the one that works better, because with no direction every choice drifts to the average of the category, and a direction that only exists in words is easy to get wrong. ([full](identity.md#direction-first))
+- **Borrow From the Subject**: When a product needs a look of its own, take type, color and shape from the subject's own world (its tools, artifacts, places, era, numbers and the words its people use) rather than from other software, and keep only what does a job on the screen, because a theme worn on every section reads as a costume, not a brand. ([full](identity.md#borrow-from-the-subject))
+- **Ownable Assets**: Pick two or three things nobody else in your category uses (a shape, a color pairing, a way of drawing progress or setting numbers) and use them the same way on every screen, because people recognize what is both unique and repeated. ([full](identity.md#ownable-assets))
+- **Typeface as Voice**: People read a typeface's personality before its words, so choose the face for this subject and test it on the real headline; one family set well is often enough, and a display face earns its place only where it reads better than the text face. ([full](identity.md#typeface-as-voice))
+- **Palette From the World**: Take hues from the subject's own world rather than from color-psychology charts, judge them together on the real screen, set energy with chroma and weight with lightness, and build every ramp on shared lightness steps so text and buttons keep their contrast in any hue. ([full](identity.md#palette-from-the-world))
+- **Signature Move**: Give the product one recognizable move, taken from what it does or from its world, use it the same way every time, and show it big where people pause (the first screen, empty states, success moments) while the headline and the product still read first, not as a corner detail and not on every control. ([full](identity.md#signature-move))
+
 ## Typography
 
 - **Letter Spacing**: Tighten letter spacing as text gets bigger, and loosen it for small uppercase. ([full](typography.md#letter-spacing))
@@ -64,6 +73,16 @@ One rule per concept. Re-read this before you finish any UI change, and open the
 
 - **Microcopy**: Interface words are interface: buttons name the action, labels name the thing, and errors say what happened and how to fix it. ([full](content.md#microcopy))
 - **Real Content**: Design with the awkward data you'll actually get, and give every text box a plan for when it overflows. ([full](content.md#real-content))
+
+## Marketing
+
+- **Message First**: Before you choose a single section, write down who the page is for, what they use today, and what only this product does, because no layout can rescue a message any competitor could say. ([full](marketing.md#message-first))
+- **The First Screen**: On the first screen, say what the product is and who it's for in plain words, show it, and offer one next step, in a page shape people already recognize, because that screen decides whether anyone reads the rest. ([full](marketing.md#the-first-screen))
+- **Show the Product**: Fill the hero and feature images with the product doing its job, its real screen, its output, its code or the thing itself, because people study pictures that carry information and skip the ones that only decorate. ([full](marketing.md#show-the-product))
+- **Sections Follow Questions**: Order a long page by the questions a buyer asks, in the order they ask them, give each section one idea, and size it by how much that answer matters, because a page of equal sections tells the reader nothing is more important than anything else. ([full](marketing.md#sections-follow-questions))
+- **Specific Proof**: On a page that persuades, put proof right next to the claim it backs, and make it specific enough to check: a named person with their role and company, or a number with its baseline and timeframe, because praise nobody can check reads as filler. ([full](marketing.md#specific-proof))
+- **Calls to Action**: Give a page that persuades one primary action, label it with what happens after the click, and repeat it where the reader decides; keep every other action quieter, so nobody has to guess which button matters or what it does. ([full](marketing.md#calls-to-action))
+- **Pricing Pages**: Show real prices with what they're per and how often they're billed, offer four plans or fewer with at most one honest recommendation, and compare what differs between plans rather than every feature, because people come to a pricing page to work out what they would pay. ([full](marketing.md#pricing-pages))
 
 ## Motion
 

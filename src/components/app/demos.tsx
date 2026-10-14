@@ -328,6 +328,17 @@ export const AnimationCostDemo = dynamic(() =>
 export const NoveltyBudgetDemo = dynamic(() =>
   import("@/components/demos/novelty-budget").then((m) => m.NoveltyBudgetDemo)
 );
+export const DirectionFirstDemo = dynamic(() =>
+  import("@/components/demos/direction-first").then((m) => m.DirectionFirstDemo)
+);
+export const BorrowFromTheSubjectDemo = dynamic(() =>
+  import("@/components/demos/borrow-from-the-subject").then(
+    (m) => m.BorrowFromTheSubjectDemo
+  )
+);
+export const OwnableAssetsDemo = dynamic(() =>
+  import("@/components/demos/ownable-assets").then((m) => m.OwnableAssetsDemo)
+);
 export const OklchDemo = dynamic(() =>
   import("@/components/demos/oklch").then((m) => m.OklchDemo)
 );
@@ -632,4 +643,37 @@ export const RecyclingDemo = dynamic(() =>
 );
 export const PullToRefreshDemo = dynamic(() =>
   import("@/components/demos/native-lists").then((m) => m.PullToRefreshDemo)
+);
+export const SpecificProofDemo = dynamic(() =>
+  import("@/components/demos/specific-proof").then((m) => m.SpecificProofDemo)
+);
+export const CallsToActionDemo = dynamic(() =>
+  import("@/components/demos/calls-to-action").then((m) => m.CallsToActionDemo)
+);
+export const PricingPagesDemo = dynamic(() =>
+  import("@/components/demos/pricing-pages").then((m) => m.PricingPagesDemo)
+);
+export const TypefaceVoiceDemo = dynamic(() =>
+  import("@/components/demos/typeface-as-voice").then((m) => m.TypefaceVoiceDemo)
+);
+export const PaletteWorldDemo = dynamic(() =>
+  import("@/components/demos/palette-from-the-world").then((m) => m.PaletteWorldDemo)
+);
+export const SignatureMoveDemo = dynamic(() =>
+  import("@/components/demos/signature-move").then((m) => m.SignatureMoveDemo)
+);
+// Marketing
+export const MessageFirstDemo = dynamic(() =>
+  import("@/components/demos/message-first").then((m) => m.MessageFirstDemo)
+);
+export const FirstScreenDemo = dynamic(() =>
+  import("@/components/demos/the-first-screen").then((m) => m.FirstScreenDemo)
+);
+export const ShowTheProductDemo = dynamic(() =>
+  import("@/components/demos/show-the-product").then((m) => m.ShowTheProductDemo)
+);
+export const SectionsFollowQuestionsDemo = dynamic(() =>
+  import("@/components/demos/sections-follow-questions").then(
+    (m) => m.SectionsFollowQuestionsDemo
+  )
 );

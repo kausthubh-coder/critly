@@ -1,0 +1,120 @@
+---
+title: Direction First
+description: Decide what it is like before how it looks.
+section: Identity
+order: 1
+publishedAt: "2026-10-14"
+resources:
+  - url: https://claude.com/blog/improving-frontend-design-through-skills
+    title: Improving frontend design through Skills
+    description: Anthropic on distributional convergence, and why a model with no direction samples the safe middle of web design.
+  - url: https://arxiv.org/abs/2510.01171
+    title: "Verbalized Sampling: How to Mitigate Mode Collapse and Unlock LLM Diversity"
+    description: Traces mode collapse to typicality bias in the people who rate model outputs, and shows that asking for several answers at once widens the range.
+  - url: https://arxiv.org/html/2610.11539
+    title: "Design Creativity Bench: Measuring creativity in LLM-Generated UI"
+    description: Fifteen models against human designers. The models fit the brief as well as people did, with far less range between briefs.
+  - url: https://www.peachpit.com/articles/article.aspx?p=2437847
+    title: "The Brand Flip: An Interview with Marty Neumeier"
+    description: Where the onliness statement comes from, and why the word "only" makes it hard to fill in.
+  - url: https://research.google/pubs/the-role-of-visual-complexity-and-prototypicality-regarding-first-impression-of-websites-working-towards-understanding-aesthetic-judgments/
+    title: Visual complexity and prototypicality in first impressions of websites
+    description: Tuch and colleagues at Google, 2012. Within 50ms, simple pages that looked typical of their kind were liked best.
+  - url: https://rauno.me/craft/novelty
+    title: Novelty
+    description: Rauno Freiberg on keeping about 90% of an interface familiar and spending the rest on what is new.
+---
+
+Ask a model for a landing page and nothing else, and you get the page it has
+seen most often. Ask again for something distinctive and the page changes, but
+it changes the same way for everyone who asks. The average moves somewhere
+new and is still an average.
+
+**Before you choose a font, a color or a shape, decide what the product is like and who it's for, then choose the look by building two different first screens and keeping the one that works better, because with no direction every choice drifts to the average of the category, and a direction that only exists in words is easy to get wrong.**
+
+<DirectionFirstDemo />
+
+The brief and the page structure are the same in all four. With no direction,
+every value is a category default and could belong to any transit app. Each
+route starts from a different source, and every value names where it came
+from. Then turn on the thumbnail test.
+
+## Why the average wins
+
+A model predicts what is likely. Anthropic calls the result
+[distributional convergence](https://claude.com/blog/improving-frontend-design-through-skills):
+safe choices fill the training data, so with no direction the model samples
+from the middle. Preference tuning narrows it further. The authors of
+[Verbalized Sampling](https://arxiv.org/abs/2510.01171) trace this to
+typicality bias: the people who rate outputs favor what looks familiar, and
+the model learns to give it to them.
+
+It has been measured for interfaces.
+[Design Creativity Bench](https://arxiv.org/html/2610.11539) scored fifteen
+models against human designers. The best model fit the brief slightly better
+than the humans did (99.2% against 98.0%), but the models' range across
+different briefs was far lower (0.58 against 0.90). In the authors' words,
+"differentiating the prompt does not differentiate the design."
+
+Telling a model to be distinctive doesn't fix this, because distinctive has an
+average too. Anthropic found that steering a model off one overused typeface
+landed it on another. In Critly's own test builds, pages told to stand out all
+arrived at the same new look. A rule about what to avoid moves the center. It
+doesn't give the page a subject.
+
+That much is measured. What follows is method: how studios and brand
+strategists make the choice somewhere other than the middle. It is reasoning,
+not a tested cause of better pages.
+
+## Three things, decided first
+
+The subject comes first, as concrete nouns from its world: tools, artifacts,
+places, numbers, the words its people use. For a night bus app, that is the
+destination blind, the stop flag, the timetable, the last bus. Adjectives
+like "modern" or "friendly" don't count, because every competitor uses them.
+[Borrow From the Subject](/borrow-from-the-subject) is about finding these.
+
+Next comes the only line. Marty Neumeier's
+[onliness statement](https://www.peachpit.com/articles/article.aspx?p=2437847)
+has two blanks: "Our brand is the only ___ that ___." The first is the
+category, the second the difference. If the nearest competitor could sign the
+sentence, it isn't done.
+
+Last is the move people should remember, one [signature](/signature-move)
+taken from what the product does.
+
+Then sketch three routes, each from a different source: one from the
+subject's nouns, one from a constraint (one typeface and two colors, or a
+grid taken from the domain), one from a world outside software whose way of
+working fits. Mark each as common, unusual or rare for the category. This is
+close to what the Verbalized Sampling authors tested: asking for several
+answers and how likely each one is raised diversity 1.6 to 2.1 times in their
+creative writing tasks. Pick by fit to the subject, not by novelty. A common
+route is right when you can say why it suits this brief better than the
+others.
+
+## Familiar structure, specific materials
+
+A direction is not a license to reinvent the page. In a Google study,
+[Tuch and colleagues](https://research.google/pubs/the-role-of-visual-complexity-and-prototypicality-regarding-first-impression-of-websites-working-towards-understanding-aesthetic-judgments/)
+showed people websites for 50 milliseconds. The pages they liked best were
+simple and typical of their kind. Layout, navigation and controls that work
+the way people expect are part of being typical.
+
+So the identity goes into the materials: type, color, shape, the content
+itself ([real content](/real-content), [microcopy](/microcopy)), and one
+signature. Rauno Freiberg [puts it](https://rauno.me/craft/novelty) as about
+90% familiar and 10% new. In the demo, only the materials change between
+routes. The header, the headline, the next bus and the one button stay where
+people look for them.
+
+Write the three decisions down where the next screen will see them. The
+second page should trace back to the same nouns as the first, which is how a
+look becomes [one people recognize](/ownable-assets).
+
+## Review: can you still tell?
+
+Shrink the finished page to a thumbnail and cover the name. Can you tell
+which product it is? Can you tell what it's about? If not, the materials came
+from the category instead of the subject. More decoration won't fix that. Go
+back to the nouns and strengthen the choices that came from them.

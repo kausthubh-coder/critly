@@ -7,7 +7,7 @@
   { "id": "type-scale", "concept": "type-scale", "stage": "v1", "policy": true, "fails": "A font size isn't one of the sizes in the policy's type scale." },
   { "id": "font-family", "concept": "design-tokens", "stage": "v1", "policy": true, "fails": "Interface text uses a font that isn't in the policy (code, kbd and pre are excluded)." },
   { "id": "line-length", "concept": "line-length", "stage": "v1", "policy": false, "fails": "A paragraph runs wider than 75 characters (or the policy's limit)." },
-  { "id": "letter-spacing", "concept": "letter-spacing", "stage": "v1", "policy": false, "fails": "All-caps text has no positive tracking, or display text (32px and up) has positive tracking." },
+  { "id": "letter-spacing", "concept": "letter-spacing", "stage": "v1", "policy": false, "fails": "All-caps text under 24px has no positive tracking, or display text (32px and up) has positive tracking." },
   { "id": "tabular-numbers", "concept": "tabular-numbers", "stage": "v1", "policy": false, "fails": "Numbers in table cells (or marked data-critly-number) don't use tabular figures, or a numeric column isn't end-aligned." },
   { "id": "html-background", "concept": "html-background", "stage": "v1", "policy": false, "fails": "The html element has no background, or it differs from the body's, so overscroll shows a different color." },
   { "id": "transition-all", "concept": "effect-cost", "stage": "v1", "policy": false, "fails": "An element uses transition: all." },

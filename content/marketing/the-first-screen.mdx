@@ -1,0 +1,119 @@
+---
+title: The First Screen
+description: Say what it is, show it, offer one next step.
+section: Marketing
+order: 2
+publishedAt: "2026-10-14"
+resources:
+  - url: https://research.google/pubs/the-role-of-visual-complexity-and-prototypicality-regarding-first-impression-of-websites-working-towards-understanding-aesthetic-judgments/
+    title: Visual complexity and prototypicality in first impressions
+    description: Tuch and colleagues at Google (2012). Across 119 sites, simple pages that looked typical of their kind were liked best, and people judged within 50ms.
+  - url: https://www.nngroup.com/articles/how-long-do-users-stay-on-web-pages/
+    title: How long do users stay on web pages?
+    description: Jakob Nielsen on why leaving is most likely in the first 10 seconds, and what a page has to say in that time.
+  - url: https://www.nngroup.com/articles/scrolling-and-attention/
+    title: Scrolling and attention
+    description: Nielsen Norman Group's 2018 eye-tracking update. 57% of viewing time above the fold, 74% in the first two screens.
+  - url: https://www.nngroup.com/articles/illusion-of-completeness/
+    title: The illusion of completeness
+    description: How a full-screen hero makes a page look finished, so six of eight users never scrolled.
+  - url: https://utopia.fyi/blog/designing-with-fluid-type-scales/
+    title: Designing with fluid type scales
+    description: Utopia on a type scale that changes ratio between phone and desktop, set with clamp().
+---
+
+In our evals, AI-built landing pages opened on a headline that didn't say what
+the product was, body text at 14px on a desktop screen, and almost no picture
+of the product. The first screen looked finished. Nothing on it said what the
+product was, who it was for, or what it looked like.
+
+**On the first screen, say what the product is and who it's for in plain
+words, show it, and offer one next step, in a page shape people already
+recognize, because that screen decides whether anyone reads the rest.**
+
+<FirstScreenDemo />
+
+Switch between the weak and strong versions at both sizes. Then flash each
+one for 50ms and ask yourself what you saw. The weak version leaves you with a
+shape and a color. The strong one leaves the product.
+
+## Fifty milliseconds, then ten seconds
+
+People make two quick decisions about a page. In a Google study by
+[Tuch and colleagues](https://research.google/pubs/the-role-of-visual-complexity-and-prototypicality-regarding-first-impression-of-websites-working-towards-understanding-aesthetic-judgments/),
+participants rated 119 real sites shown for as little as 50ms, and complexity
+registered in as little as 17ms. Sites that were visually simple and looked
+typical of their kind were liked best. That's a lab measure of appeal, not of
+sales, but it says something useful: a familiar layout (name top left, a
+headline, a picture, a button) isn't what makes a page generic. Generic copy
+and generic pictures do. Keep the shape people know and make the content
+specific.
+
+The second decision is whether to stay. In Nielsen Norman Group's analysis of
+page visit times, people are most likely to leave in the
+[first 10 seconds](https://www.nngroup.com/articles/how-long-do-users-stay-on-web-pages/),
+and a page that wants minutes of attention has to make its value clear in
+that time. Ten seconds is a headline, a line under it, and a look at the
+picture. If the headline is a slogan, those seconds are gone.
+
+## Most attention stays near the top
+
+People scroll, but attention thins as they go. In
+[Nielsen Norman Group's 2018 eye-tracking](https://www.nngroup.com/articles/scrolling-and-attention/),
+57% of viewing time went to the first screenful and 74% to the first two,
+down from 80% above the fold in 2010. So the first screen can't be a teaser
+for the real content below. It has to carry what it is, who it's for, the
+product, and the next step on its own.
+
+It also has to admit there's more. A hero that fills the window exactly makes
+the page look complete. In one of
+[their studies](https://www.nngroup.com/articles/illusion-of-completeness/),
+six of eight users didn't realize they could scroll a page whose full-height
+hero ended on a clean line. Let the top of the next section show at both
+desktop and phone sizes, so the page invites a scroll without an arrow
+asking for one.
+
+## Big enough to lead
+
+A dense tool can use 14px body text, because people read it in glances all
+day. A page that persuades gets read once, by someone deciding whether to care.
+Body text of 17 to 20px is a good default for it, with a headline big enough
+that it's plainly the first thing you read. Pick a larger ratio than an app
+would, and let it shrink on phones. Utopia's
+[fluid scales](https://utopia.fyi/blog/designing-with-fluid-type-scales/) use
+a ratio of about 1.2 on a small screen and 1.33 on a large one, and
+`clamp()` moves between them.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --text-body: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);   /* 17px → 20px */
+  --text-display: clamp(2.5rem, 1.6rem + 4vw, 4.5rem);    /* 40px → 72px */
+}
+
+h1 {
+  font: 600 var(--text-display) / 1.05 var(--font-display);
+  max-width: 16ch;
+  text-wrap: balance;
+}`,
+    },
+  ]}
+/>
+
+The top step has to fit the real headline. If the headline is a full sentence
+naming the product and the reader, try it at full size on a phone before you
+settle the scale. The [type scale](/type-scale) sets the steps, and
+[line length](/line-length) keeps the body readable at the larger size.
+
+## One next step
+
+Two equal buttons ask the reader to choose before they know anything. Pick the
+one action most people should take, make it the only solid button, and name
+it for what happens next. Anything else is a plain link beside it. The
+[calls to action](/calls-to-action) concept covers the wording. The picture
+beside it should be the product doing its job, which is
+[the next concept](/show-the-product).

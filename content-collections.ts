@@ -120,6 +120,8 @@ const concepts = defineCollection({
       "Data",
       "Mobile",
       "Craft",
+      "Identity",
+      "Marketing",
     ]),
     order: z.number().default(0),
     publishedAt: z.string(),

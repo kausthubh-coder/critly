@@ -22,6 +22,19 @@ import { SoftKeyboardThumbnail } from "@/components/thumbnails/mobile/soft-keybo
 import { TextSizeThumbnail } from "@/components/thumbnails/mobile/text-size";
 import { UiThreadThumbnail } from "@/components/thumbnails/mobile/ui-thread";
 import { AppLaunchThumbnail } from "@/components/thumbnails/mobile/app-launch";
+import { SpecificProofThumbnail } from "@/components/thumbnails/marketing/specific-proof";
+import { CallsToActionThumbnail } from "@/components/thumbnails/marketing/calls-to-action";
+import { PricingPagesThumbnail } from "@/components/thumbnails/marketing/pricing-pages";
+import { DirectionFirstThumbnail } from "@/components/thumbnails/identity/direction-first";
+import { BorrowFromTheSubjectThumbnail } from "@/components/thumbnails/identity/borrow-from-the-subject";
+import { OwnableAssetsThumbnail } from "@/components/thumbnails/identity/ownable-assets";
+import { TypefaceAsVoiceThumbnail } from "@/components/thumbnails/identity/typeface-as-voice";
+import { PaletteFromTheWorldThumbnail } from "@/components/thumbnails/identity/palette-from-the-world";
+import { SignatureMoveThumbnail } from "@/components/thumbnails/identity/signature-move";
+import { MessageFirstThumbnail } from "@/components/thumbnails/marketing/message-first";
+import { FirstScreenThumbnail } from "@/components/thumbnails/marketing/the-first-screen";
+import { ShowTheProductThumbnail } from "@/components/thumbnails/marketing/show-the-product";
+import { SectionsFollowQuestionsThumbnail } from "@/components/thumbnails/marketing/sections-follow-questions";
 import type { Section } from "@/lib/sections";
 
 // Static-by-default thumbnails; each plays its idea on card hover (the index
@@ -1808,6 +1821,19 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "ui-thread": UiThreadThumbnail,
   "app-launch": AppLaunchThumbnail,
   "native-lists": NativeListsThumbnail,
+  "specific-proof": SpecificProofThumbnail,
+  "calls-to-action": CallsToActionThumbnail,
+  "pricing-pages": PricingPagesThumbnail,
+  "direction-first": DirectionFirstThumbnail,
+  "borrow-from-the-subject": BorrowFromTheSubjectThumbnail,
+  "ownable-assets": OwnableAssetsThumbnail,
+  "typeface-as-voice": TypefaceAsVoiceThumbnail,
+  "palette-from-the-world": PaletteFromTheWorldThumbnail,
+  "signature-move": SignatureMoveThumbnail,
+  "message-first": MessageFirstThumbnail,
+  "the-first-screen": FirstScreenThumbnail,
+  "show-the-product": ShowTheProductThumbnail,
+  "sections-follow-questions": SectionsFollowQuestionsThumbnail,
 };
 
 export function ConceptThumbnail({

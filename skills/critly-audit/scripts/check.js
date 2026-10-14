@@ -625,7 +625,7 @@
       const letters = text.replace(/[^\p{L}]/gu, '');
       const literalCaps = letters.length >= 4 && letters === letters.toUpperCase() && letters !== letters.toLowerCase() && (/\p{L}{2,}\s+\p{L}{2,}/u.test(text) || letters.length >= 6);
       const caps = (st.textTransform === 'uppercase' && letters.length >= 2) || /all-small-caps|all-petite-caps/.test(st.fontVariantCaps) || literalCaps;
-      if (caps && ls <= 0.001) add('letter-spacing', el, `all-caps text with letter-spacing ${ls ? px(ls) : 'normal'}`, `Add letter-spacing between 0.05em and 0.1em${tw ? ' (tracking-wider is 0.05em, tracking-widest 0.1em)' : ''}; capitals crowd together at small sizes.`, { key: like(el) + ls });
+      if (caps && size < 24 && ls <= 0.001) add('letter-spacing', el, `${px(size)} all-caps text with letter-spacing ${ls ? px(ls) : 'normal'}`, `Add letter-spacing between 0.05em and 0.1em${tw ? ' (tracking-wider is 0.05em, tracking-widest 0.1em)' : ''}; capitals crowd together at small sizes.`, { key: like(el) + ls });
       else if (!caps && size >= 32 && ls > 0.001 * size) add('letter-spacing', el, `${px(size)} display text with letter-spacing +${px(ls)} (${Math.round(ls / size * 1000) / 1000}em)`, `Remove the positive tracking: use 0 or about -0.02em${tw ? ' (tracking-tight is -0.025em)' : ''}; large text needs less space between letters, not more.`, { key: like(el) + ls });
     }
     const measure = document.createElement('canvas').getContext('2d');

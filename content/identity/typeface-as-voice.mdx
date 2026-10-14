@@ -1,0 +1,125 @@
+---
+title: Typeface as Voice
+description: People hear the type before the words.
+section: Identity
+order: 4
+publishedAt: "2026-10-14"
+resources:
+  - url: https://portfolio.erau.edu/en/publications/two-studies-on-how-a-typeface-congruent-with-content-can-enhance-/
+    title: Two studies on how a typeface congruent with content can enhance onscreen communication
+    description: Hazlett, Larson, Shaikh and Chaparro (2013) on readers taking in a typeface's personality at a glance.
+  - url: https://portfolio.erau.edu/en/publications/perception-of-fonts-perceived-personality-traits-and-uses/
+    title: "Perception of fonts: perceived personality traits and uses"
+    description: Shaikh, Chaparro and Fox (2006) on how people rate 20 fonts, and why the ratings group by family.
+  - url: https://linear.app/now/how-we-redesigned-the-linear-ui
+    title: How we redesigned the Linear UI
+    description: Linear moved its headings to Inter Display for more expression and kept regular Inter for everything else.
+  - url: https://www.figma.com/blog/the-story-of-creating-figma-sans/
+    title: The story of creating Figma Sans
+    description: Figma and Grilli Type on a family with text, display, condensed and mono cuts, and a square dot on the i.
+  - url: https://practicaltypography.com/system-fonts.html
+    title: System fonts
+    description: Matthew Butterick on why a face that comes with every computer can't make anything look like itself.
+  - url: https://openfontlicense.org/
+    title: SIL Open Font License
+    description: What the OFL lets you do with a font, including using it on websites and in apps.
+---
+
+Set the same headline in a slab serif and in a soft rounded sans. Before
+anyone reads a word, one sounds like a seed catalogue and the other like a
+children's dentist. Most products never make this choice. They ship the
+framework's default face, which tells people only that nobody chose one.
+
+**People read a typeface's personality before its words, so choose the face for this subject and test it on the real headline; one family set well is often enough, and a display face earns its place only where it reads better than the text face.**
+
+Pick a brief, then try each face on its headline. Change the brief and watch
+the best fit move.
+
+<TypefaceVoiceDemo />
+
+No face here is good or bad in general. The slab that suits a seed catalogue
+fights a dentist's booking page, and the rounded face that welcomes a nervous
+child makes a payroll tool look unserious. The fit lives in the pair: this
+face, this subject.
+
+## What the research shows
+
+The effect is measured. In [Shaikh, Chaparro and Fox (2006)](https://portfolio.erau.edu/en/publications/perception-of-fonts-perceived-personality-traits-and-uses/),
+people rated 20 fonts on 15 pairs of adjectives and picked uses for each. The
+personalities they gave grouped by family (serif, sans serif, modern,
+monospace, script), and they matched those personalities to uses. In
+[Hazlett and colleagues (2013)](https://portfolio.erau.edu/en/publications/two-studies-on-how-a-typeface-congruent-with-content-can-enhance-/),
+people recognized emotion words faster when the face's personality matched
+the word, and their snap judgment of a page's tone changed with its typeface.
+The authors conclude that readers take in a typeface's personality instantly.
+
+That is the limit of the evidence. These are lab studies of short words and
+quick ratings, run on the screen fonts of their time. They show that a face
+speaks before the text does. They can't tell you which face suits your
+product. That part is judgement, and the rest of this page is reasoning
+rather than measurement.
+
+## Two jobs, two faces
+
+The display face is for headlines, the wordmark, a big number in the hero:
+large, short and seen for a moment, so it can carry character. The text face
+is for paragraphs, labels, tables and forms: small, long and read for
+minutes, so it needs open shapes, a calm rhythm and clear figures at 14 to
+16px. One face rarely does both jobs well.
+
+Linear [moved its headings](https://linear.app/now/how-we-redesigned-the-linear-ui)
+to Inter Display "to add more expression" and kept regular Inter for the
+rest. Figma asked Grilli Type for [Figma Sans](https://www.figma.com/blog/the-story-of-creating-figma-sans/),
+a family with text, display, condensed and mono cuts, and gave the i a
+rectangular dot because a round one could read as childish. Both put
+the voice in the large sizes and kept the small sizes plain.
+
+Pair the two by contrast in one way. Let them differ clearly in one thing
+(serif against sans, condensed against normal width, heavy against regular)
+and agree in the rest: proportions, era, mood. Two faces that differ a little
+in everything look like an accident. Two that differ in one way look chosen.
+
+Take the voice from the subject's world: the lettering on its tools, signs,
+labels and paperwork, and the era it belongs to ([Borrow From the
+Subject](/borrow-from-the-subject) shows how). A face you would pick for any
+product says nothing about this one, and Matthew Butterick's point about
+[system fonts](https://practicaltypography.com/system-fonts.html) holds for
+any face that is everywhere: it can't make you look like yourself. A
+ubiquitous face is still a sound default for the text role, and for a dense
+tool where people's own content should lead ([Product Feel](/product-feel)),
+as long as the [direction](/direction-first) says why.
+
+## Before you ship it
+
+- **License.** Fonts under the [SIL Open Font License](https://openfontlicense.org/),
+  which covers most of Google Fonts, can be used on websites and in apps.
+  Read any other license before shipping. Free trials from type foundries are
+  often for testing only.
+- **Weights.** Load only the ones you use, usually regular and one heavier
+  weight for text and a single weight for display. Each one is another file
+  to download ([Font Loading](/font-loading)).
+- **Figures.** If the product shows prices, times or tables, check that the
+  text face has tabular figures before you commit to it.
+  `font-variant-numeric: tabular-nums` does nothing in a face that lacks them
+  ([Tabular Numbers](/tabular-numbers)).
+- **Size.** The display face sets the top of the [type scale](/type-scale).
+  Test it with the real headline at full size, on a phone too.
+
+Name the faces by role, so the voice can change in one place:
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      code: `:root {
+  --font-display: "Display Face", var(--font-text);
+  --font-text: "Text Face", system-ui, sans-serif;
+}
+
+h1, h2, .hero-figure { font-family: var(--font-display); }
+body { font-family: var(--font-text); }
+td, .amount { font-variant-numeric: tabular-nums; }`,
+    },
+  ]}
+/>
