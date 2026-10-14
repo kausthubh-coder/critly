@@ -633,3 +633,12 @@ export const RecyclingDemo = dynamic(() =>
 export const PullToRefreshDemo = dynamic(() =>
   import("@/components/demos/native-lists").then((m) => m.PullToRefreshDemo)
 );
+export const SpecificProofDemo = dynamic(() =>
+  import("@/components/demos/specific-proof").then((m) => m.SpecificProofDemo)
+);
+export const CallsToActionDemo = dynamic(() =>
+  import("@/components/demos/calls-to-action").then((m) => m.CallsToActionDemo)
+);
+export const PricingPagesDemo = dynamic(() =>
+  import("@/components/demos/pricing-pages").then((m) => m.PricingPagesDemo)
+);
