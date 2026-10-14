@@ -30,7 +30,7 @@ const LISTS = {
 type ListName = keyof typeof LISTS;
 const LIST_NAMES = Object.keys(LISTS) as ListName[];
 
-const ROW_HEIGHT = 40;
+const ROW_HEIGHT = 44;
 
 export function NoveltyBudgetDemo() {
   const [mode, setMode] = useState<Mode>("everywhere");
@@ -83,7 +83,7 @@ export function NoveltyBudgetDemo() {
                   key={name}
                   aria-pressed={active}
                   className={cn(
-                    "relative h-7 cursor-pointer rounded-md px-2.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                    "relative h-7 cursor-pointer rounded-md px-2.5 text-xs font-medium after:absolute after:inset-x-0 after:-inset-y-2 after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                     everywhere && "transition-colors duration-300",
                     active
                       ? "text-foreground"
@@ -157,7 +157,7 @@ export function NoveltyBudgetDemo() {
                     <button
                       aria-pressed={done.has(task)}
                       className={cn(
-                        "flex h-10 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left text-xs hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                        "flex h-11 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left text-xs hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                         everywhere && "transition-colors duration-300"
                       )}
                       onClick={() => complete(task)}
