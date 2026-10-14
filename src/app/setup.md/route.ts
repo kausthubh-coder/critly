@@ -26,6 +26,8 @@ Create \`.critly/policy.json\`: the app's design system as numbers. Fill it from
 
 Show the policy to the user and ask them to approve it before you continue. Don't loosen a value so the app passes; a finding means the interface should change.
 
+Then write \`.critly/direction.md\`: a short note describing the app's look (typefaces, palette, shape, signature, voice) so later work keeps it. The \`critly\` skill's \`direction.md\` has the format; describe what is there, don't change it.
+
 ## 4. Add the script
 
 Add two scripts to \`package.json\`. The dev server has to be running when they run.
@@ -38,7 +40,7 @@ Add two scripts to \`package.json\`. The dev server has to be running when they 
 Add these to the project's AGENTS.md (create it if needed). If the project has a CLAUDE.md that doesn't import AGENTS.md, add \`@AGENTS.md\` to it.
 
 \`\`\`markdown
-- UI work: use the \`critly\` skill. Read \`.critly/policy.json\` before choosing spacing, type or color, use only its values, and never edit it to pass.
+- UI work: use the \`critly\` skill. Read \`.critly/direction.md\` (the look) and \`.critly/policy.json\` (the values) before choosing type, color or spacing. Use only the policy's values, and never edit it to pass.
 - After any UI change, run \`npm run lint:ui\` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then run \`npm run taste:ui\`, open the squint and overlay images for each changed screen, and fix each look or say why the screen needs it before saying it's done.
 \`\`\`
 

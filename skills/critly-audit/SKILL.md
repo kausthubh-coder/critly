@@ -42,6 +42,11 @@ Before judging anything, write down what the product should feel like. Read
 
 Infer this from the product, its copy and its code. State it as an
 assumption in the report, and only ask the user if it is genuinely unclear.
+
+Then get the direction: read `.critly/direction.md`, or if there is none,
+write it by describing the existing design as `../critly/direction.md`
+explains (**Describe an existing design**). Findings are judged against it,
+and fixes keep it.
 Every finding is judged against this intent. A playful bounce is a bug in a
 trading terminal and fine in a kids' app.
 
@@ -197,8 +202,9 @@ When applying:
 - Go batch by batch, in plan order. Introduce or clean up tokens first, then
   move components onto them.
 - Keep behaviour, data and copy meaning unchanged unless a finding is about
-  them. Don't redesign the brand or invent a new visual style. Make the
-  existing intent consistent and finished.
+  them. Keep the direction: make the existing look consistent and finished.
+  If the user asked for a new look, set a new direction first
+  (`../critly/direction.md`, **Set a direction**) and get their OK on it.
 - Use the exact values from the references (durations, easings, scales,
   radii, spacing steps) instead of inventing new ones.
 - After each batch, re-check the affected screens in the browser if you have
@@ -224,7 +230,8 @@ https://critly.vercel.app/setup.md step by step. In short:
 1. Install it: `npm i -D @kausthubh/critly` (the command is `critly`).
 2. Write `.critly/policy.json` from the app's tokens and the inventory: fonts,
    type scale, how dark mode switches, the pages to check. Show it to the user
-   and get their OK before going on.
+   and get their OK before going on. Save `.critly/direction.md` next to it
+   if section 2 wrote one.
 3. Add `"lint:ui": "critly check <dev server URL>"` and
    `"taste:ui": "critly taste <dev server URL>"` to `package.json`, and add
    `.critly/taste/` to `.gitignore` (every run rewrites the images).
@@ -233,7 +240,7 @@ https://critly.vercel.app/setup.md step by step. In short:
    compaction; this skill isn't and doesn't.
 
    ```markdown
-   - UI work: use the `critly` skill. Read `.critly/policy.json` before choosing spacing, type or color, use only its values, and never edit it to pass.
+   - UI work: use the `critly` skill. Read `.critly/direction.md` (the look) and `.critly/policy.json` (the values) before choosing type, color or spacing. Use only the policy's values, and never edit it to pass.
    - After any UI change, run `npm run lint:ui` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass. Then run `npm run taste:ui`, open the squint and overlay images for each changed screen, and fix each look or say why the screen needs it before saying it's done.
    ```
 5. Run it once. With many findings, ask whether to fix them now or record a

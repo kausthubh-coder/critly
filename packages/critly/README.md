@@ -220,7 +220,7 @@ rule off is a design decision for the person who owns the design, not a way to g
 agents, put that in AGENTS.md:
 
 ```markdown
-- UI work: use the `critly` skill. Read `.critly/policy.json` before choosing spacing, type or color, use only its values, and never edit it to pass.
+- UI work: use the `critly` skill. Read `.critly/direction.md` (the look) and `.critly/policy.json` (the values) before choosing type, color or spacing. Use only the policy's values, and never edit it to pass.
 - After any UI change, run `npm run lint:ui` and fix every error until it exits 0. Exit 2 means it couldn't run; say so, it is not a pass.
 ```
 

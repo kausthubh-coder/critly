@@ -6,8 +6,10 @@ import {
   CirclesThreeIcon,
   CursorClickIcon,
   DeviceMobileIcon,
+  FingerprintIcon,
   LayoutIcon,
   LightningIcon,
+  MegaphoneIcon,
   PenNibIcon,
   SpeakerHighIcon,
   TextAaIcon,
@@ -27,6 +29,8 @@ const icons = {
   Data: ChartBarHorizontalIcon,
   Mobile: DeviceMobileIcon,
   Craft: PenNibIcon,
+  Identity: FingerprintIcon,
+  Marketing: MegaphoneIcon,
 } as const;
 
 // Muted enough to sit in a grayscale UI; the duotone fill layer
@@ -43,6 +47,8 @@ export const sectionTextColor: Record<Section, string> = {
   Data: "text-cyan-600 dark:text-cyan-400",
   Mobile: "text-indigo-600 dark:text-indigo-400",
   Craft: "text-orange-600 dark:text-orange-400",
+  Identity: "text-pink-600 dark:text-pink-400",
+  Marketing: "text-green-600 dark:text-green-400",
 };
 
 export type DotColor = Section | "foreground";
@@ -74,6 +80,10 @@ export const dotColorFrom: Record<DotColor, string> = {
     "[--dot-from:var(--color-indigo-500)] dark:[--dot-from:var(--color-indigo-400)]",
   Craft:
     "[--dot-from:var(--color-orange-500)] dark:[--dot-from:var(--color-orange-400)]",
+  Identity:
+    "[--dot-from:var(--color-pink-500)] dark:[--dot-from:var(--color-pink-400)]",
+  Marketing:
+    "[--dot-from:var(--color-green-500)] dark:[--dot-from:var(--color-green-400)]",
 };
 
 export const dotColorTo: Record<DotColor, string> = {
@@ -99,6 +109,10 @@ export const dotColorTo: Record<DotColor, string> = {
     "[--dot-to:var(--color-indigo-500)] dark:[--dot-to:var(--color-indigo-400)]",
   Craft:
     "[--dot-to:var(--color-orange-500)] dark:[--dot-to:var(--color-orange-400)]",
+  Identity:
+    "[--dot-to:var(--color-pink-500)] dark:[--dot-to:var(--color-pink-400)]",
+  Marketing:
+    "[--dot-to:var(--color-green-500)] dark:[--dot-to:var(--color-green-400)]",
 };
 
 export function SectionIcon({

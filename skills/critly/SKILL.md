@@ -1,6 +1,6 @@
 ---
 name: critly
-description: 'Design engineering concepts from Critly (critly.vercel.app) for the details that make interfaces feel right and fast - typography, color, spacing and layout, interaction states, focus, forms, motion, sound, data, web performance, and native mobile apps (iOS and Android, React Native and Expo, SwiftUI, Jetpack Compose, Flutter). Use when building, polishing or reviewing UI: buttons, hover/press/focus/disabled states, inputs and forms, menus, modals and drawers, empty and loading states, cards, borders, shadows, glass and blur, border radius, icons, numbers, tables, lists and feeds, charts, images, video, animations, springs, easings, transitions. Also use for performance work: slow pages, load times, laggy typing, janky or stuttering animation, slow navigation, heavy images or video, big lists, bundle size. Also use when building or reviewing a native mobile app or screen: gestures (tap, double tap, long press, swipe, drag, pinch), swipe actions, context menus, bottom sheets, back navigation and tab bars, haptics, safe areas and notches, the soft keyboard, text size and Dynamic Type, app launch and splash screens, lists and pull to refresh, 120Hz smoothness, and what differs between iPhone and Android. Triggers include "make it feel better", "polish this", "something feels off", "review my UI", "make it faster", "why is this slow", "smooth this out", or questions about taste, whitespace, hierarchy, or design details. Also use for a taste pass: the squint test, counting boxes and edges, and checking a screen has one focal point.'
+description: 'Design engineering concepts from Critly (critly.vercel.app) for setting a product''s visual direction and for the details that make interfaces feel right and fast - typography, color, spacing and layout, interaction states, focus, forms, motion, sound, data, web performance, and native mobile apps (iOS and Android, React Native and Expo, SwiftUI, Jetpack Compose, Flutter). Use when building, polishing or reviewing UI: buttons, hover/press/focus/disabled states, inputs and forms, menus, modals and drawers, empty and loading states, cards, borders, shadows, glass and blur, border radius, icons, numbers, tables, lists and feeds, charts, images, video, animations, springs, easings, transitions. Also use for performance work: slow pages, load times, laggy typing, janky or stuttering animation, slow navigation, heavy images or video, big lists, bundle size. Also use when building or reviewing a native mobile app or screen: gestures (tap, double tap, long press, swipe, drag, pinch), swipe actions, context menus, bottom sheets, back navigation and tab bars, haptics, safe areas and notches, the soft keyboard, text size and Dynamic Type, app launch and splash screens, lists and pull to refresh, 120Hz smoothness, and what differs between iPhone and Android. Triggers include "make it feel better", "polish this", "something feels off", "review my UI", "make it faster", "why is this slow", "smooth this out", or questions about taste, whitespace, hierarchy, or design details. Also use for a taste pass: the squint test, counting boxes and edges, and checking a screen has one focal point. Also use when starting a new product, app or page with no design yet, coming up with a look, brand or design system from scratch, or redesigning one.'
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
@@ -22,9 +22,10 @@ boxes and edges, finds what it leads with, and writes the images to look at
 (https://critly.vercel.app/taste-pass).
 
 Critly is design principles and the checks that hold them, not a style. The
-look (typefaces, palette, mood) comes from the brief or the project's
-existing design; Critly makes whatever look that is clear, consistent and
-well made.
+look (typefaces, palette, shape, signature, voice) comes from a **direction**:
+the project's existing design, or one you set from the subject itself with
+`direction.md` in this skill's folder. Critly's concepts then make that look
+clear, consistent and well made.
 
 `references/rules.md` lists every concept's rule in one line. It is short on
 purpose: read it whenever you start a new piece of work. Open the full
@@ -43,30 +44,37 @@ it runs a full top-down pass with these concepts.
    ones to use, and you never edit it to make something pass. If
    `package.json` has a `lint:ui` script (or the project otherwise runs
    `critly check`), this task ends with it at exit 0.
-2. Start from the feel. Before picking any value, decide in one line who uses
-   this, how often, and how it should feel: compact or comfortable, instant
-   or animated, quiet or expressive. Read **Product Feel** for how each
-   choice maps to values. If the project already has tokens (spacing scale,
-   type scale, color roles, radii), use them instead of adding new ones.
-   With nothing to follow, choose the typefaces and palette from this feel
-   and the brief, not from Critly's examples.
-3. Map the work to concepts with the table in **What to open** below, and
+2. **Get the direction before any visual value.** Read
+   `.critly/direction.md` in the project. If it isn't there, open
+   `direction.md` in this skill's folder now and follow it: it either
+   describes the project's existing design or sets a new one, and ends with
+   the note saved. The note owns the typefaces, palette, shape, signature and
+   voice; Critly's concepts own the mechanics (states, contrast, spacing
+   logic, motion timing, speed). This step comes before the references so
+   their examples don't become the look.
+3. **Decide the surface and the feel.** Persuade (landing, marketing,
+   pricing, first run) or operate (screens used daily), as `direction.md`
+   describes. Then in one line: who uses it, how often, compact or
+   comfortable, instant or animated. Read **Product Feel** for how each maps
+   to values. If the project already has tokens (spacing scale, type scale,
+   color roles, radii), use them instead of adding new ones.
+4. Map the work to concepts with the table in **What to open** below, and
    skim `references/rules.md`.
-4. Read the matching sections in `references/` before writing code. Each
+5. Read the matching sections in `references/` before writing code. Each
    concept there has the full reasoning, the rule, and the code. Do not apply
    a concept from its one-line summary alone.
-5. Apply the rule. For mechanical values (durations, easings, scales, radii,
+6. Apply the rule. For mechanical values (durations, easings, scales, radii,
    opacities, spacing steps), the reference's numbers are tested best
    practice: start from them instead of inventing your own. Reuse the same
    few values everywhere instead of tuning each component. The examples'
-   fonts, colors and layouts only illustrate the principle; don't copy them
-   as a style.
-6. **Come back when the work changes shape.** What you read at the start only
+   fonts, colors and layouts only illustrate the principle; the direction
+   supplies yours.
+7. **Come back when the work changes shape.** What you read at the start only
    covers what you planned. The moment the work grows a new kind of thing (you
    add a blur, an animation, a long list, an image or video, a slow action, a
    drag), stop and open the concepts for that row of the table before writing
    that code.
-7. **Check before you say it's done.**
+8. **Check before you say it's done.**
    - Run the check on every route you changed: `npm run lint:ui` when the
      project has it, otherwise `npx @kausthubh/critly check <url>` against the
      running app. Fix every error and every `review` finding until it exits 0.
@@ -78,6 +86,8 @@ it runs a full top-down pass with these concepts.
      overlay (boxes, edges, the lead) per screen. Open every image and answer
      the three questions in **Taste pass** below. Its looks are not failures,
      but fix each one or say in one line why the screen needs it.
+   - Then do the review at the end of `direction.md` (whose page is this?)
+     on the same screenshots.
    - Screenshot what the taste pass doesn't open: dark mode, and the states
      (hover, focus, open menus, errors, empty, loading). The check only rules
      out what it can measure; hierarchy and spacing that read wrong are yours
@@ -86,9 +96,10 @@ it runs a full top-down pass with these concepts.
      **Measuring Performance** describes and report before and after numbers.
    - If what you built differs from an approved mockup or design, say what
      changed and why before the user finds it.
-8. **End with evidence**, not a list of concepts: quote the check's last line
+9. **End with evidence**, not a list of concepts: quote the check's last line
    and the taste pass's, say which screens you looked at and what leads on
-   each, and name anything you couldn't check.
+   each, name the direction's route and where its signature shows, and name
+   anything you couldn't check.
    Never say tests or checks pass unless you ran them. If the project has no
    check yet, offer once to set it up (the `critly-audit` skill does it).
 
@@ -96,6 +107,7 @@ it runs a full top-down pass with these concepts.
 
 | When the work involves | Open |
 | --- | --- |
+| A new product, app or page with no design yet, a redesign, a brand or design system | `direction.md` first, then Product Feel, Type Scale, Color Roles, Design Tokens |
 | Any animation or transition | Easings, Springs, Interruptibility, Smooth Animation, Reduced Motion |
 | Animating size, position or layout | Smooth Animation, Shared Layout, Liquid Motion |
 | Drags, swipes, sheets, carousels | Momentum, Springs, Interruptibility |
@@ -173,7 +185,7 @@ last line is the one to quote. In a browser tool, paste
 report, `window.__critlyTaste.overlay(report)` to mark the page, and
 `window.__critlyTaste.squint(true)` before your own screenshot. It can find the
 heaviest shape, not whether it's the right one: that call is yours, against the
-feel you wrote down in step 2. Read **Taste Pass** for the reasoning.
+direction and the feel from steps 2 and 3. Read **Taste Pass** for the reasoning.
 
 The code samples in the references use Tailwind v4 (`outline-hidden`,
 `shadow-(--var)`, `@theme`). Check the project's Tailwind version, and
@@ -189,10 +201,18 @@ before copying an API. Only cite a concept that is in the index.
 
 - Details that nobody notices still compound. Correct defaults on radius,
   spacing, easing, and contrast are what make an interface feel finished.
-- Consistency beats novelty. Reuse the same two or three easings, one spacing
-  scale, the same radius ratios, and one shadow recipe across the product.
-- Space and tone before decoration. Group with whitespace before borders, and
-  quiet secondary content before making the primary thing louder.
+- Decide the direction, then the details. A product's look comes from its
+  subject; Critly's concepts make that look work.
+- Consistency is what makes a look recognizable. Reuse the same typefaces,
+  the same two or three easings, one spacing scale, the same radius ratios,
+  and one shadow recipe across the product.
+- Familiar structure, specific materials. Keep layout, navigation and
+  controls the way people expect, and put identity in type, color, shape,
+  content and one signature.
+- On screens people use daily, space and tone before decoration: group with
+  whitespace before borders, and quiet secondary content before making the
+  primary thing louder. An empty page isn't restraint; fill what you remove
+  with something from the subject.
 - Squint before you ship. If the blurred screen doesn't lead with the thing it
   is for, no detail will save it.
 - Motion has to earn its place. Frequent, intentional interactions should be
