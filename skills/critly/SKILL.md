@@ -16,16 +16,17 @@ to do it. The live site pairs every concept with an interactive demo.
 Critly also has a check: `critly check <url>` loads the running app, measures
 what it renders, and fails when the interface breaks a concept, naming the
 value to use (https://critly.vercel.app/check). This skill tells you what good
-looks like; the check proves you did it. For what can't be measured as wrong,
+looks like; the check catches what can be measured. A clean check doesn't make a
+screen good. For what can't be measured as wrong,
 `critly taste <url>` runs a taste pass: it squints at each screen, counts its
 boxes and edges, finds what it leads with, and writes the images to look at
 (https://critly.vercel.app/taste-pass).
 
 Critly is design principles and the checks that hold them, not a style. The
 look (typefaces, palette, shape, signature, voice) comes from a **direction**:
-the project's existing design, or one you set from the subject itself with
-`direction.md` in this skill's folder. Critly's concepts then make that look
-clear, consistent and well made.
+the project's existing design, or one you set with `direction.md` in this
+skill's folder by building two first screens and keeping the better one.
+Critly's concepts then make that look clear, consistent and well made.
 
 `references/rules.md` lists every concept's rule in one line. It is short on
 purpose: read it whenever you start a new piece of work. Open the full
@@ -47,11 +48,12 @@ it runs a full top-down pass with these concepts.
 2. **Get the direction before any visual value.** Read
    `.critly/direction.md` in the project. If it isn't there, open
    `direction.md` in this skill's folder now and follow it: it either
-   describes the project's existing design or sets a new one, and ends with
-   the note saved. The note owns the typefaces, palette, shape, signature and
-   voice; Critly's concepts own the mechanics (states, contrast, spacing
-   logic, motion timing, speed). This step comes before the references so
-   their examples don't become the look.
+   describes the project's existing design or sets a new one by comparing
+   two rendered first screens, and ends with the note saved. The note owns
+   the typefaces, palette, shape, imagery and voice; Critly's concepts own the
+   mechanics (states, contrast, spacing logic, motion timing, speed). Don't
+   read the references before that comparison: their examples become the
+   look.
 3. **Decide the surface and the feel.** Persuade (landing, marketing,
    pricing, first run) or operate (screens used daily), as `direction.md`
    describes. Then in one line: who uses it, how often, compact or
@@ -77,17 +79,23 @@ it runs a full top-down pass with these concepts.
 8. **Check before you say it's done.**
    - Run the check on every route you changed: `npm run lint:ui` when the
      project has it, otherwise `npx @kausthubh/critly check <url>` against the
-     running app. Fix every error and every `review` finding until it exits 0.
-     Exit 2 means it couldn't run: say so in one line; it is not a pass. Fix
-     the interface, not the policy.
+     running app. Fix every error until it exits 0. Exit 2 means it couldn't
+     run: say so in one line; it is not a pass. Fix the interface, not the
+     policy.
+   - A `review` finding means the check couldn't measure something (text
+     over a texture, gradient or image), not that it failed. Look at the
+     pixels in each scheme. If it reads clearly, keep the design: with the
+     user around, ask them for a reasoned exception in the policy; otherwise
+     list it in your summary as looked at. Don't remove a texture, gradient
+     or image just to clear a review.
    - Then run the taste pass on every changed page: `npm run taste:ui` when
      the project has it, otherwise `npx @kausthubh/critly taste <url>`. It
      screenshots each page at 390 and 1440 and writes a squint image and an
      overlay (boxes, edges, the lead) per screen. Open every image and answer
      the three questions in **Taste pass** below. Its looks are not failures,
      but fix each one or say in one line why the screen needs it.
-   - Then do the review at the end of `direction.md` (whose page is this?)
-     on the same screenshots.
+   - Then do the review at the end of `direction.md` (is it better than the
+     obvious version?) on the same screenshots.
    - Screenshot what the taste pass doesn't open: dark mode, and the states
      (hover, focus, open menus, errors, empty, loading). The check only rules
      out what it can measure; hierarchy and spacing that read wrong are yours
@@ -98,8 +106,8 @@ it runs a full top-down pass with these concepts.
      changed and why before the user finds it.
 9. **End with evidence**, not a list of concepts: quote the check's last line
    and the taste pass's, say which screens you looked at and what leads on
-   each, name the direction's route and where its signature shows, and name
-   anything you couldn't check.
+   each, name the two first screens you compared and why the one you kept
+   won, and name anything you couldn't check.
    Never say tests or checks pass unless you ran them. If the project has no
    check yet, offer once to set it up (the `critly-audit` skill does it).
 
@@ -107,8 +115,8 @@ it runs a full top-down pass with these concepts.
 
 | When the work involves | Open |
 | --- | --- |
-| A new product, app or page with no design yet, a redesign, a brand or design system | `direction.md` first, then Direction First, Borrow From the Subject, Typeface as Voice, Palette From the World, Signature Move, Ownable Assets, then Product Feel, Type Scale, Color Roles, Design Tokens |
-| A landing, marketing, launch or pricing page | Message First, The First Screen, Show the Product, Sections Follow Questions, Specific Proof, Calls to Action, Pricing Pages |
+| A new product, app or page with no design yet, a redesign, a brand or design system | `direction.md` first. After the comparison: Product Feel, Type Scale, Color Roles, Design Tokens. Open an Identity concept only for a question it answers (Typeface as Voice to choose a face, Palette From the World for a palette) |
+| A landing, marketing, launch or pricing page | After the comparison: The First Screen, Show the Product, Specific Proof, Calls to Action; Sections Follow Questions for the page order; Pricing Pages for prices |
 | Any animation or transition | Easings, Springs, Interruptibility, Smooth Animation, Reduced Motion |
 | Animating size, position or layout | Smooth Animation, Shared Layout, Liquid Motion |
 | Drags, swipes, sheets, carousels | Momentum, Springs, Interruptibility |
@@ -202,18 +210,18 @@ before copying an API. Only cite a concept that is in the index.
 
 - Details that nobody notices still compound. Correct defaults on radius,
   spacing, easing, and contrast are what make an interface feel finished.
-- Decide the direction, then the details. A product's look comes from its
-  subject; Critly's concepts make that look work.
+- Decide the direction, then the details, and decide it by looking: two
+  rendered screens side by side beat any description of one.
 - Consistency is what makes a look recognizable. Reuse the same typefaces,
   the same two or three easings, one spacing scale, the same radius ratios,
   and one shadow recipe across the product.
 - Familiar structure, specific materials. Keep layout, navigation and
-  controls the way people expect, and put identity in type, color, shape,
-  content and one signature.
+  controls the way people expect, and put identity in type, color, real
+  content and the product itself. A theme worn on every section is a
+  costume, not a brand.
 - On screens people use daily, space and tone before decoration: group with
   whitespace before borders, and quiet secondary content before making the
-  primary thing louder. An empty page isn't restraint; fill what you remove
-  with something from the subject.
+  primary thing louder.
 - Squint before you ship. If the blurred screen doesn't lead with the thing it
   is for, no detail will save it.
 - Motion has to earn its place. Frequent, intentional interactions should be
@@ -243,7 +251,7 @@ before copying an API. Only cite a concept that is in the index.
 - **Ownable Assets**: Own a few things, and repeat them. ([reference](references/identity.md#ownable-assets), [demo](https://critly.vercel.app/ownable-assets))
 - **Typeface as Voice**: People hear the type before the words. ([reference](references/identity.md#typeface-as-voice), [demo](https://critly.vercel.app/typeface-as-voice))
 - **Palette From the World**: Hue from the subject, contrast from the steps. ([reference](references/identity.md#palette-from-the-world), [demo](https://critly.vercel.app/palette-from-the-world))
-- **Signature Move**: One move, at full size, where people stop. ([reference](references/identity.md#signature-move), [demo](https://critly.vercel.app/signature-move))
+- **Signature Move**: One move, used the same way, where people stop. ([reference](references/identity.md#signature-move), [demo](https://critly.vercel.app/signature-move))
 
 ### Typography
 

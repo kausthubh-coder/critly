@@ -1,22 +1,25 @@
 # Direction
 
 The direction is the decision about what this product looks and sounds like:
-its typefaces, palette, shape, signature and voice, and where each came from.
-Critly's concepts make any direction clear, consistent and well made; they
-don't choose one. A model with no direction drifts to the average interface
-of its category, so set one before choosing any visual value.
+its typefaces, palette, shape, imagery and voice. Critly's concepts make any
+direction clear, consistent and well made; they don't choose one.
+
+Choose it by looking, not by arguing. A story about where a color came from is
+easy to write and says nothing about whether the screen works. Two rendered
+screens side by side do. The familiar, well-made version of a category is a
+real option, and often the right one for screens people use daily; a
+direction has to beat it on the screen, not in the note.
 
 The direction lives in `.critly/direction.md` in the project. Saving it is what
-keeps the look the same across screens and sessions, and repetition is what
-makes a look recognizable.
+keeps the look the same across screens and sessions.
 
 ## Pick the path
 
 | The project has | Do |
 | --- | --- |
-| `.critly/direction.md` | Read it. It owns every visual value. Go back to the skill. |
+| `.critly/direction.md` | Read it. It owns the look. Go back to the skill. |
 | A design of its own (a custom theme or tokens, brand fonts or colors, finished screens) but no note | **Describe** it: write the note from what is there (below). Keep the look. |
-| No design, only a component library's starter theme, or the user asks for a new look or a redesign | **Set** a direction: the five steps below. |
+| No design, only a component library's starter theme, or the user asks for a new look or a redesign | **Set** a direction: the steps below. |
 
 A starter theme is one nobody chose: the library's default palette and
 radius, the framework's default font. When a project has only that and the
@@ -26,54 +29,58 @@ and keep going.
 
 ## Set a direction
 
-1. **List the subject's world.** Write 8 to 12 concrete nouns from the brief
-   and the subject: its tools, materials, artifacts, places, era, numbers, and
-   the words its people use. Things a person could photograph or hold, not
-   adjectives. Done when most of them would never appear in a competitor's
-   brief.
-2. **Write the only line.** "The only [category] that [difference], for
-   [who]." Put the nearest competitor's name in it. If it still reads true,
-   sharpen the difference until it doesn't.
-3. **Sketch three routes**, one sentence each, each from a different source:
-   - one built from the subject's nouns (a material, an artifact, a printed
-     thing from that world), used for how it works rather than as a costume:
-     a darkroom test strip becomes the time-slot picker, not a texture,
-   - one built from a constraint (one typeface, two colors, a grid or rhythm
-     taken from the domain),
-   - one built from a world outside software whose way of working fits (a
-     field manual, a train timetable, a seed packet).
+1. **Collect the material.** Write down what is true: what the product does
+   and for whom, the one job of the most important screen, the facts and
+   numbers the brief gives, and the assets that exist (logo, product screens,
+   photos, real customers). Write the real headline and the real product
+   content that screen will show. No theme yet.
+2. **Look at two or three references**: real, excellent products or pages
+   that solve a similar screen, at least one outside the category (How to Get
+   References). For each, write one thing it teaches about composition, type,
+   imagery or density. Take the lesson, not the look. Without a browser, name
+   ones you know well and say what you remember of them.
+3. **Build two first screens.** Make two rough versions of the first view of
+   the most important screen, with the real headline and content, at desktop
+   (1440×900) and phone (390×844). Make them differ in composition, not just
+   in font and color: where the product sits and how big, type-led or
+   image-led, light or dark ground, dense or open. Let one be the clearest
+   familiar version of this kind of screen, and one follow an idea from the
+   product or its world. Only the first view: no full page, no states yet.
+   Build them as two throwaway pages (or one page with a switch), screenshot
+   both, and delete the one you don't keep.
+4. **Compare them side by side at real size** and keep the better one,
+   judged in this order:
+   - It says what it is and shows the product at first glance.
+   - It suits the people and the subject.
+   - It makes the thing look desirable or trustworthy, as the brief needs.
+   - It is well made: one thing leads, spacing groups, type is set well.
 
-   Mark each as common, unusual or rare for this category. The first look
-   that comes to mind is the common one: it is the average of every page you
-   have seen, and other models reach for it too. Pick the one that fits the
-   subject and the people using it best. A common route is right only when
-   you can say why it suits this brief better than the others.
-   When the user is in the conversation and this is a whole product or brand,
-   show the three routes in a few lines and ask which. Otherwise pick, and
-   name the other two in your summary so the user can switch.
-4. **Write the note** in the format below.
-5. **Turn it into tokens** in the order under **From the note to tokens**.
-   Then build the most important screen first, look at it, and adjust the
-   note if a choice doesn't hold up before building the rest.
+   Distinctiveness only breaks a tie. If neither is good, build a third
+   rather than polishing the weaker one. When the user is in the
+   conversation, show them both screenshots and let them choose.
+5. **Write the note** from the version that won, then turn it into tokens
+   (**From the note to tokens**) and build the rest of the screen and the
+   page.
 
 ## The note
 
-`.critly/direction.md`, 25 lines or fewer. Every value says which noun, word
-or constraint it came from.
+`.critly/direction.md`, 25 lines or fewer. It records what won, so the next
+screen and the next session match it.
 
 ```markdown
 # Direction
 
-Subject: <what it is, one line>
-Only: the only <category> that <difference>, for <who>.
-From: <the nouns this draws on>
-Route: <the chosen route, one sentence>. Also considered: <the other two>.
+Subject: <what it is and who it's for, one line>
+Job: <what the most important screen must get across first>
+Kept: <the version that won and why, one line>. Also tried: <the other>.
+References: <each one, and what it taught>
 
 ## Materials
-- Type: <display face, text face, mono if any>. Why: <source>
-- Palette: <ground, ink, accent, any brand hues, as values>. Why: <source>
-- Shape: <radius, line weight, how surfaces separate>. Why: <source>
-- Signature: <the one thing people should remember>. Where and how big: <2 or 3 places>
+- Type: <faces and their roles>
+- Palette: <ground, ink, accent, any others, as values>
+- Shape: <radius, line weight, how surfaces separate>
+- Imagery: <what is pictured (the product, the thing itself), how it's cropped and framed>
+- Signature: <a detail that recurs, or "none yet">
 - Voice: <three traits>. Errors and money: plain and calm.
 - Density and pace: <per surface: compact or comfortable, instant or animated>
 
@@ -81,60 +88,67 @@ Route: <the chosen route, one sentence>. Also considered: <the other two>.
 Layout, navigation, controls and states follow the platform and Critly's concepts.
 ```
 
-**Type** sets the personality fastest: people read a typeface's personality
-before its words. Let a display face with character carry headings and the
-brand, and a text face carry reading. Choose the display face for this
-subject; a face you would choose for any product says nothing about this one.
-A widely used face is a fine text face when the note says why. Pair faces that
-differ clearly in one way and agree in the rest. Check the license (Google
-Fonts and OFL faces are safe to ship), the weights you need, and that the face
-has tabular figures if the product shows numbers (`tabular-nums` does nothing
-otherwise).
+A reason can be what you saw ("the condensed face kept the headline to two
+lines", "the dark ground made the product screenshot lead"). It doesn't need
+a story.
 
-**Palette** comes from the subject's nouns, not from color psychology charts
-(the research behind "blue means trust" is weak). Decide the ground first,
-because it covers most of the screen: light, dark, or a field of the brand
-color, each named after the noun it came from. Chroma sets energy and
-lightness sets weight; these are better supported than hue meanings, so set
-them on purpose. Bright hues (yellow, lime) keep their solid step light and
-take dark text, or they turn olive. One accent stays reserved for the next action and
-where you are, and status colors keep their meaning; beyond that, color is as
-free as the direction wants.
+**Type.** One family, well set, is a valid direction: weight, size and
+spacing do most of the work. Add a second face only for a job the first can't
+do: headlines with more character, or a mono for code, ids and money columns.
+Keep an expressive face on headlines; body text and controls stay plainly
+readable. Test every face with the real headline and the longest real strings
+before keeping it. Check the license (Google Fonts and OFL faces are safe to
+ship), the weights you need, and tabular figures if the product shows
+numbers (`tabular-nums` does nothing otherwise).
 
-**Signature** is one move taken from what the product does or from its world,
-used the same way every time: a shape, a texture, a way numbers are set, a
-transition, a graphic device. Put it where people pause (the hero, empty
-states, success moments, the first screen of an app), not on every control.
-Where it appears, make it big enough to see from across the room: on a
-landing page it fills a large part of the first screen, not a corner. Type and
-color set the personality, but people recognize a product by a shape, a
-character or a pairing that is both unique in its category and repeated. A
-move the whole category already uses can't be yours, so check the category
-first. Two or three such assets (a judgement, not a measured number), used the
-same way everywhere and never refreshed for variety, are what make a product
-recognizable.
+**Palette.** Decide the ground first, because it covers most of the screen:
+light, dark, or a field of the brand color. Chroma sets energy and lightness
+sets weight; these are better supported than hue meanings ("blue means
+trust" rests on weak research), so set them on purpose. Bright hues (yellow,
+lime) keep their solid step light and take dark text, or they turn olive. One
+accent stays reserved for the next action and where you are, and status
+colors keep their meaning. Pick colors by how they look together on the real
+screen.
+
+**Imagery.** The strongest material is usually the product itself: its real
+screens, the thing it sells, the people who use it. Show it large and cropped
+to the part that matters (Show the Product). When there are no real assets,
+draw a clear, honest picture of the product working, mark in the code where
+photos or screenshots should go, and list them in your summary; don't fill the
+gap with decoration.
+
+**Signature** is optional and earned. If a detail from the winning version
+does a job and recurs well (the way numbers are set, a drawing style, a
+recurring shape, the product view itself), keep it and use it the same way
+every time. Size it by the reading order: on a first screen the headline, the
+product and the action come first. Don't dress the software in its subject's
+world: signage type, stencils, paper and stamps on every section read as a
+costume, not a brand. A few recurring details, kept consistent over time, are
+what make a product recognizable; one screen can't prove that.
 
 ## Surfaces
 
 The same direction serves every screen. What changes is the dose.
 
 - **Persuade** surfaces (landing, marketing, pricing, first run, empty and
-  success moments) get the full direction: large type, the signature at its
-  biggest, imagery from the subject. Keep the page shape familiar (people
-  judge a page in under a second, and pages that look typical of their kind
-  are liked best) and make the content specific: a headline that says what it
-  is and who it's for, the product shown doing its job, and proof next to the
-  claim it backs (a named person with role and company, or a number with its
-  baseline and timeframe; when there is no real proof yet, leave a marked
-  slot instead of inventing one). One primary action, named for what happens
-  after the click, repeated where readers decide; every other action is
-  visibly quieter. Give each section one idea and size it by how much it matters,
-  so the page has a pace: a few big moments, some dense ones, room between.
-  Read the Marketing concepts before building one of these pages.
+  success moments) get the fuller direction: larger type, the imagery at its
+  biggest. Keep the page shape familiar (people judge a page in under a
+  second, and pages that look typical of their kind are liked best) and make
+  the content specific: a headline that says what it is and who it's for, the
+  product shown doing its job, and proof next to the claim it backs (a named
+  person with role and company, or a number with its baseline and timeframe;
+  when it isn't in yet, use the proof you have, mark the spot in the code and
+  list it in your summary; never invent it, and never show readers a to-do
+  note). One primary action, named for what happens after the click, repeated
+  where readers decide; every other action is visibly quieter. Give each
+  section one idea and size it by how much it matters, so the page has a pace.
+  Open the Marketing concept for the question in front of you (the first
+  screen, proof, the call to action, pricing).
 - **Operate** surfaces (dashboards, tables, editors, settings, anything used
-  daily) take the type, palette, density and a small dose of the signature.
-  Layout, navigation and controls stay standard, and the chrome stays quiet so
-  the person's own content leads.
+  daily) take the type and palette and stay quiet. Layout, navigation and
+  controls stay standard, and the chrome steps back so the person's own
+  content leads. The best dashboard is usually the clearest familiar one,
+  finished well.
 
 ## From the note to tokens
 
@@ -175,31 +189,26 @@ roles are enough.
 
 Read the theme or tokens, the font imports, the logo, and two or three main
 screens. Write the note in the same format, describing what is there: values
-as they are, the "why" as best you can infer it, and `Signature: none yet`
-if there isn't one. Describing changes nothing in the app. Problems you find
-(low contrast, a missing state) are fixes for the build, made within the
+as they are, `Kept: the existing design`, and `Signature: none yet` if there
+isn't one. Describing changes nothing in the app. Problems you find (low
+contrast, a missing state) are fixes for the build, made within the
 direction, not changes to it.
 
-## Review: whose page is this?
+## Review: is it better than the obvious version?
 
 After the build, with the screenshots open:
 
-- **Cover the name and logo.** Could the nearest competitor ship this screen
-  as it is? Then the materials came from the category, not the subject.
-  Strengthen the subject-derived choices and the signature; adding more
-  decoration doesn't fix it.
-- **Shrink it to a thumbnail** (about 200px wide, from the full-page
-  screenshot) with the name covered. Can you still tell which product it is
-  and what it is about, and can you point to the signature? If it reads as
-  grey lines, the type, ground and signature are too quiet for this surface.
-  You are the person closest to it and the worst judge of how distinct it is,
-  so when the user is around, ask them to look too.
+- **Real size, first screen.** At 1440×900 and 390×844, not shrunk: what does
+  the eye land on first, second and third? It should be the order the screen
+  needs, usually headline, product, action.
+- **Against the version you didn't keep**, or the plain familiar version of
+  this screen: is this one clearly better to use or to buy from, not just
+  different? If not, say so and take the better one.
+- **Look for costume.** Any material that dresses the software in its
+  subject's world without doing a job (themed type on every heading, textures,
+  props, decorative borders): quiet it or remove it.
 - **Check the proof.** Every testimonial, logo and number is real and
-  checkable, or a marked slot for the user to fill.
-- **Trace every choice.** Each typeface, color and shape names its source in
-  the note. Change any that can't.
-- **Fill what you removed.** Where restraint left a section empty, put
-  something from the subject there: real content, the product working, a
-  field of the brand color, a picture of the thing itself.
+  checkable. What's missing is listed in your summary, not shown on the page
+  as a placeholder or a note.
 - **Use it like its category.** Navigation, controls and states still work the
   way people expect from this kind of product.

@@ -14,7 +14,7 @@ seen most often. Ask again for something distinctive and the page changes, but
 it changes the same way for everyone who asks. The average moves somewhere
 new and is still an average.
 
-**Before you choose a font, a color or a shape, decide what the product is like (its subject, the one thing only it can claim, and the move people should remember) and trace every value back to them, because with no direction every choice drifts to the average of the category.**
+**Before you choose a font, a color or a shape, decide what the product is like and who it's for, then choose the look by building two different first screens and keeping the one that works better, because with no direction every choice drifts to the average of the category, and a direction that only exists in words is easy to get wrong.**
 
 > **Interactive demo: Direction First.** Open https://critly.vercel.app/direction-first to try it.
 
@@ -132,7 +132,7 @@ stencilled sacks and plot stakes. A climbing gym has colored holds and the
 setter's tape. A darkroom has a safelight and the code printed along the edge
 of the film.
 
-**Take type, color and shape from the subject's own world (its tools, artifacts, places, era, numbers and the words its people use) rather than from other software, because only material from the subject can say what the product is about.**
+**When a product needs a look of its own, take type, color and shape from the subject's own world (its tools, artifacts, places, era, numbers and the words its people use) rather than from other software, and keep only what does a job on the screen, because a theme worn on every section reads as a costume, not a brand.**
 
 > **Interactive demo: Borrow From The Subject.** Open https://critly.vercel.app/borrow-from-the-subject to try it.
 
@@ -325,7 +325,7 @@ anyone reads a word, one sounds like a seed catalogue and the other like a
 children's dentist. Most products never make this choice. They ship the
 framework's default face, which tells people only that nobody chose one.
 
-**People read a typeface's personality before its words, so let a display face carry the brand and a text face carry the reading, both chosen for this subject.**
+**People read a typeface's personality before its words, so choose the face for this subject and test it on the real headline; one family set well is often enough, and a display face earns its place only where it reads better than the text face.**
 
 Pick a brief, then try each face on its headline. Change the brief and watch
 the best fit move.
@@ -437,7 +437,7 @@ and it says orange. Charts like this are part of why so many banks, clouds
 and health apps share one blue, and why none of them can be told apart by
 their color.
 
-**Take hues from the subject's own world rather than from color-psychology charts, set energy with chroma and weight with lightness, and build every ramp on shared lightness steps so text and buttons keep their contrast in any hue.**
+**Take hues from the subject's own world rather than from color-psychology charts, judge them together on the real screen, set energy with chroma and weight with lightness, and build every ramp on shared lightness steps so text and buttons keep their contrast in any hue.**
 
 Pick a subject. Each hue comes from something in its world. Then push the
 chroma, switch the ground, and watch the contrast numbers.
@@ -538,7 +538,7 @@ meaning.
 
 ## Signature Move
 
-> One move, at full size, where people stop.
+> One move, used the same way, where people stop.
 
 - Section: Identity
 - URL: https://critly.vercel.app/signature-move
@@ -550,7 +550,7 @@ the footer, a wave in the logo that never appears again, or a gradient
 border on every input until it reads as noise. From across the room, the
 screen looks like any other app in its category.
 
-**Give the product one recognizable move, taken from what it does or from its world, use it the same way every time, and spend it at full size where people pause (the first screen, empty states, success moments), not as a corner detail and not on every control.**
+**Give the product one recognizable move, taken from what it does or from its world, use it the same way every time, and show it big where people pause (the first screen, empty states, success moments) while the headline and the product still read first, not as a corner detail and not on every control.**
 
 Tidewell is a fictional tide-times app for sea swimmers. Its move is the tide
 curve. Put it nowhere, everywhere, tiny in a corner, or at full size in the
