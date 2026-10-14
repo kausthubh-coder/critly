@@ -223,6 +223,10 @@ import {
   TypefaceVoiceDemo,
   PaletteWorldDemo,
   SignatureMoveDemo,
+  MessageFirstDemo,
+  FirstScreenDemo,
+  ShowTheProductDemo,
+  SectionsFollowQuestionsDemo,
 } from "@/components/app/demos";
 import { cn } from "@/lib/utils";
 
@@ -518,6 +522,10 @@ const components: MDXComponents = {
   TypefaceVoiceDemo,
   PaletteWorldDemo,
   SignatureMoveDemo,
+  MessageFirstDemo,
+  FirstScreenDemo,
+  ShowTheProductDemo,
+  SectionsFollowQuestionsDemo,
   CodeBlock,
   LinkList,
 };

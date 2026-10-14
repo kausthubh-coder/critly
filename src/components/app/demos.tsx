@@ -662,3 +662,18 @@ export const PaletteWorldDemo = dynamic(() =>
 export const SignatureMoveDemo = dynamic(() =>
   import("@/components/demos/signature-move").then((m) => m.SignatureMoveDemo)
 );
+// Marketing
+export const MessageFirstDemo = dynamic(() =>
+  import("@/components/demos/message-first").then((m) => m.MessageFirstDemo)
+);
+export const FirstScreenDemo = dynamic(() =>
+  import("@/components/demos/the-first-screen").then((m) => m.FirstScreenDemo)
+);
+export const ShowTheProductDemo = dynamic(() =>
+  import("@/components/demos/show-the-product").then((m) => m.ShowTheProductDemo)
+);
+export const SectionsFollowQuestionsDemo = dynamic(() =>
+  import("@/components/demos/sections-follow-questions").then(
+    (m) => m.SectionsFollowQuestionsDemo
+  )
+);
