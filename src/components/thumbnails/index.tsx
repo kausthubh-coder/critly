@@ -22,6 +22,9 @@ import { SoftKeyboardThumbnail } from "@/components/thumbnails/mobile/soft-keybo
 import { TextSizeThumbnail } from "@/components/thumbnails/mobile/text-size";
 import { UiThreadThumbnail } from "@/components/thumbnails/mobile/ui-thread";
 import { AppLaunchThumbnail } from "@/components/thumbnails/mobile/app-launch";
+import { DirectionFirstThumbnail } from "@/components/thumbnails/identity/direction-first";
+import { BorrowFromTheSubjectThumbnail } from "@/components/thumbnails/identity/borrow-from-the-subject";
+import { OwnableAssetsThumbnail } from "@/components/thumbnails/identity/ownable-assets";
 import type { Section } from "@/lib/sections";
 
 // Static-by-default thumbnails; each plays its idea on card hover (the index
@@ -1808,6 +1811,9 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "ui-thread": UiThreadThumbnail,
   "app-launch": AppLaunchThumbnail,
   "native-lists": NativeListsThumbnail,
+  "direction-first": DirectionFirstThumbnail,
+  "borrow-from-the-subject": BorrowFromTheSubjectThumbnail,
+  "ownable-assets": OwnableAssetsThumbnail,
 };
 
 export function ConceptThumbnail({

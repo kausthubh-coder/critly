@@ -328,6 +328,17 @@ export const AnimationCostDemo = dynamic(() =>
 export const NoveltyBudgetDemo = dynamic(() =>
   import("@/components/demos/novelty-budget").then((m) => m.NoveltyBudgetDemo)
 );
+export const DirectionFirstDemo = dynamic(() =>
+  import("@/components/demos/direction-first").then((m) => m.DirectionFirstDemo)
+);
+export const BorrowFromTheSubjectDemo = dynamic(() =>
+  import("@/components/demos/borrow-from-the-subject").then(
+    (m) => m.BorrowFromTheSubjectDemo
+  )
+);
+export const OwnableAssetsDemo = dynamic(() =>
+  import("@/components/demos/ownable-assets").then((m) => m.OwnableAssetsDemo)
+);
 export const OklchDemo = dynamic(() =>
   import("@/components/demos/oklch").then((m) => m.OklchDemo)
 );
