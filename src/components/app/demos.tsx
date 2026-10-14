@@ -633,3 +633,18 @@ export const RecyclingDemo = dynamic(() =>
 export const PullToRefreshDemo = dynamic(() =>
   import("@/components/demos/native-lists").then((m) => m.PullToRefreshDemo)
 );
+// Marketing
+export const MessageFirstDemo = dynamic(() =>
+  import("@/components/demos/message-first").then((m) => m.MessageFirstDemo)
+);
+export const FirstScreenDemo = dynamic(() =>
+  import("@/components/demos/the-first-screen").then((m) => m.FirstScreenDemo)
+);
+export const ShowTheProductDemo = dynamic(() =>
+  import("@/components/demos/show-the-product").then((m) => m.ShowTheProductDemo)
+);
+export const SectionsFollowQuestionsDemo = dynamic(() =>
+  import("@/components/demos/sections-follow-questions").then(
+    (m) => m.SectionsFollowQuestionsDemo
+  )
+);

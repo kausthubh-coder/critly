@@ -214,6 +214,10 @@ import {
   LaunchScreenDemo,
   RecyclingDemo,
   PullToRefreshDemo,
+  MessageFirstDemo,
+  FirstScreenDemo,
+  ShowTheProductDemo,
+  SectionsFollowQuestionsDemo,
 } from "@/components/app/demos";
 import { cn } from "@/lib/utils";
 
@@ -500,6 +504,10 @@ const components: MDXComponents = {
   LaunchScreenDemo,
   RecyclingDemo,
   PullToRefreshDemo,
+  MessageFirstDemo,
+  FirstScreenDemo,
+  ShowTheProductDemo,
+  SectionsFollowQuestionsDemo,
   CodeBlock,
   LinkList,
 };
