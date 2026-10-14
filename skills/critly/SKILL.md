@@ -4,7 +4,7 @@ description: 'Design engineering concepts from Critly (critly.vercel.app) for se
 metadata:
   author: kausthubh-coder
   source: https://critly.vercel.app
-  version: "2026-10-13"
+  version: "2026-10-14"
 ---
 
 # Critly
@@ -236,6 +236,15 @@ before copying an API. Only cite a concept that is in the index.
 - **Product Feel**: Decide the feel before the numbers. ([reference](references/craft.md#product-feel), [demo](https://critly.vercel.app/product-feel))
 - **Design Tokens**: Name the role, not the value. ([reference](references/craft.md#design-tokens), [demo](https://critly.vercel.app/design-tokens))
 
+### Identity
+
+- **Direction First**: Decide what it is like before how it looks. ([reference](references/identity.md#direction-first), [demo](https://critly.vercel.app/direction-first))
+- **Borrow From the Subject**: Take the look from the thing itself. ([reference](references/identity.md#borrow-from-the-subject), [demo](https://critly.vercel.app/borrow-from-the-subject))
+- **Ownable Assets**: Own a few things, and repeat them. ([reference](references/identity.md#ownable-assets), [demo](https://critly.vercel.app/ownable-assets))
+- **Typeface as Voice**: People hear the type before the words. ([reference](references/identity.md#typeface-as-voice), [demo](https://critly.vercel.app/typeface-as-voice))
+- **Palette From the World**: Hue from the subject, contrast from the steps. ([reference](references/identity.md#palette-from-the-world), [demo](https://critly.vercel.app/palette-from-the-world))
+- **Signature Move**: One move, at full size, where people stop. ([reference](references/identity.md#signature-move), [demo](https://critly.vercel.app/signature-move))
+
 ### Typography
 
 - **Letter Spacing**: Tighten big text, loosen small text. ([reference](references/typography.md#letter-spacing), [demo](https://critly.vercel.app/letter-spacing))
@@ -288,6 +297,16 @@ before copying an API. Only cite a concept that is in the index.
 
 - **Microcopy**: Buttons say what they do. ([reference](references/content.md#microcopy), [demo](https://critly.vercel.app/microcopy))
 - **Real Content**: Design for the data you'll actually get. ([reference](references/content.md#real-content), [demo](https://critly.vercel.app/real-content))
+
+### Marketing
+
+- **Message First**: Say what only you do, then lay out the page. ([reference](references/marketing.md#message-first), [demo](https://critly.vercel.app/message-first))
+- **The First Screen**: Say what it is, show it, offer one next step. ([reference](references/marketing.md#the-first-screen), [demo](https://critly.vercel.app/the-first-screen))
+- **Show the Product**: Picture the product doing its job. ([reference](references/marketing.md#show-the-product), [demo](https://critly.vercel.app/show-the-product))
+- **Sections Follow Questions**: Order the page by what buyers ask. ([reference](references/marketing.md#sections-follow-questions), [demo](https://critly.vercel.app/sections-follow-questions))
+- **Specific Proof**: Names and numbers, next to the claim. ([reference](references/marketing.md#specific-proof), [demo](https://critly.vercel.app/specific-proof))
+- **Calls to Action**: One action, named for what happens next. ([reference](references/marketing.md#calls-to-action), [demo](https://critly.vercel.app/calls-to-action))
+- **Pricing Pages**: Real prices, a few plans, the differences. ([reference](references/marketing.md#pricing-pages), [demo](https://critly.vercel.app/pricing-pages))
 
 ### Motion
 
