@@ -1,0 +1,106 @@
+---
+title: Ownable Assets
+description: Own a few things, and repeat them.
+section: Identity
+order: 3
+publishedAt: "2026-10-14"
+resources:
+  - url: https://marketingscience.info/news-and-insights/brands-of-distinction
+    title: Brands of Distinction
+    description: Jenni Romaniuk of the Ehrenberg-Bass Institute on distinctive assets, why uniqueness matters more than fame, and why inconsistency undoes both.
+  - url: https://www.marketingweek.com/15-brand-assets-truly-distinctive-finds-research/
+    title: Only 15% of brand assets are "truly distinctive", study finds
+    description: Ipsos and JKR tested over 5,000 assets with over 26,000 people. Products and logos reached the top tier most often, colors least.
+  - url: https://ideas.repec.org/a/pal/jobman/v31y2024i1d10.1057_s41262-023-00329-6.html
+    title: Exploring the uniqueness of distinctive brand assets within the UK automotive industry
+    description: Fiocchi and Seyed Esfahani, 2024. Fonts, slogans and colors scored low on uniqueness; logos were the most ownable.
+  - url: https://www.thedrum.com/opinion/2013/09/05/five-tips-identifying-and-managing-your-brand-assets
+    title: Five tips for identifying and managing your brand assets
+    description: Check what competitors already own before you adopt an element, and don't change it from campaign to campaign.
+  - url: https://www.marketingweek.com/marketers-judgement-strength-brand-assets-rarely-accurate/
+    title: Marketers' judgement of brand asset strength "rarely accurate"
+    description: Ehrenberg-Bass research on why the people closest to a brand misjudge how distinctive it is.
+  - url: https://www.pentagram.com/work/mastercard
+    title: Mastercard, by Pentagram
+    description: The case for dropping the name from the mark, after 81% of people recognized the circles alone.
+---
+
+Cover the names on five budgeting apps and most of them turn into the same
+app: the same white card, the same blue button, the same rounded corners.
+Each team chose those values for good reasons. None of the values belongs to
+any of them.
+
+**Pick two or three things nobody else in your category uses (a shape, a color pairing, a way of drawing progress or setting numbers) and use them the same way on every screen, because people recognize what is both unique and repeated.**
+
+<OwnableAssetsDemo />
+
+Look at the four apps, then take the names off and identify each one from a
+screen you haven't seen. Do it with the category defaults, then with each
+app's own assets.
+
+## What the brand research found
+
+Brand researchers call these distinctive assets: the colors, shapes,
+characters and type that bring a brand to mind without its name. Jenni
+Romaniuk of the Ehrenberg-Bass Institute
+[sets out two tests](https://marketingscience.info/news-and-insights/brands-of-distinction).
+An asset has to be famous (people know it) and unique (it brings to mind only
+one brand), and "of these two, uniqueness is most important." She also calls
+inconsistency "the enemy of distinctive asset building." An asset that
+changes from one place to the next never gets learned.
+
+Some kinds of asset are much harder to own than others. Ipsos and the agency
+JKR tested over 5,000 assets with over 26,000 people and graded how well each
+one brought its brand to mind on its own. Only 15% reached the top tier.
+[By type](https://www.marketingweek.com/15-brand-assets-truly-distinctive-finds-research/),
+31% of products made it, 19% of logos, 16% of characters, 6% of slogans, and
+4% of colors. A
+[2024 study of UK car brands](https://ideas.repec.org/a/pal/jobman/v31y2024i1d10.1057_s41262-023-00329-6.html)
+found the same pattern: fonts, slogans and colors scored low on uniqueness,
+and logos were the most ownable.
+
+So a brand color alone rarely does the job, because a color is easy to share
+with half the category. A pairing does better, or a shape, or a character, or
+a color that always appears with a particular shape. Mastercard is the
+well-known case: in its own research,
+[81% of people recognized](https://www.pentagram.com/work/mastercard) the two
+circles without the name. That is a case study, from the brand's side.
+
+## Applying it to interfaces
+
+This research is about ads, packaging and logos, not product screens.
+Applying it to UI is our extrapolation, and it hasn't been tested there. The
+reasoning carries over to a product people use often: every screen is another
+chance to repeat an asset, or to break it.
+
+In an interface, an asset might be a shape that shows up in buttons, progress
+and empty states. It might be a color pairing, a way of setting numbers, a way of
+drawing progress, or a sound. A typeface alone is weak, for the same reason a
+color is: many brands can use it. In the demo each app has two or three: Tally
+counts in tally marks and sets money in a mono face, Kitty draws everything as
+a round pot, Stash puts an envelope flap on every screen, and Fathom reads
+progress off a depth gauge. None of them changed the layout.
+
+Pick assets that come from the subject ([Borrow From the
+Subject](/borrow-from-the-subject)), since those are least likely to be
+shared. Before adopting one, check the category. Julian Major's
+[advice](https://www.thedrum.com/opinion/2013/09/05/five-tips-identifying-and-managing-your-brand-assets)
+is to "check if any competitors have associations with it." Then put the assets in
+[tokens](/design-tokens) and components, so a new screen gets them by default
+instead of by memory. Spend them where people pause, as in [Signature
+Move](/signature-move), and keep frequent controls quiet ([Novelty
+Budget](/novelty-budget)).
+
+## Why you can't judge your own
+
+The people who make a brand are the worst at telling how distinctive it is.
+Ehrenberg-Bass
+[found](https://www.marketingweek.com/marketers-judgement-strength-brand-assets-rarely-accurate/)
+that marketers overestimate how well known their assets are and underestimate
+how distinctive they are, because they see far more of their category than
+their customers do.
+
+So test it the way the demo does. Show someone outside the team a screen with
+the name removed and ask whose it is. If they can't tell, the assets aren't
+unique yet, or they aren't repeated enough to be learned. Changing them for
+variety would only make that worse.

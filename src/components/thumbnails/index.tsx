@@ -25,6 +25,9 @@ import { AppLaunchThumbnail } from "@/components/thumbnails/mobile/app-launch";
 import { SpecificProofThumbnail } from "@/components/thumbnails/marketing/specific-proof";
 import { CallsToActionThumbnail } from "@/components/thumbnails/marketing/calls-to-action";
 import { PricingPagesThumbnail } from "@/components/thumbnails/marketing/pricing-pages";
+import { DirectionFirstThumbnail } from "@/components/thumbnails/identity/direction-first";
+import { BorrowFromTheSubjectThumbnail } from "@/components/thumbnails/identity/borrow-from-the-subject";
+import { OwnableAssetsThumbnail } from "@/components/thumbnails/identity/ownable-assets";
 import type { Section } from "@/lib/sections";
 
 // Static-by-default thumbnails; each plays its idea on card hover (the index
@@ -1814,6 +1817,9 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "specific-proof": SpecificProofThumbnail,
   "calls-to-action": CallsToActionThumbnail,
   "pricing-pages": PricingPagesThumbnail,
+  "direction-first": DirectionFirstThumbnail,
+  "borrow-from-the-subject": BorrowFromTheSubjectThumbnail,
+  "ownable-assets": OwnableAssetsThumbnail,
 };
 
 export function ConceptThumbnail({
