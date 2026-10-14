@@ -42,9 +42,11 @@ and keep going.
    - one built from a world outside software whose way of working fits (a
      field manual, a train timetable, a seed packet).
 
-   Mark each as common, unusual or rare for this category. Pick the one that
-   fits the subject and the people using it best. A common route is right
-   only when you can say why it suits this brief better than the others.
+   Mark each as common, unusual or rare for this category. The first look
+   that comes to mind is the common one: it is the average of every page you
+   have seen, and other models reach for it too. Pick the one that fits the
+   subject and the people using it best. A common route is right only when
+   you can say why it suits this brief better than the others.
    When the user is in the conversation and this is a whole product or brand,
    show the three routes in a few lines and ask which. Otherwise pick, and
    name the other two in your summary so the user can switch.
@@ -86,7 +88,9 @@ one. Check the license (Google Fonts and OFL faces are safe to ship), the
 weights you need, and tabular figures if the product shows numbers.
 
 **Palette** comes from the subject's nouns, not from color psychology charts
-(the research behind "blue means trust" is weak). Chroma sets energy and
+(the research behind "blue means trust" is weak). Decide the ground first,
+because it covers most of the screen: light, dark, or a field of the brand
+color, each named after the noun it came from. Chroma sets energy and
 lightness sets weight. One accent stays reserved for the next action and
 where you are, and status colors keep their meaning; beyond that, color is as
 free as the direction wants.
@@ -95,6 +99,8 @@ free as the direction wants.
 used the same way every time: a shape, a texture, a way numbers are set, a
 transition, a graphic device. Put it where people pause (the hero, empty
 states, success moments, the first screen of an app), not on every control.
+Where it appears, make it big enough to see from across the room: on a
+landing page it fills a large part of the first screen, not a corner.
 Two or three such assets, repeated everywhere, are what make a product
 recognizable; more than that fragments it.
 
@@ -108,7 +114,9 @@ The same direction serves every screen. What changes is the dose.
   judge a page in under a second, and pages that look typical of their kind
   are liked best) and make the content specific: a headline that says what it
   is and who it's for, the product shown doing its job, proof with names and
-  numbers.
+  numbers. Give each section one idea and size it by how much it matters,
+  so the page has a pace: a few big moments, some dense ones, room between.
+  Read the Marketing concepts before building one of these pages.
 - **Operate** surfaces (dashboards, tables, editors, settings, anything used
   daily) take the type, palette, density and a small dose of the signature.
   Layout, navigation and controls stay standard, and the chrome stays quiet so
@@ -166,6 +174,10 @@ After the build, with the screenshots open:
   as it is? Then the materials came from the category, not the subject.
   Strengthen the subject-derived choices and the signature; adding more
   decoration doesn't fix it.
+- **Shrink it to a thumbnail** (about 200px wide, from the full-page
+  screenshot). Can you still tell what the product is about, and does
+  something besides text stand out? If it reads as grey lines, the type,
+  ground and signature are too quiet for this surface.
 - **Trace every choice.** Each typeface, color and shape names its source in
   the note. Change any that can't.
 - **Fill what you removed.** Where restraint left a section empty, put

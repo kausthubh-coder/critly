@@ -107,7 +107,8 @@ it runs a full top-down pass with these concepts.
 
 | When the work involves | Open |
 | --- | --- |
-| A new product, app or page with no design yet, a redesign, a brand or design system | `direction.md` first, then Product Feel, Type Scale, Color Roles, Design Tokens |
+| A new product, app or page with no design yet, a redesign, a brand or design system | `direction.md` first, then Direction First, Borrow From the Subject, Typeface as Voice, Palette From the World, Signature Move, Ownable Assets, then Product Feel, Type Scale, Color Roles, Design Tokens |
+| A landing, marketing, launch or pricing page | Message First, The First Screen, Show the Product, Sections Follow Questions, Specific Proof, Calls to Action, Pricing Pages |
 | Any animation or transition | Easings, Springs, Interruptibility, Smooth Animation, Reduced Motion |
 | Animating size, position or layout | Smooth Animation, Shared Layout, Liquid Motion |
 | Drags, swipes, sheets, carousels | Momentum, Springs, Interruptibility |
