@@ -633,3 +633,12 @@ export const RecyclingDemo = dynamic(() =>
 export const PullToRefreshDemo = dynamic(() =>
   import("@/components/demos/native-lists").then((m) => m.PullToRefreshDemo)
 );
+export const TypefaceVoiceDemo = dynamic(() =>
+  import("@/components/demos/typeface-as-voice").then((m) => m.TypefaceVoiceDemo)
+);
+export const PaletteWorldDemo = dynamic(() =>
+  import("@/components/demos/palette-from-the-world").then((m) => m.PaletteWorldDemo)
+);
+export const SignatureMoveDemo = dynamic(() =>
+  import("@/components/demos/signature-move").then((m) => m.SignatureMoveDemo)
+);

@@ -1,0 +1,124 @@
+---
+title: Palette From the World
+description: Hue from the subject, contrast from the steps.
+section: Identity
+order: 5
+publishedAt: "2026-10-14"
+resources:
+  - url: https://www.frontiersin.org/articles/10.3389/fpsyg.2015.00368/full
+    title: Color and psychological functioning
+    description: Andrew Elliot's 2015 review of color psychology, and why most of its findings are still preliminary.
+  - url: https://link.springer.com/article/10.1007/s11747-010-0245-y
+    title: Exciting red and competent blue
+    description: Labrecque and Milne (2012), four studies on hue, saturation and value in how a brand's personality reads.
+  - url: https://stripe.com/blog/accessible-color-systems
+    title: Designing accessible color systems
+    description: Stripe rebuilt its palette on perceptual lightness levels so contrast is the same in every hue.
+  - url: https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale
+    title: Understanding the scale
+    description: Radix gives each of its 12 steps a job, from app background to high-contrast text.
+  - url: https://linear.app/now/how-we-redesigned-the-linear-ui
+    title: How we redesigned the Linear UI
+    description: Linear generates whole themes from three inputs (base color, accent and contrast) in LCH.
+---
+
+Ask a color-psychology chart for "trust" and it says blue. Ask for "energy"
+and it says orange. Charts like this are part of why so many banks, clouds
+and health apps share one blue, and why none of them can be told apart by
+their color.
+
+**Take hues from the subject's own world rather than from color-psychology charts, set energy with chroma and weight with lightness, and build every ramp on shared lightness steps so text and buttons keep their contrast in any hue.**
+
+Pick a subject. Each hue comes from something in its world. Then push the
+chroma, switch the ground, and watch the contrast numbers.
+
+<PaletteWorldDemo />
+
+Six subjects, six brands, and the body text, the link and the button pass in
+every one. Nothing was tuned by hand. Each step sits at the same lightness in
+every hue (with one exception, below), so a step means the same contrast
+whatever color it wears.
+
+## The charts are weaker than they look
+
+Andrew Elliot's [2015 review](https://www.frontiersin.org/articles/10.3389/fpsyg.2015.00368/full)
+of color psychology calls the field early. Much of the research is
+underpowered, and he expects every effect to depend on conditions: culture,
+gender, age, the task, the exact shade. He calls it premature to make
+"impassioned calls for application". A chart that says blue means trust is
+that kind of call.
+
+[Labrecque and Milne (2012)](https://link.springer.com/article/10.1007/s11747-010-0245-y)
+is the study most often cited for brand color. Across four studies, they
+mapped hues onto brand personality traits, and their second study found that
+saturation and value (how vivid and how light a color is) strengthened those
+traits. Hue mattered, but so did how much of it there was and how light or
+dark it sat. That is one paper, tested on logos, so read it as support for a
+way of working, not as a formula.
+
+The practical reading: no hue carries a fixed meaning you can look up, and
+if everyone in a category picks the hue a chart gave them, it stops telling
+anyone apart. Color alone is also hard to own ([Ownable
+Assets](/ownable-assets)), which is one more reason to tie it to something
+only this product has.
+
+## Where the hue comes from
+
+From the subject's nouns ([Borrow From the Subject](/borrow-from-the-subject)):
+the tiles of a public pool, a courier's hi-vis vest, ripe plums, a
+chanterelle, glacier ice. A hue taken from a thing comes with a reason you
+can say out loud, and the reason tells you how to use it. Hi-vis yellow
+belongs where something must be seen, not on every border.
+
+Then set two levers by the [direction](/direction-first), not by the hue.
+**Chroma sets energy.** Vivid reads loud and quick; grayed reads quiet and
+serious. **Lightness sets weight.** A dark ground with deep colors feels heavy
+and close; a light ground with pale tints feels open. The same plum can be a
+loud consumer app or a quiet co-op ledger depending on these two alone.
+
+## Build every ramp on the same steps
+
+Stripe rebuilt its colors in a perceptually uniform space so that
+[contrast is uniform across hues](https://stripe.com/blog/accessible-color-systems).
+In their scale, any two colors five levels apart pass for small text, and four apart for icons
+and large text. Radix gives each of its 12 steps
+[a job](https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale):
+1 and 2 for backgrounds, 3 to 5 for component fills, 6 to 8 for borders, 9
+and 10 for solid fills, 11 and 12 for text.
+
+Do both in [OKLCH](/oklch). Fix the lightness of each step, let chroma rise
+toward the solid step and fall again for text, and change only the hue
+between ramps. The exception is the bright hues. Yellow and lime only turn
+vivid when they're light, and at the usual solid lightness they go olive, so
+their solid steps sit high and take dark text. Radix does the same for its
+sky, mint, lime, yellow and amber. Try the bike courier. Keep chroma inside what the screen can show, or the browser
+clips it and two steps can come out the same. Tint the neutrals with a trace
+of the brand hue on the same steps. For dark mode, write a second set of
+lightness steps and keep the hues.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      code: `/* --seed-hue and --seed-chroma come from the direction note */
+:root {
+  --brand-2: oklch(0.98 calc(var(--seed-chroma) * 0.12) var(--seed-hue));
+  --brand-9: oklch(0.54 var(--seed-chroma) var(--seed-hue));
+  --brand-11: oklch(0.46 calc(var(--seed-chroma) * 0.9) var(--seed-hue));
+  --gray-11: oklch(0.46 0.012 var(--seed-hue));
+
+  --accent: var(--brand-9);
+  --link: var(--brand-11);
+  --text-muted: var(--gray-11);
+}`,
+    },
+  ]}
+/>
+
+Change the seed and every role follows, still legible. Linear builds whole
+themes this way, from [three inputs](https://linear.app/now/how-we-redesigned-the-linear-ui):
+a base color, an accent and a contrast level. The palette can then be as
+loud as the direction wants, as long as [Color Roles](/color-roles) still
+holds: one color for the next action, and status colors that keep their
+meaning.
