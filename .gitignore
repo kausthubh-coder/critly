@@ -46,3 +46,6 @@ video/out
 
 # critly taste images (rewritten every run)
 .critly/taste/
+
+# a link to .agents/skills that bun run setup creates
+/.claude/skills
