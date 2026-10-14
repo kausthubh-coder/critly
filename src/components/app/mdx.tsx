@@ -220,6 +220,9 @@ import {
   SpecificProofDemo,
   CallsToActionDemo,
   PricingPagesDemo,
+  TypefaceVoiceDemo,
+  PaletteWorldDemo,
+  SignatureMoveDemo,
 } from "@/components/app/demos";
 import { cn } from "@/lib/utils";
 
@@ -512,6 +515,9 @@ const components: MDXComponents = {
   SpecificProofDemo,
   CallsToActionDemo,
   PricingPagesDemo,
+  TypefaceVoiceDemo,
+  PaletteWorldDemo,
+  SignatureMoveDemo,
   CodeBlock,
   LinkList,
 };

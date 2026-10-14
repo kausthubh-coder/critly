@@ -28,6 +28,9 @@ import { PricingPagesThumbnail } from "@/components/thumbnails/marketing/pricing
 import { DirectionFirstThumbnail } from "@/components/thumbnails/identity/direction-first";
 import { BorrowFromTheSubjectThumbnail } from "@/components/thumbnails/identity/borrow-from-the-subject";
 import { OwnableAssetsThumbnail } from "@/components/thumbnails/identity/ownable-assets";
+import { TypefaceAsVoiceThumbnail } from "@/components/thumbnails/identity/typeface-as-voice";
+import { PaletteFromTheWorldThumbnail } from "@/components/thumbnails/identity/palette-from-the-world";
+import { SignatureMoveThumbnail } from "@/components/thumbnails/identity/signature-move";
 import type { Section } from "@/lib/sections";
 
 // Static-by-default thumbnails; each plays its idea on card hover (the index
@@ -1820,6 +1823,9 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "direction-first": DirectionFirstThumbnail,
   "borrow-from-the-subject": BorrowFromTheSubjectThumbnail,
   "ownable-assets": OwnableAssetsThumbnail,
+  "typeface-as-voice": TypefaceAsVoiceThumbnail,
+  "palette-from-the-world": PaletteFromTheWorldThumbnail,
+  "signature-move": SignatureMoveThumbnail,
 };
 
 export function ConceptThumbnail({
