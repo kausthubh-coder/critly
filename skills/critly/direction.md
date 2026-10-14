@@ -36,7 +36,8 @@ and keep going.
    sharpen the difference until it doesn't.
 3. **Sketch three routes**, one sentence each, each from a different source:
    - one built from the subject's nouns (a material, an artifact, a printed
-     thing from that world),
+     thing from that world), used for how it works rather than as a costume:
+     a darkroom test strip becomes the time-slot picker, not a texture,
    - one built from a constraint (one typeface, two colors, a grid or rhythm
      taken from the domain),
    - one built from a world outside software whose way of working fits (a
@@ -72,7 +73,7 @@ Route: <the chosen route, one sentence>. Also considered: <the other two>.
 - Type: <display face, text face, mono if any>. Why: <source>
 - Palette: <ground, ink, accent, any brand hues, as values>. Why: <source>
 - Shape: <radius, line weight, how surfaces separate>. Why: <source>
-- Signature: <the one thing people should remember>. Where: <2 or 3 places>
+- Signature: <the one thing people should remember>. Where and how big: <2 or 3 places>
 - Voice: <three traits>. Errors and money: plain and calm.
 - Density and pace: <per surface: compact or comfortable, instant or animated>
 
@@ -80,18 +81,23 @@ Route: <the chosen route, one sentence>. Also considered: <the other two>.
 Layout, navigation, controls and states follow the platform and Critly's concepts.
 ```
 
-**Type** carries the identity faster than anything else: people read a
-typeface's personality before its words. Let a display face with character
-carry headings and the brand, and a text face carry reading. Choose both for
-this subject; a face you would choose for any product says nothing about this
-one. Check the license (Google Fonts and OFL faces are safe to ship), the
-weights you need, and tabular figures if the product shows numbers.
+**Type** sets the personality fastest: people read a typeface's personality
+before its words. Let a display face with character carry headings and the
+brand, and a text face carry reading. Choose the display face for this
+subject; a face you would choose for any product says nothing about this one.
+A widely used face is a fine text face when the note says why. Pair faces that
+differ clearly in one way and agree in the rest. Check the license (Google
+Fonts and OFL faces are safe to ship), the weights you need, and that the face
+has tabular figures if the product shows numbers (`tabular-nums` does nothing
+otherwise).
 
 **Palette** comes from the subject's nouns, not from color psychology charts
 (the research behind "blue means trust" is weak). Decide the ground first,
 because it covers most of the screen: light, dark, or a field of the brand
 color, each named after the noun it came from. Chroma sets energy and
-lightness sets weight. One accent stays reserved for the next action and
+lightness sets weight; these are better supported than hue meanings, so set
+them on purpose. Bright hues (yellow, lime) keep their solid step light and
+take dark text, or they turn olive. One accent stays reserved for the next action and
 where you are, and status colors keep their meaning; beyond that, color is as
 free as the direction wants.
 
@@ -100,9 +106,13 @@ used the same way every time: a shape, a texture, a way numbers are set, a
 transition, a graphic device. Put it where people pause (the hero, empty
 states, success moments, the first screen of an app), not on every control.
 Where it appears, make it big enough to see from across the room: on a
-landing page it fills a large part of the first screen, not a corner.
-Two or three such assets, repeated everywhere, are what make a product
-recognizable; more than that fragments it.
+landing page it fills a large part of the first screen, not a corner. Type and
+color set the personality, but people recognize a product by a shape, a
+character or a pairing that is both unique in its category and repeated. A
+move the whole category already uses can't be yours, so check the category
+first. Two or three such assets (a judgement, not a measured number), used the
+same way everywhere and never refreshed for variety, are what make a product
+recognizable.
 
 ## Surfaces
 
@@ -113,8 +123,12 @@ The same direction serves every screen. What changes is the dose.
   biggest, imagery from the subject. Keep the page shape familiar (people
   judge a page in under a second, and pages that look typical of their kind
   are liked best) and make the content specific: a headline that says what it
-  is and who it's for, the product shown doing its job, proof with names and
-  numbers. Give each section one idea and size it by how much it matters,
+  is and who it's for, the product shown doing its job, and proof next to the
+  claim it backs (a named person with role and company, or a number with its
+  baseline and timeframe; when there is no real proof yet, leave a marked
+  slot instead of inventing one). One primary action, named for what happens
+  after the click, repeated where readers decide; every other action is
+  visibly quieter. Give each section one idea and size it by how much it matters,
   so the page has a pace: a few big moments, some dense ones, room between.
   Read the Marketing concepts before building one of these pages.
 - **Operate** surfaces (dashboards, tables, editors, settings, anything used
@@ -175,9 +189,13 @@ After the build, with the screenshots open:
   Strengthen the subject-derived choices and the signature; adding more
   decoration doesn't fix it.
 - **Shrink it to a thumbnail** (about 200px wide, from the full-page
-  screenshot). Can you still tell what the product is about, and does
-  something besides text stand out? If it reads as grey lines, the type,
-  ground and signature are too quiet for this surface.
+  screenshot) with the name covered. Can you still tell which product it is
+  and what it is about, and can you point to the signature? If it reads as
+  grey lines, the type, ground and signature are too quiet for this surface.
+  You are the person closest to it and the worst judge of how distinct it is,
+  so when the user is around, ask them to look too.
+- **Check the proof.** Every testimonial, logo and number is real and
+  checkable, or a marked slot for the user to fill.
 - **Trace every choice.** Each typeface, color and shape names its source in
   the note. Change any that can't.
 - **Fill what you removed.** Where restraint left a section empty, put
