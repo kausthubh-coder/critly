@@ -1,0 +1,103 @@
+---
+title: Pricing Pages
+description: Real prices, a few plans, the differences.
+section: Marketing
+order: 7
+publishedAt: "2026-10-14"
+resources:
+  - url: https://www.nngroup.com/articles/b2b-trust-from-b2c/
+    title: What B2B designers can learn from B2C about building trust
+    description: Therese Fessenden at Nielsen Norman Group on why a hidden price adds a step, looks unaffordable, and makes the company seem to be hiding something.
+  - url: https://www.nngroup.com/articles/show-prices-for-common-scenarios/
+    title: Show prices for common scenarios
+    description: Jakob Nielsen on pricing that really does vary. Show sample prices for typical orders instead of hiding them.
+  - url: https://www.nngroup.com/articles/comparison-tables/
+    title: Comparison tables
+    description: Kate Moran and Taylor Dykes on comparing five items or fewer (two on phones), keeping column headers in view, and letting people highlight differences.
+  - url: https://www.smashingmagazine.com/2022/07/designing-better-pricing-page/
+    title: Designing a better pricing page
+    description: Vitaly Friedman on how people scan pricing tables row by row, showing key features first, and avoiding sideways scrolling on phones.
+  - url: https://marketing.wharton.upenn.edu/wp-content/uploads/2016/10/The-Limits-of-Attraction.pdf
+    title: The limits of attraction
+    description: Frederick, Lee and Baskin (2014) on the decoy effect, which largely disappeared when the choices looked like real products.
+  - url: https://ecommons.cornell.edu/entities/publication/0c5b506a-f8d3-4a4c-8825-b2c715e9f956
+    title: More evidence challenging the attraction effect
+    description: Yang and Lynn (2014). Only 11 of 91 attempts across 23 product categories produced a reliable decoy effect.
+---
+
+People open a pricing page with one question: what would this cost me? "Let's
+talk" doesn't answer it. Neither does "$29" with no hint of per person or per
+month, or five plans with forty rows of checkmarks. Each one hands the reader
+the sums, and some of them leave instead.
+
+**Show real prices with what they're per and how often they're billed, offer four plans or fewer with at most one honest recommendation, and compare what differs between plans rather than every feature, because people come to a pricing page to work out what they would pay.**
+
+<PricingPagesDemo />
+
+Flip the billing toggle in both versions. In the confusing one, two prices
+change and the rest stay put, and the saving is "up to 20%". In the clear one,
+every price changes and each plan states its saving in dollars. Narrow your
+window, or open this on a phone, and the confusing table scrolls sideways
+while the clear plans stack.
+
+## Show the price
+
+Hiding the price costs more than the extra click. Therese Fessenden at Nielsen
+Norman Group lists three [costs](https://www.nngroup.com/articles/b2b-trust-from-b2c/):
+it adds a step, it makes the product seem unaffordable, and it "makes the
+organization seem dubious for the simple reason that it is hiding something."
+
+If the price really does vary, show what typical customers pay. Jakob Nielsen's
+advice from a B2B study is to [show sample prices](https://www.nngroup.com/articles/show-prices-for-common-scenarios/)
+for common orders, for example "$19 per person a month, 25 people minimum"
+or "a 40-person team pays about $760 a month." Every price says what it's per
+and how often: per person, per month, billed yearly.
+
+## Few plans, one recommendation
+
+Comparing is hard work, and people only do it properly with a few options.
+NN/g's guidance on [comparison tables](https://www.nngroup.com/articles/comparison-tables/)
+is five items at most, and two at a time on a phone. For plans, three or four
+is enough to cover different sizes of customer.
+
+Recommend at most one plan, and say who it's for: "for crews of 2 to 50"
+tells a reader more than "Most popular", and it stays true even if it isn't the
+plan most people buy. Two badges cancel each other out.
+
+Don't add a plan just to make another look like a bargain. This "decoy"
+effect looked strong in early lab work with numbers in a table, but in
+Frederick, Lee and Baskin's studies it [largely disappeared](https://marketing.wharton.upenn.edu/wp-content/uploads/2016/10/The-Limits-of-Attraction.pdf)
+when the choices looked like real products, and Yang and Lynn found a
+reliable effect in [11 of 91 attempts](https://ecommons.cornell.edu/entities/publication/0c5b506a-f8d3-4a4c-8825-b2c715e9f956).
+Every plan on the page should be one that somebody ought to buy.
+
+## Compare the differences
+
+People read a pricing table [row by row](https://www.smashingmagazine.com/2022/07/designing-better-pricing-page/),
+left to right, and jump back to the column headers to check which plan they're
+looking at. A list of the same eight features under every plan makes them do
+that eight times to find the two that differ. Lead each plan with who it's for
+and what it adds: "Everything in Solo, plus shared lists and sign-off." If you
+need the full table, put it below the plans, keep the plan names in view as
+it scrolls, and let people show only the rows that differ.
+
+Set prices in [tabular numbers](/tabular-numbers), so they line up across
+plans and the layout stays still when the toggle changes them.
+
+## The yearly toggle
+
+The toggle changes every price on the page, including the recommended plan,
+the per-seat prices and any minimums. State the saving as money for each plan:
+"$300 billed yearly, saves $60." "Save up to 20%" makes the reader work out
+which plans it applies to. Show the yearly price per month next to the total
+billed, so it compares directly with the monthly price, and label the toggle
+so it's clear which period is showing.
+
+## On a phone
+
+Plans stack in a single column, and nothing scrolls sideways. Friedman's
+advice is to avoid horizontal scrolling in pricing tables "at all costs". A
+sideways table hides most of the columns, and the reader loses track of which
+plan they're reading. If a detailed comparison has to work on a phone, compare
+two plans at a time and let the reader pick which two. See
+[responsive](/responsive) for the rest of the layout.
