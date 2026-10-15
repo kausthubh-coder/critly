@@ -29,8 +29,14 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (!command.length) {
     console.log(port);
   } else {
-    const child = spawn(command.join(" "), { stdio: "inherit", shell: true, env: { ...process.env, PORT: String(port) } });
+    // Without Chrome or Edge (a cloud VM), critly runs in Playwright's Chromium. See browser.mjs.
+    const { findBrowser } = await import("./browser.mjs");
+    const env = { ...process.env, ...findBrowser()?.env, PORT: String(port) };
+    // Its own process group on Linux, so stopping this script stops next dev's workers too.
+    const group = process.platform !== "win32";
+    const child = spawn(command.join(" "), { stdio: "inherit", shell: true, env, detached: group });
     child.on("exit", (code, signal) => process.exit(code ?? (signal ? 1 : 0)));
-    for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => child.kill(signal));
+    const stop = (signal) => { try { group ? process.kill(-child.pid, signal) : child.kill(signal); } catch {} };
+    for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) process.on(signal, () => stop(signal));
   }
 }
