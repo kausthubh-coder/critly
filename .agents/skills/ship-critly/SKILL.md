@@ -11,9 +11,14 @@ Critly ships to three places, all from `main` on `kausthubh-coder/critly`:
 - **Package.** `@kausthubh/critly` on npm, from `packages/critly`. It ships only when its `version` is newer than npm's.
 - **Skills.** `skills/critly` and `skills/critly-audit`, linked into every agent from the main checkout. They go live when the main checkout pulls them.
 
-The repo is public, so changes land through a PR. `<main>` below is `C:\Users\kaust\OneDrive\Documents\dev\critly`.
+The repo is public, so changes land through a PR. `<main>` below is `C:\Users\kaust\OneDrive\Documents\dev\critly`. In a cloud session there is no `<main>`, and `gh pr` doesn't work: use the `# cloud:` lines, which call the REST API through `gh api`.
 
-**Rules.** Production needs my go in this conversation. Stop at the first failure. Never force-push, never skip checks, never edit `.critly/policy.json` to pass. Write the rollback (end of this file) into your notes before step 3.
+**Rules.**
+- Production needs my go in this conversation. "Ship" is that go for every step below, including the merge and cleanup: don't stop to ask between steps.
+- When a step fails because of this change (a failing check, a broken build, a deploy error), fix it, rerun the checks and carry on. Stop and tell me only when the cause is outside the change or the fix needs my decision.
+- Never end the turn while a build or deploy you started is queued or running. Watch it to `success`, `failure` or `error`.
+- Never force-push, never skip checks, never edit `.critly/policy.json` to pass.
+- Write the rollback (end of this file) into your notes before step 2.
 
 ## 1. Ready
 
@@ -28,14 +33,14 @@ The repo is public, so changes land through a PR. `<main>` below is `C:\Users\ka
 
 ```
 git push -u origin <branch>
-gh pr create --fill --base main
-gh pr checks <pr> --watch --fail-fast      # the Vercel preview; give up after 15 minutes
+gh pr create --fill --base main            # cloud: gh api repos/kausthubh-coder/critly/pulls -f head=<branch> -f base=main -f title=<title> -f body=<body> -q .number
+gh pr checks <pr> --watch --fail-fast      # cloud: gh api repos/kausthubh-coder/critly/commits/<branch head sha>/status -q '.statuses[] | select(.context=="Vercel") | .state'
 ```
 
-Then stop and wait for my review. Merge only when I say so:
+Wait for the Vercel preview check (at most 15 minutes; in the cloud, rerun the status call every 30 seconds) and load the changed pages on its preview URL (the status's `target_url`). If it fails because of this change, fix, rerun step 1 and push again. Once it's green, merge:
 
 ```
-gh pr merge <pr> --squash
+gh pr merge <pr> --squash                  # cloud: gh api -X PUT repos/kausthubh-coder/critly/pulls/<pr>/merge -f merge_method=squash
 ```
 
 Leave out `--delete-branch`: gh would try to switch this worktree to `main`, which the main checkout already has. Step 6 deletes the branch.
@@ -48,14 +53,14 @@ Leave out `--delete-branch`: gh would try to switch this worktree to `main`, whi
    npm publish --access public --dry-run   # check the file list and version
    npm publish --access public
    ```
-   npm opens a browser for my passkey. Tell me it's waiting; the approval window is a few minutes.
+   npm opens a browser for my passkey. Tell me it's waiting; the approval window is a few minutes. A cloud session can't publish (no passkey): ship the rest and list the publish for my machine.
 2. **Site.** Vercel deploys the merge commit on its own. Watch its status, at most 10 minutes:
    ```
-   gh pr view <pr> --json mergeCommit -q .mergeCommit.oid
+   gh pr view <pr> --json mergeCommit -q .mergeCommit.oid      # cloud: gh api repos/kausthubh-coder/critly/pulls/<pr> -q .merge_commit_sha
    gh api repos/kausthubh-coder/critly/commits/<sha>/status -q ".statuses[] | select(.context==\"Vercel\") | .state"
    ```
-   Done at `success`; stop at `failure` or `error`. GitHub's deployments list updates late, so read this status instead.
-3. **Build skill workflow.** The same push runs `.github/workflows/build-skill.yml`. Wait for it: `gh run list --workflow build-skill.yml --commit <sha>`, then `gh run watch <id> --exit-status`. If it committed a "Regenerate agent skill" commit, step 2 missed something; that commit deploys too.
+   Done at `success`. At `failure` or `error`, read the build log at the status's `target_url`; if this change caused it, fix it, rerun step 1 and land again. GitHub's deployments list updates late, so read this status instead.
+3. **Build skill workflow.** The same push runs `.github/workflows/build-skill.yml` when it touched its paths. Wait for it: `gh run list --workflow build-skill.yml --commit <sha>`, then `gh run watch <id> --exit-status` (cloud: `gh api "repos/kausthubh-coder/critly/actions/workflows/build-skill.yml/runs?head_sha=<sha>" -q '.workflow_runs[] | .status + " " + (.conclusion // "")'` until `completed success`). If it committed a "Regenerate agent skill" commit, step 1 missed something; that commit deploys too, so watch its Vercel status as well.
 
 ## 4. Check production
 
@@ -68,13 +73,14 @@ Read only:
 
 This is what makes the skills live.
 
+- In a cloud session there's no main checkout: list "pull `<main>`, then `bun run setup`" for my machine.
 - If `git -C <main> status --short` prints nothing and it's on `main`: `git -C <main> pull --ff-only`, then `bun run setup` in `<main>`.
 - If it's dirty or on another branch, leave it and tell me: the global `critly` skills stay on the old version until it's pulled.
 - If a folder under `skills/` was added, renamed or removed, run `node scripts/link.mjs` in `C:\Users\kaust\OneDrive\Documents\dev\agent-skills` (try `--dry-run` first).
 
 ## 6. Clean up
 
-- `git push origin --delete <branch>` if the remote branch is still there.
+- `git push origin --delete <branch>` if the remote branch is still there. In a cloud session, keep the session's own branch: the cloud expects it pushed. There's no worktree to remove there either.
 - If no thread needs this worktree anymore (check `t3_thread_list`), remove it as `worktree-critly` says. If it's the worktree this thread runs in, leave it and tell me it can go.
 
 ## 7. Report

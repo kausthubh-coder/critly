@@ -41,6 +41,7 @@ bun run check    # site build + package tests + skill copy drift; run before cal
 | The site's own design policy | `.critly/policy.json` |
 | Skill generator | `scripts/build-skill.ts` |
 | Dev port and setup | `scripts/port.mjs`, `scripts/setup.mjs` |
+| Cloud session start, browser for lint:ui | `scripts/cloud.mjs`, `scripts/browser.mjs`, `.claude/settings.json` |
 
 ## Generated files
 
@@ -57,6 +58,16 @@ Add `content/<section>/<slug>.mdx` with `title`, `description`, `section`, `orde
 ## Package
 
 `packages/critly` is plain Node ESM with no build step, its own npm lockfile and its own `node_modules`. Tests: `cd packages/critly && node --test`. It finds the installed Chrome or Edge and never downloads a browser. Bump `version` in its `package.json` to release it; `ship-critly` publishes it.
+
+## Cloud sessions
+
+A cloud VM (Claude Code on the web, Codex Cloud) is Linux with a bare clone and no Chrome. The SessionStart hook in `.claude/settings.json` runs `node scripts/cloud.mjs` (Codex: set the environment's setup script to `CLOUD=1 node scripts/cloud.mjs`). It loads Kausthubh's global skills and rules, runs setup, and makes sure there's a browser. It does nothing outside the cloud. Its last line says ready or what failed; rerun it if you're unsure.
+
+- Works here: setup and the doctor, `bun run dev`, `bun run check`, `bun run build:skill`, the package tests, and `bun run lint:ui` / `taste:ui` headless. Without Chrome or Edge, `scripts/browser.mjs` hands the package Playwright's Chromium from `$PLAYWRIGHT_BROWSERS_PATH` through `CRITLY_BROWSER`; the hook also exports it, so `node packages/critly/bin/critly.js check <url>` works directly. On Windows nothing changes: the package finds Chrome itself.
+- `bun run dev` here runs in its own process group: stop it with `kill -- -<pid>`, or it outlives the shell.
+- Shipping works with `ship-critly`. `gh pr` doesn't work here; `gh api` does, and `ship-critly` gives both.
+- Only on Kausthubh's machine: the main checkout (pulling it is what makes the skills live), `npm publish` (it needs his passkey), T3 tools, and the Vercel dashboard rollback. List those in the report.
+- Env vars: none. The site has no secrets.
 
 # Critly checks itself
 

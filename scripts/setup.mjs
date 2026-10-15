@@ -14,6 +14,7 @@ import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
 import { ROOT, DEFAULT_PORT, readPort } from "./port.mjs";
+import { findBrowser } from "./browser.mjs";
 
 const doctorOnly = process.argv.includes("--doctor");
 const git = (...args) => execFileSync("git", ["-C", ROOT, ...args], { encoding: "utf8" }).trim();
@@ -129,6 +130,8 @@ async function doctor() {
   else report(true, "port", `${port} (${(await isFree(port)) ? "free" : "in use, by this checkout's dev server if you started one"})`);
 
   report(skillsLinked(), "skills link", skillsLinked() ? ".claude/skills -> .agents/skills" : ".claude/skills is missing or points elsewhere", "bun run setup");
+  const browser = findBrowser();
+  report(!!browser, "browser", browser ? `${browser.name} for lint:ui and taste:ui` : "no Chrome, Edge or Playwright Chromium", "install Google Chrome, or set CRITLY_BROWSER to a Chromium");
   report(true, "backend", "none (static site, nothing shared between checkouts)");
   report(true, "env", "nothing to copy; .env.local only holds PORT");
 
